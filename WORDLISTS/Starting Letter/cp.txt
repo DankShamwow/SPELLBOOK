@@ -1,0 +1,10 @@
+cpd
+cpi
+cpl
+cpm
+cpo
+cps
+cpt
+cpu
+cpus
+cputime

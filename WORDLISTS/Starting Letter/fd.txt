@@ -1,0 +1,5 @@
+fdname
+fdnames
+fdtype
+fdub
+fdubs

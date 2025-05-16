@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr6y881ppbpyc"]
+
+[ext_resource type="Script" uid="uid://bj0j0kx8aabh" path="res://WORDLISTS/WordListProcessor.gd" id="1_yt7y4"]
+
+[node name="WordListProcessor" type="Node2D"]
+script = ExtResource("1_yt7y4")

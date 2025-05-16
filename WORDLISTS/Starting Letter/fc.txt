@@ -1,0 +1,7 @@
+fchar
+fcy
+fcomp
+fconv
+fconvert
+fcp
+fcs

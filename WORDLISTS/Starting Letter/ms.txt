@@ -1,0 +1,8 @@
+msalliance
+msec
+msg
+msink
+msl
+msource
+mss
+mster

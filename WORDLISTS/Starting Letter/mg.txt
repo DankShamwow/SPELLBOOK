@@ -1,0 +1,4 @@
+mgal
+mgd
+mgr
+mgt
