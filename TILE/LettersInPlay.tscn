@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://be5oum3d8xs7f"]
+
+[ext_resource type="Script" uid="uid://clkn0wjdmp7kf" path="res://TILE/TileGrid.gd" id="1_32x5v"]
+
+[node name="LettersInPlay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_32x5v")

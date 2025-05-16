@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=3 uid="uid://by15p4c2auvkj"]
+
+[ext_resource type="Script" uid="uid://gpp5u7s65rc0" path="res://TILE/GridTile.gd" id="1_34hk8"]
+[ext_resource type="Texture2D" uid="uid://djpjrqeh8bbpb" path="res://SPRITES/LetterTiles.png" id="2_adt6t"]
+[ext_resource type="Texture2D" uid="uid://dne456p8pc3be" path="res://SPRITES/TileSpriteMask.png" id="3_l10u7"]
+[ext_resource type="PackedScene" uid="uid://cvdr52etnjkjh" path="res://TILE/TileTooltip.tscn" id="3_tcwnn"]
+
+[node name="GridTile" type="Control"]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(16, 16)
+script = ExtResource("1_34hk8")
+
+[node name="Tile_Button" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[node name="Tile_Sprite" type="Node2D" parent="Tile_Button"]
+position = Vector2(16, 16)
+
+[node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 4
+
+[node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 4
+
+[node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+
+[node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+
+[node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+
+[node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 4
+
+[node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("3_l10u7")
+
+[node name="Tile_Tooltip" parent="." instance=ExtResource("3_tcwnn")]
+visible = false
+layout_mode = 0
+offset_top = 0.0
+offset_bottom = 185.0
+
+[connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
+[connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]
+[connection signal="mouse_exited" from="Tile_Button" to="." method="_on_tile_button_mouse_exited"]

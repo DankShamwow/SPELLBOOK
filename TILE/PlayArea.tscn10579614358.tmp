@@ -1,0 +1,106 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6y6pin36ci3a"]
+
+[ext_resource type="Script" uid="uid://vxaat8qahrnt" path="res://TILE/PlayArea.gd" id="1_7icpg"]
+[ext_resource type="Texture2D" uid="uid://dr5cl3kr8m0lj" path="res://SPRITES/TileGrid.png" id="2_71ry4"]
+
+[node name="PlayArea" type="Control" node_paths=PackedStringArray("tile_grid")]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 3
+anchors_preset = 0
+scale = Vector2(2, 2)
+script = ExtResource("1_7icpg")
+tile_scene = null
+grid_tile_scene = null
+tile_grid = NodePath("Grid_Area")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("2_71ry4")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="GridContainer" type="GridContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Column1Drop" type="Marker2D" parent="."]
+position = Vector2(8, -32)
+
+[node name="Column2Drop" type="Marker2D" parent="."]
+position = Vector2(40, -32)
+
+[node name="Column3Drop" type="Marker2D" parent="."]
+position = Vector2(72, -32)
+
+[node name="Column4Drop" type="Marker2D" parent="."]
+position = Vector2(104, -32)
+
+[node name="Index0" type="Marker2D" parent="."]
+position = Vector2(8, 8)
+
+[node name="Index1" type="Marker2D" parent="."]
+position = Vector2(40, 8)
+
+[node name="Index2" type="Marker2D" parent="."]
+position = Vector2(72, 8)
+
+[node name="Index3" type="Marker2D" parent="."]
+position = Vector2(104, 8)
+
+[node name="Index4" type="Marker2D" parent="."]
+position = Vector2(8, 40)
+
+[node name="Index5" type="Marker2D" parent="."]
+position = Vector2(40, 40)
+
+[node name="Index6" type="Marker2D" parent="."]
+position = Vector2(72, 40)
+
+[node name="Index7" type="Marker2D" parent="."]
+position = Vector2(104, 40)
+
+[node name="Index8" type="Marker2D" parent="."]
+position = Vector2(8, 72)
+
+[node name="Index9" type="Marker2D" parent="."]
+position = Vector2(40, 72)
+
+[node name="Index10" type="Marker2D" parent="."]
+position = Vector2(72, 72)
+
+[node name="Index11" type="Marker2D" parent="."]
+position = Vector2(104, 72)
+
+[node name="Index12" type="Marker2D" parent="."]
+position = Vector2(8, 104)
+
+[node name="Index13" type="Marker2D" parent="."]
+position = Vector2(40, 104)
+
+[node name="Index14" type="Marker2D" parent="."]
+position = Vector2(72, 104)
+
+[node name="Index15" type="Marker2D" parent="."]
+position = Vector2(104, 104)
+
+[node name="Grid_Area" type="Node2D" parent="."]

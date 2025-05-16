@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqgh4db6hoq0j"]
+
+[ext_resource type="Script" uid="uid://0xbqm5xm0yvm" path="res://TILE/TileSlot.gd" id="1_twspf"]
+
+[node name="TileSlot" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_twspf")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 2
+
+[connection signal="gui_input" from="TextureButton" to="." method="_on_texture_button_gui_input"]
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]

@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvdr52etnjkjh"]
+
+[ext_resource type="Script" uid="uid://yxjuluron3qq" path="res://TILE/TileTooltip.gd" id="1_hmn3l"]
+
+[node name="TileTooltip" type="VBoxContainer" node_paths=PackedStringArray("id_box", "type_box", "letter_box", "notch1_box", "notch2_box", "notch3_box", "tile_index_box")]
+offset_top = -192.0
+offset_right = 32.0
+offset_bottom = -4.0
+size_flags_horizontal = 3
+script = ExtResource("1_hmn3l")
+id_box = NodePath("Identifier_Box")
+type_box = NodePath("Type_Box")
+letter_box = NodePath("Letter_Box")
+notch1_box = NodePath("Notch1_Box")
+notch2_box = NodePath("Notch2_Box")
+notch3_box = NodePath("Notch3_Box")
+tile_index_box = NodePath("Tile_Index_Box")
+
+[node name="Identifier_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Identifier_Box"]
+layout_mode = 2
+
+[node name="Type_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Type_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Type_Box"]
+layout_mode = 2
+
+[node name="Letter_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Letter_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Letter_Box"]
+layout_mode = 2
+
+[node name="Notch1_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Notch1_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Notch1_Box"]
+layout_mode = 2
+
+[node name="Notch2_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Notch2_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Notch2_Box"]
+layout_mode = 2
+
+[node name="Notch3_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Notch3_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Notch3_Box"]
+layout_mode = 2
+
+[node name="Tile_Index_Box" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Tile_Index_Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Tile_Index_Box"]
+layout_mode = 2

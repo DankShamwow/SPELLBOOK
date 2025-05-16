@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LetterTile" load_steps=3 format=3 uid="uid://b62vocpkfkrai"]
+
+[ext_resource type="Script" uid="uid://c3xpopxaea3vo" path="res://TILE/LetterTile.gd" id="1_aucec"]
+[ext_resource type="Texture2D" uid="uid://b8vgrlwy0xk4d" path="res://SPRITES/LetterTiles.png" id="2_enk27"]
+
+[resource]
+script = ExtResource("1_aucec")
+type = 0
+letter = 0
+texture = ExtResource("2_enk27")
