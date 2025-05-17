@@ -5,9 +5,12 @@ class_name GridTile
 @onready var sprite = $Tile_Button/Tile_Sprite
 
 var original_z = self.z_index
+
 enum GridTileAction {
 	PLAY, VIEW
 }
+
+var point_values  	= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
@@ -92,14 +95,43 @@ func scale_to_word_size(scaling_factor):
 func scale_back_to_grid():
 	var tween = get_tree().create_tween()
 	tween.tween_property(sprite, "scale", Vector2(1, 1), 0.01)
+
+## Function that handles the scoring of a tile.
+func score_tile():
+	var letter_score = 0
+	if self.tile.type == 0 or self.tile.type == 2:
+		letter_score += point_values[self.tile.letter]
+		juice_score()
+		return letter_score
+
+		
+	elif self.tile.type == 1:
+		letter_score += 0
+		juice_score()
+		return letter_score
+
+
+	elif self.tile.type == 3:
+		letter_score += point_values[self.tile.letter]
+		juice_score()
+		return letter_score
+
 	
+	elif self.tile.type == 4:
+		letter_score += point_values[self.tile.letter] - 1
+		if letter_score == 0:
+			letter_score += 1
+		juice_score()
+		return letter_score
+
+	return letter_score
+
 func juice_score():
-	var old_color = sprite.modulate.v
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(self.scale.x*1.3, self.scale.y*1.3), 0.02)
+	tween.tween_property(sprite, "scale", Vector2(self.scale.x*1.2, self.scale.y*1.2), 0.1)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property(sprite, "scale", Vector2(self.scale.x/1.3, self.scale.y/1.3), 0.1)
+	tween.tween_property(sprite, "scale", Vector2(self.scale.x/1.2, self.scale.y/1.2), 0.01)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 
 #set_tooltip_text("Letter Tile!\n 

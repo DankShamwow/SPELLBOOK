@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=4 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://gpp5u7s65rc0" path="res://TILE/GridTile.gd" id="1_34hk8"]
 [ext_resource type="Texture2D" uid="uid://djpjrqeh8bbpb" path="res://SPRITES/LetterTiles.png" id="2_adt6t"]
 [ext_resource type="Texture2D" uid="uid://dne456p8pc3be" path="res://SPRITES/TileSpriteMask.png" id="3_l10u7"]
-[ext_resource type="PackedScene" uid="uid://cvdr52etnjkjh" path="res://TILE/TileTooltip.tscn" id="3_tcwnn"]
 
 [node name="GridTile" type="Control"]
 texture_filter = 1
@@ -49,12 +48,6 @@ vframes = 4
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_l10u7")
-
-[node name="Tile_Tooltip" parent="." instance=ExtResource("3_tcwnn")]
-visible = false
-layout_mode = 0
-offset_top = 0.0
-offset_bottom = 185.0
 
 [connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
 [connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]

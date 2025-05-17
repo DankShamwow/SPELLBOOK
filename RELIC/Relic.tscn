@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://cg20swu6v7qa7"]
+
+[ext_resource type="Script" uid="uid://6qch5jad6qt7" path="res://RELIC/Relic.gd" id="1_h6dk7"]
+[ext_resource type="Texture2D" uid="uid://bv14btkjpvew1" path="res://SPRITES/Relics.png" id="2_ct0xs"]
+
+[node name="Relic" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_h6dk7")
+
+[node name="Relic_Button" type="TextureButton" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Relic_Sprite" type="Sprite2D" parent="Relic_Button"]
+texture_filter = 1
+position = Vector2(16, 16)
+texture = ExtResource("2_ct0xs")
+hframes = 10
+vframes = 2
+
+[node name="Relic_Mask" type="Sprite2D" parent="Relic_Button"]
+texture_filter = 1
+position = Vector2(16, 16)
+texture = ExtResource("2_ct0xs")
+hframes = 10
+vframes = 2
+
+[connection signal="mouse_entered" from="Relic_Button" to="." method="_on_relic_button_mouse_entered"]
+[connection signal="mouse_exited" from="Relic_Button" to="." method="_on_relic_button_mouse_exited"]

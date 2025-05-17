@@ -4,14 +4,17 @@ class_name PlayArea
 var filePath = "res://WORDLISTS/Starting Letter/"
 
 ## available_tiles is the list of LetterTiles remaining in the deck.
-var available_tiles = TileManager.available_tiles
+var available_tiles = GeneralManager.available_tiles
 
 ## tiles_in_play is the list of LetterTiles currently in the grid or being used to play a word.
-var tiles_in_play = TileManager.tiles_in_play
+var tiles_in_play = GeneralManager.tiles_in_play
 
 ## buffered_tiles is the list of LetterTiles that was just played, and will be returned to the
 ## list of available tiles at the start of the next turn, or when the next shuffling event happens to the player's deck.
-var buffered_tiles = TileManager.buffered_tiles
+var buffered_tiles = GeneralManager.buffered_tiles
+
+## current_relics is the list of relics that the player currently has.
+var current_relics = GeneralManager.current_relics
 
 ## clicked_tile_array is a list of the GridTiles that have been clicked on.
 var clicked_tile_array = []
@@ -28,14 +31,30 @@ var point_values  	= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 
 ## mult_values determines the multiplier on the score based on the length of a word.
 var mult_values		= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 60, 80, 100]
 
+## possible_grid_positions lists all valid grid positions.
+## If you're modding the game and you're seeing this, you're going to want to either increase the number of indeces here
+## or rewrite the handling of this entirely. I did NOT want to make an item that increases the grid size, because
+## it would completely fuck up the UI. You have been warned!!!
 var possible_grid_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+## scored_letter_count is the sum total of the numbers that have been scored.
+var scored_letter_count = 0
+
+## played_words_count is the sum total of the number of words that have been played.
+var played_words_count = 0
 
 @export var tile_scene: PackedScene = preload("res://TILE/LetterTile.tscn")
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GridTile.tscn")
+var relic_scene = preload("res://RELIC/Relic.gd")
 
 ## tile_grid is the parent of all the tiles in the grid. We use the grid_index of a GridTile to recognize which child it is.
 @export var tile_grid: Node2D
+
+## to_be_destroyed is the parent of all tiles about to be destroyed, such as when words are played.
 @export var to_be_destroyed: Node2D
+
+## relics_collection is the parent of all relic nodes. Parent your relics to this.
+@export var relics_collection: Node2D
 
 var tiles: LetterTile
 var tile_slots: Array[GridTile]
@@ -80,6 +99,15 @@ func _on_test_button_pressed():
 	print(available_tiles.size())
 	print(tiles_in_play.size())
 	get_node("TestButton").set_disabled(false)
+	
+func _on_relic_button_pressed():
+	get_node("RelicButton").set_disabled(true)
+	print("Giving you an Upper Case!")
+	var new_relic = preload("res://RELIC/relic_0.tscn").instantiate()
+	new_relic.position = Vector2((-216 + (32 * current_relics.size())), -132)
+	current_relics.append(new_relic)
+	relics_collection.add_child(new_relic)
+	get_node("RelicButton").set_disabled(false)
 	
 func _on_shuffle_button_pressed():
 	update_buffered_tiles.emit()
@@ -179,75 +207,76 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 
 func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 	# If the clicked tile array does NOT have this tile, then add it to the array and do stuff.
-	var first_tile = null
-	var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-	
-	if not clicked_tile_array.has(which):
-		var clicked_tile = which
-		clicked_tile_array.append(clicked_tile)
-		letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
-		print(letters_from_tiles)
-		if clicked_tile_array.size() <= 6:
-			
-			# We need the first tile to be able to determine the positions of the rest of the tiles.
-			first_tile = clicked_tile_array.front()
-			first_tile.tile.target = Vector2(56 - (20 * clicked_tile_array.size() - 20), -100)
-			var first_tile_x = first_tile.tile.target.x
-			for i in clicked_tile_array.size():
-				clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i), -100)
+	if action == GridTile.GridTileAction.PLAY:
+		var first_tile = null
+		var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+		
+		if not clicked_tile_array.has(which):
+			var clicked_tile = which
+			clicked_tile_array.append(clicked_tile)
+			letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
+			print(letters_from_tiles)
+			if clicked_tile_array.size() <= 6:
 				
-		elif clicked_tile_array.size() > 6:
-			scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-			first_tile = clicked_tile_array.front()
-			first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20)*scaling_factor, -100)
-			var first_tile_x = first_tile.tile.target.x
-			for i in clicked_tile_array.size():
-				clicked_tile_array[i].tile.target = Vector2((first_tile_x + (40 * i *scaling_factor)), -100)
-	
-	elif clicked_tile_array.has(which):
-		
-		# Get the tile we clicked on, then pop it from the arrays
-		var clicked_tile = which
-		
-		## popped_tile_index is the location of the tile that was just clicked on.
-		var popped_tile_index = clicked_tile_array.find(clicked_tile)
-		
-		letters_from_tiles.remove_at(popped_tile_index)
-		print(letters_from_tiles)
-		
-		## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
-		var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
-		popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
-		popped_tile.scale_back_to_grid()
-		
-		# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
-		if clicked_tile_array:
-			first_tile = clicked_tile_array.front()
-			if clicked_tile_array.size() > 6:
-				scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-				first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20) * scaling_factor, -100)
-				var first_tile_x = first_tile.tile.target.x
-				for i in clicked_tile_array.size():
-					clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i * scaling_factor), -100)
-			
-			elif clicked_tile_array.size() <= 6:
+				# We need the first tile to be able to determine the positions of the rest of the tiles.
+				first_tile = clicked_tile_array.front()
 				first_tile.tile.target = Vector2(56 - (20 * clicked_tile_array.size() - 20), -100)
 				var first_tile_x = first_tile.tile.target.x
 				for i in clicked_tile_array.size():
 					clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i), -100)
+					
+			elif clicked_tile_array.size() > 6:
+				scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+				first_tile = clicked_tile_array.front()
+				first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20)*scaling_factor, -100)
+				var first_tile_x = first_tile.tile.target.x
+				for i in clicked_tile_array.size():
+					clicked_tile_array[i].tile.target = Vector2((first_tile_x + (40 * i *scaling_factor)), -100)
+		
+		elif clicked_tile_array.has(which):
+			
+			# Get the tile we clicked on, then pop it from the arrays
+			var clicked_tile = which
+			
+			## popped_tile_index is the location of the tile that was just clicked on.
+			var popped_tile_index = clicked_tile_array.find(clicked_tile)
+			
+			letters_from_tiles.remove_at(popped_tile_index)
+			print(letters_from_tiles)
+			
+			## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
+			var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
+			popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
+			popped_tile.scale_back_to_grid()
+			
+			# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
+			if clicked_tile_array:
+				first_tile = clicked_tile_array.front()
+				if clicked_tile_array.size() > 6:
+					scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+					first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20) * scaling_factor, -100)
+					var first_tile_x = first_tile.tile.target.x
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i * scaling_factor), -100)
+				
+				elif clicked_tile_array.size() <= 6:
+					first_tile.tile.target = Vector2(56 - (20 * clicked_tile_array.size() - 20), -100)
+					var first_tile_x = first_tile.tile.target.x
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i), -100)
 
-	if clicked_tile_array.size() > 6:
-		scaling_factor = float(6.5 / (clicked_tile_array.size()+1))
-		print(scaling_factor)
-		for i in clicked_tile_array.size():
-			clicked_tile_array[i].scale_to_word_size(scaling_factor)
-	elif clicked_tile_array.size() <= 6:
-		print(scaling_factor)
-		scaling_factor = 1.0
-		for i in clicked_tile_array.size():
-			clicked_tile_array[i].scale_to_word_size(scaling_factor)
-	
-	word_from_tiles(letters_from_tiles)
+		if clicked_tile_array.size() > 6:
+			scaling_factor = float(6.5 / (clicked_tile_array.size()+1))
+			print(scaling_factor)
+			for i in clicked_tile_array.size():
+				clicked_tile_array[i].scale_to_word_size(scaling_factor)
+		elif clicked_tile_array.size() <= 6:
+			print(scaling_factor)
+			scaling_factor = 1.0
+			for i in clicked_tile_array.size():
+				clicked_tile_array[i].scale_to_word_size(scaling_factor)
+		
+		word_from_tiles(letters_from_tiles)
 
 func word_from_tiles(letters_from_tiles):
 	word = "".join(letters_from_tiles)
@@ -272,31 +301,103 @@ func word_from_tiles(letters_from_tiles):
 func _on_play_button_pressed():
 	get_node("PlayButton").set_disabled(true)
 	
+	played_words_count += 1
+	
 	var points_score = 0
 	var mult_score = 0
+	var letter_score = 0
 	var total_score = 0
+	var word_retriggers = 0
+	var letter_retriggers = 0
 	
 	## marked_to_replace is a list of the grid index values that tiles need to either
 	## fall into, or for new tiles to spawn and fall into.
 	var marked_to_replace = []
 	
-	## remaining_tiles is the list of indices currently occupied by a GridTile
+	# If there are any effects that would retrigger the scoring of the word, they'll be processed here.
+	# If there's any special effects, they should also be processed here.
+	for i in current_relics.size():
+		word_retriggers += current_relics[i].word_retrigger_effect(word)
+	
+	for i in word_retriggers + 1:
+		
+		for j in clicked_tile_array.size():
+			
+			for k in current_relics.size():
+				
+				# Pull any letter retrigger effects from relics
+				letter_retriggers += current_relics[k].letter_retrigger_effect(clicked_tile_array[j].tile.letter)
+			
+			# Score each letter for a number of times equal to their retriggers, plus one.
+			for k in letter_retriggers + 1:
+				
+				# Score the actual letter and get the score, plus increment the scored letter count.
+				letter_score += clicked_tile_array[j].score_tile()
+				scored_letter_count += 1
+				# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+				await get_tree().create_timer(0.005).timeout
+				
+				# TODO: Put Notch-based effects here? Or maybe they belong inside the tile scoring. I don't know.
+				
+				# Pull any bonus point effects from relics.
+				for l in current_relics.size():
+					
+					# Grid index based effects
+					letter_score += current_relics[l].grid_index_effect(clicked_tile_array[j].tile.grid_index)
+					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+					
+					# Letter based effects
+					letter_score += current_relics[l].letter_score_effect(clicked_tile_array[j].tile.letter)
+					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+					
+					# Word based effects that trigger on each letter of a word
+					letter_score += current_relics[l].word_letter_bonus_score_effect(word)
+					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+					
+					# Effects based on the total count of scored letters
+					letter_score += current_relics[l].x_letters_played_effect(scored_letter_count, letter_score)
+					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+			
+			points_score += letter_score
+			
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			
+			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
+			letter_score = 0
+			letter_retriggers = 0
+			await get_tree().create_timer(0.005).timeout
+			
+			# We don't want the mult score to go back down when we potentially rescore a word.
+			var previous_mult_score = mult_score
+			mult_score = mult_values[j]
+			if previous_mult_score > mult_score:
+				mult_score = previous_mult_score
+			
+			# If something is going to modify the mult score, it goes here.
+			for k in current_relics.size():
+				# TODO: Add modifiers to the mult score.
+				pass
+			
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			await get_tree().create_timer(0.075).timeout
+			
+			total_score = points_score * mult_score
+			
+			# If something is going to modify the total word score, it goes here.
+			for k in current_relics.size():
+				# TODO: Add modifiers to the total score.
+				pass
+			
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			await get_tree().create_timer(0.075).timeout
+			
+
+	# Post-processing for the scoring algorithm.
 	for i in clicked_tile_array.size():
 		marked_to_replace.append(clicked_tile_array[i].tile.grid_index)
-		var letter_score = point_values[clicked_tile_array[i].tile.letter]
-		points_score += letter_score
-		clicked_tile_array[i].juice_score()
-		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-		await get_tree().create_timer(0.075).timeout
-		mult_score = mult_values[i]
-		await get_tree().create_timer(0.075).timeout
-		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-		total_score = points_score * mult_score
-		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-		await get_tree().create_timer(0.075).timeout
 		clicked_tile_array[i].reparent(to_be_destroyed)
 		tiles_in_play.remove_at(i)
-		
+	
 	for i in clicked_tile_array.size():
 		var last_letter = clicked_tile_array.pop_back()
 		buffered_tiles.append(last_letter.tile)
@@ -312,11 +413,8 @@ func _on_play_button_pressed():
 	
 func move_tiles_into_place():
 	var remaining_tiles = []
-	
 	for i in tile_grid.get_child_count():
 		remaining_tiles.append(tile_grid.get_child(i).tile.grid_index)
-
-	for i in tile_grid.get_child_count():
 		var found_tile = tile_grid.get_child(i)
 		if found_tile.tile.grid_index < 12:
 			print(found_tile.tile.grid_index)
