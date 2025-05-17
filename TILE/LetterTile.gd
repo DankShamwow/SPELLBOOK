@@ -12,6 +12,7 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED}
 @export var notch3: NotchTypes
 @export var tile_index: int
 @export var grid_index: int
+@export var xth_letter_played: int
 @export var target: Vector2
 
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
