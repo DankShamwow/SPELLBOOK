@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 StartingTiles="*res://TILE/StartingTiles.gd"
 GeneralManager="*res://GENERAL/GeneralManager.gd"
 WordListManager="*res://WORDLISTS/WordListManager.gd"
+StartingTiles2="*res://TILE/StartingTiles2.gd"
 
 [display]
 
@@ -29,6 +30,7 @@ window/size/viewport_height=720
 [file_customization]
 
 folder_colors={
+"res://COMBAT/": "red",
 "res://GENERAL/": "pink",
 "res://OLD_BAD/": "gray",
 "res://RELIC/": "blue",

@@ -1,5 +1,0 @@
-pkg
-pkgs
-pks
-pkt
-pkwy

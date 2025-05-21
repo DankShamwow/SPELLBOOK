@@ -1,4 +1,0 @@
-fth
-fthm
-ftncmd
-ftnerr

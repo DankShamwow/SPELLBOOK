@@ -1,3 +1,0 @@
-gcd
-gconv
-gconvert

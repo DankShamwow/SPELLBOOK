@@ -1,7 +1,11 @@
 extends Control
 class_name PlayArea
 
-var filePath = "res://WORDLISTS/Starting Letter/"
+var filePath = "res://WORDLISTS/STANDARD/"
+
+
+## current_deck is the list of LetterTiles in your deck.
+var current_deck = GeneralManager.current_deck
 
 ## available_tiles is the list of LetterTiles remaining in the deck.
 var available_tiles = GeneralManager.available_tiles
@@ -13,8 +17,17 @@ var tiles_in_play = GeneralManager.tiles_in_play
 ## list of available tiles at the start of the next turn, or when the next shuffling event happens to the player's deck.
 var buffered_tiles = GeneralManager.buffered_tiles
 
-## current_relics is the list of relics that the player currently has.
+## current_relics is the list of Relics that the player currently has.
 var current_relics = GeneralManager.current_relics
+
+## modified_wordlist is the list of words that has been added to by various Relics.
+var modified_wordlist 	= []
+
+## scored_letter_count is the sum total of the numbers that have been scored.
+var scored_letter_count = GeneralManager.scored_letter_count
+
+## played_words_count is the sum total of the number of words that have been played.
+var played_words_count = GeneralManager.played_words_count
 
 ## clicked_tile_array is a list of the GridTiles that have been clicked on.
 var clicked_tile_array = []
@@ -37,15 +50,18 @@ var mult_values		= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 6
 ## it would completely fuck up the UI. You have been warned!!!
 var possible_grid_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
-## scored_letter_count is the sum total of the numbers that have been scored.
-var scored_letter_count = 0
+## bag_open determines if the Tile Bag is open or not.
+var bag_open = false
 
-## played_words_count is the sum total of the number of words that have been played.
-var played_words_count = 0
+## scoring_check determines if a word is currently being played. It prevents you from adding letters to a word while it's being played.
+var scoring_check = false
 
 @export var tile_scene: PackedScene = preload("res://TILE/LetterTile.tscn")
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GridTile.tscn")
 var relic_scene = preload("res://RELIC/Relic.gd")
+
+## bag_grid is the parent of all the tiles that spawn when you open the Tile Bag.
+@export var bag_grid: GridContainer
 
 ## tile_grid is the parent of all the tiles in the grid. We use the grid_index of a GridTile to recognize which child it is.
 @export var tile_grid: Node2D
@@ -61,38 +77,46 @@ var tile_slots: Array[GridTile]
 
 signal update_bag_tiles()
 signal update_buffered_tiles()
+signal disable_tile_bag(state)
+
+func spawn_new_tile(grid_index):
+	## added_tile is a GridTile with the data from a LetterTile
+	var added_tile = grid_tile_scene.instantiate()
+	
+	## called_tile is a LetterTile
+	var called_tile = available_tiles.pop_at(randi() % available_tiles.size())
+	
+	# Add the LetterTile to the GridTile so it has data
+	added_tile.tile = called_tile
+	
+	# Append the called_tile to the tiles_in_play array, add the added_tile to the tile_grid
+	tiles_in_play.append(called_tile)
+	tile_grid.add_child(added_tile)
+	
+	added_tile.spawned_in()
+	
+	# Give it a grid index,
+	added_tile.tile.grid_index = grid_index
+	added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
+	added_tile.tile_clicked.connect(self._on_tile_clicked)
+	added_tile.tile_hovered.connect(self._is_tile_hovered)
+	
+	# Set the tile's drop position as well as the target position after dropping
+	# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
+	added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32) + 8),((floor(added_tile.tile.grid_index / 4) * 32) + 8))
+	# Based on the index, we tell it what column to drop from, and it spawns above.
+	added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32) + 8), -32)
+	update_bag_tiles.emit()
+	
 
 ## Instantiate each GridTile, pop a LetterTile from the available tile array, 
 ## then give the data to our new Gridtile. We also give it a grid index.
 func _on_test_button_pressed():
 	get_node("TestButton").set_disabled(true)
+	
 	for i in range(0, 16):
-
-		## added_tile is a GridTile with the data from a LetterTile
-		var added_tile = grid_tile_scene.instantiate()
-		
-		## called_tile is a LetterTile
-		var called_tile = available_tiles.pop_at(randi() % available_tiles.size())
-		
-		# Add the LetterTile to the GridTile so it has data
-		added_tile.tile = called_tile
-		
-		# Append the called_tile to the tiles_in_play array, add the added_tile to the tile_grid
-		tiles_in_play.append(called_tile)
-		tile_grid.add_child(added_tile)
-		
-		# Give it a grid index,
-		added_tile.tile.grid_index = (15 - i)
-		added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
-		added_tile.tile_clicked.connect(self._on_tile_clicked)
-		added_tile.tile_hovered.connect(self._is_tile_hovered)
-		
-		# Set the tile's drop position as well as the target position after dropping
-		# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
-		added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32) + 8),((floor(added_tile.tile.grid_index / 4) * 32) + 8))
-		# Based on the index, we tell it what column to drop from, and it spawns above.
-		added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32) + 8), -32)
-		update_bag_tiles.emit()
+		var grid_index = 15 - i
+		spawn_new_tile(grid_index)
 		await get_tree().create_timer(0.04).timeout
 	
 	print(buffered_tiles.size())
@@ -107,6 +131,10 @@ func _on_relic_button_pressed():
 	new_relic.position = Vector2((-216 + (32 * current_relics.size())), -132)
 	current_relics.append(new_relic)
 	relics_collection.add_child(new_relic)
+	var new_relic_2 = preload("res://RELIC/relic_-1.tscn").instantiate()
+	new_relic_2.position = Vector2((-216 + (32 * current_relics.size())), -132)
+	current_relics.append(new_relic_2)
+	relics_collection.add_child(new_relic_2)
 	get_node("RelicButton").set_disabled(false)
 	
 func _on_shuffle_button_pressed():
@@ -132,25 +160,18 @@ func _on_shuffle_button_pressed():
 		tile_to_push.is_dying()
 	
 	for i in range(0, 16):
-		var added_tile = grid_tile_scene.instantiate()
-		var called_tile = available_tiles.pop_at(randi() % available_tiles.size())
-		added_tile.tile = called_tile
-		tiles_in_play.append(called_tile)
-		tile_grid.add_child(added_tile)
-		added_tile.tile.grid_index = (15 - i)
-		added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
-		added_tile.tile_clicked.connect(self._on_tile_clicked)
-		added_tile.tile_hovered.connect(self._is_tile_hovered)
-
-		# Set the tile's drop position as well as the target position after dropping
-		# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
-		added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32) + 8), ((floor(added_tile.tile.grid_index / 4) * 32) + 8))
-		# Based on the index, we tell it what column to drop from, and it spawns above.
-		added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32) + 8), -32)
+		var grid_index = 15 - i
+		spawn_new_tile(grid_index)
 		update_bag_tiles.emit()
 		await get_tree().create_timer(0.04).timeout
-	get_node("ShuffleButton").set_disabled(false)
 
+	get_node("ShuffleButton").set_disabled(false)
+	
+func _on_tile_bag_toggle(toggled_on):
+	bag_open = toggled_on
+	print(bag_open)
+
+			# Vector2(((bag_tile.tile.tile_index % 10) * 32), ((floor(bag_tile.tile.tile_index / 10) * 32)))
 func _physics_process(delta):
 	for i in tile_grid.get_child_count():
 		## tile_to_move is a GridTile with a target that it needs to move to.
@@ -163,11 +184,13 @@ func _physics_process(delta):
 		velocity = velocity / delta
 		
 		# Cutoffs for how fast the tile should be moving, or if it should get snapped into place.
-		if tile_to_move.position.distance_to(target_index_location) > 2:
+		if tile_to_move.position.distance_to(target_index_location) > 0.5:
 			tile_to_move.position += (velocity) * tile_to_move.position.distance_to(target_index_location)/10
-		elif tile_to_move.position.distance_to(target_index_location) > 0.3:
+		elif tile_to_move.position.distance_to(target_index_location) > 0:
 			tile_to_move.position = target_index_location
-				
+			if not clicked_tile_array.has(tile_to_move):
+				if not buffered_tiles.has(tile_to_move.tile):
+					$TileSound.play()
 	
 		# Kill our tiles that are being told to go to the buffer.
 		if buffered_tiles.has(tile_to_move.tile) && tile_to_move.position == tile_to_move.tile.target:
@@ -206,101 +229,139 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 		which.scale_to_word_size(scaling_factor)
 
 func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
-	# If the clicked tile array does NOT have this tile, then add it to the array and do stuff.
-	if action == GridTile.GridTileAction.PLAY:
-		var first_tile = null
-		var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-		
-		if not clicked_tile_array.has(which):
-			var clicked_tile = which
-			clicked_tile_array.append(clicked_tile)
-			letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
-			print(letters_from_tiles)
-			if clicked_tile_array.size() <= 6:
+	if scoring_check == false:
+		if bag_open == false:
+			print("This is working!")
+			# If the clicked tile array does NOT have this tile, then add it to the array and do stuff.
+			if action == GridTile.GridTileAction.PLAY:
+				var first_tile = null
+				var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
 				
-				# We need the first tile to be able to determine the positions of the rest of the tiles.
-				first_tile = clicked_tile_array.front()
-				first_tile.tile.target = Vector2(56 - (20 * clicked_tile_array.size() - 20), -100)
-				var first_tile_x = first_tile.tile.target.x
-				for i in clicked_tile_array.size():
-					clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i), -100)
+				if not clicked_tile_array.has(which):
+					$TileSound.play()
+					var clicked_tile = which
+					clicked_tile_array.append(clicked_tile)
+					letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
+					print(letters_from_tiles)
+					if clicked_tile_array.size() <= 6:
+						
+						# We need the first tile to be able to determine the positions of the rest of the tiles.
+						first_tile = clicked_tile_array.front()
+						first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19), -100) # Originally 20, change to 16?
+						var first_tile_x = first_tile.tile.target.x
+						for i in clicked_tile_array.size():
+							clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i), -100) # Originally 40, change to 32?
+							
+					elif clicked_tile_array.size() > 6:
+						scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+						first_tile = clicked_tile_array.front()
+						first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19)*scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
+						var first_tile_x = first_tile.tile.target.x
+						for i in clicked_tile_array.size():
+							clicked_tile_array[i].tile.target = Vector2((first_tile_x + (38 * i *scaling_factor)), -100) # Originally 40, change to 32?
+				
+				elif clicked_tile_array.has(which):
 					
-			elif clicked_tile_array.size() > 6:
-				scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-				first_tile = clicked_tile_array.front()
-				first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20)*scaling_factor, -100)
-				var first_tile_x = first_tile.tile.target.x
-				for i in clicked_tile_array.size():
-					clicked_tile_array[i].tile.target = Vector2((first_tile_x + (40 * i *scaling_factor)), -100)
-		
-		elif clicked_tile_array.has(which):
-			
-			# Get the tile we clicked on, then pop it from the arrays
-			var clicked_tile = which
-			
-			## popped_tile_index is the location of the tile that was just clicked on.
-			var popped_tile_index = clicked_tile_array.find(clicked_tile)
-			
-			letters_from_tiles.remove_at(popped_tile_index)
-			print(letters_from_tiles)
-			
-			## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
-			var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
-			popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
-			popped_tile.scale_back_to_grid()
-			
-			# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
-			if clicked_tile_array:
-				first_tile = clicked_tile_array.front()
-				if clicked_tile_array.size() > 6:
-					scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-					first_tile.tile.target = Vector2(-4 - (10 * clicked_tile_array.size() - 20) * scaling_factor, -100)
-					var first_tile_x = first_tile.tile.target.x
-					for i in clicked_tile_array.size():
-						clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i * scaling_factor), -100)
-				
-				elif clicked_tile_array.size() <= 6:
-					first_tile.tile.target = Vector2(56 - (20 * clicked_tile_array.size() - 20), -100)
-					var first_tile_x = first_tile.tile.target.x
-					for i in clicked_tile_array.size():
-						clicked_tile_array[i].tile.target = Vector2(first_tile_x + (40 * i), -100)
+					# Get the tile we clicked on, then pop it from the arrays
+					var clicked_tile = which
+					
+					## popped_tile_index is the location of the tile that was just clicked on.
+					var popped_tile_index = clicked_tile_array.find(clicked_tile)
+					
+					letters_from_tiles.remove_at(popped_tile_index)
+					print(letters_from_tiles)
+					
+					## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
+					var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
+					popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
+					popped_tile.scale_back_to_grid()
+					
+					# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
+					if clicked_tile_array:
+						first_tile = clicked_tile_array.front()
+						if clicked_tile_array.size() > 6:
+							scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+							first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19) * scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
+							var first_tile_x = first_tile.tile.target.x
+							for i in clicked_tile_array.size():
+								clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i * scaling_factor), -100) # Originally 40, change to 32?
+						
+						elif clicked_tile_array.size() <= 6:
+							first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19), -100) # Originally 20, change to 16?
+							var first_tile_x = first_tile.tile.target.x
+							for i in clicked_tile_array.size():
+								clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i), -100) # Originally 40, change to 32?
 
-		if clicked_tile_array.size() > 6:
-			scaling_factor = float(6.5 / (clicked_tile_array.size()+1))
-			print(scaling_factor)
-			for i in clicked_tile_array.size():
-				clicked_tile_array[i].scale_to_word_size(scaling_factor)
-		elif clicked_tile_array.size() <= 6:
-			print(scaling_factor)
-			scaling_factor = 1.0
-			for i in clicked_tile_array.size():
-				clicked_tile_array[i].scale_to_word_size(scaling_factor)
-		
-		word_from_tiles(letters_from_tiles)
+				if clicked_tile_array.size() > 6:
+					scaling_factor = float(6.5 / (clicked_tile_array.size()+1))
+					print(scaling_factor)
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].scale_to_word_size(scaling_factor)
+				elif clicked_tile_array.size() <= 6:
+					print(scaling_factor)
+					scaling_factor = 1.0
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].scale_to_word_size(scaling_factor)
+				
+			word_from_tiles(letters_from_tiles)
+		else:
+			pass
+	else:
+		pass
 
 func word_from_tiles(letters_from_tiles):
+	print("This is also working?")
 	word = "".join(letters_from_tiles)
 	print(word)
 	if word.length() >= 3:
-		var list = FileAccess.open(filePath + word[0] + word[1] + ".txt", FileAccess.READ)
-		while list.get_position() < list.get_length():
-			var line = list.get_line()
-			if line == word:
-				get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
-				print("Valid word found!")
-				get_node("PlayButton").set_disabled(false)
-				list.close()
-				return true
-			if not line == word:
-				get_node("WordLabel").text = ""
-				get_node("PlayButton").set_disabled(true)
+		
+		# Check the modified wordlist first, because it's faster.
+		if modified_wordlist.has(word):
+			
+			get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
+			print("Valid word found!")
+			get_node("PlayButton").set_disabled(false)
+			
+			var raw_word_score = calc_raw_word_score()
+			
+		else:
+			var list = FileAccess.open(filePath + word[0] + word[1] + ".txt", FileAccess.READ)
+			while list.get_position() < list.get_length():
+				var line = list.get_line()
+				
+				if not line == word:
+					get_node("WordLabel").text = ""
+					get_node("PlayButton").set_disabled(true)
+				
+				if line == word:
+					get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
+					print("Valid word found!")
+					get_node("PlayButton").set_disabled(false)
+					list.close()
 	else:
 		get_node("WordLabel").text = ""
 		get_node("PlayButton").set_disabled(true)
+		
+	if not get_node("PlayButton").is_disabled():
+		var raw_word_score = calc_raw_word_score()
+		if raw_word_score >= 20 and raw_word_score < 50 and not $Good.is_playing():
+			$Good.play()
+			
+		elif raw_word_score >= 50 and raw_word_score < 100 and not $Great.is_playing():
+			$Great.play()
+			
+		elif raw_word_score >= 100 and raw_word_score < 250 and not $Excellent.is_playing():
+			$Excellent.play()
+			
+		elif raw_word_score >= 250 and raw_word_score < 500 and not $Amazing.is_playing():
+			$Amazing.play()
+			
+		elif raw_word_score >= 500 and not $Fantastic.is_playing():
+			$Fantastic.play()
 
 func _on_play_button_pressed():
+	scoring_check = true
 	get_node("PlayButton").set_disabled(true)
-	
 	played_words_count += 1
 	
 	var points_score = 0
@@ -335,6 +396,7 @@ func _on_play_button_pressed():
 				letter_score += clicked_tile_array[j].score_tile()
 				scored_letter_count += 1
 				# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
+				
 				await get_tree().create_timer(0.005).timeout
 				
 				# TODO: Put Notch-based effects here? Or maybe they belong inside the tile scoring. I don't know.
@@ -359,7 +421,6 @@ func _on_play_button_pressed():
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 			
 			points_score += letter_score
-			
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 			
 			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
@@ -391,6 +452,7 @@ func _on_play_button_pressed():
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 			await get_tree().create_timer(0.075).timeout
 			
+	#$Subaluwa.play()
 
 	# Post-processing for the scoring algorithm.
 	for i in clicked_tile_array.size():
@@ -398,18 +460,25 @@ func _on_play_button_pressed():
 		clicked_tile_array[i].reparent(to_be_destroyed)
 		tiles_in_play.remove_at(i)
 	
+	# Make the bag look pretty just before the tiles go into it.
+	disable_tile_bag.emit(true)
+	
 	for i in clicked_tile_array.size():
 		var last_letter = clicked_tile_array.pop_back()
 		buffered_tiles.append(last_letter.tile)
-		last_letter.tile.target = Vector2(360, -160)
+		print(buffered_tiles.size())
+		last_letter.z_index = 120
 		last_letter.is_dying()
+		last_letter.tile.target = Vector2(340, -148)
 		await get_tree().create_timer(0.04).timeout
 	
 	update_bag_tiles.emit()
 	letters_from_tiles.clear()
 	word_from_tiles(letters_from_tiles)
 	move_tiles_into_place()
-	await get_tree().create_timer(0.1).timeout
+	scoring_check = false
+	await get_tree().create_timer(0.5).timeout
+	disable_tile_bag.emit(false)
 	
 func move_tiles_into_place():
 	var remaining_tiles = []
@@ -445,36 +514,13 @@ func spawn_new_tiles(remaining_tiles):
 	tiles_to_fill.reverse()
 	
 	for i in (16 - remaining_tiles.size()):
-		# This is a GridTile
-		var added_tile = grid_tile_scene.instantiate()
-		
-		# This is a LetterTile
-		var called_tile = available_tiles.pop_at(randi() % available_tiles.size())
-		
-		# Add the LetterTile to the GridTile so it has data
-		added_tile.tile = called_tile
-		
-		# Append the called_tile to the tiles_in_play array, add the added_tile to the tile_grid
-		tiles_in_play.append(called_tile)
-		tile_grid.add_child(added_tile)
-		
-		# Give it a grid index.
-		added_tile.tile.grid_index = tiles_to_fill[i]
-		added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
-		added_tile.tile_clicked.connect(self._on_tile_clicked)
-		added_tile.tile_hovered.connect(self._is_tile_hovered)
-		
-		# Set the tile's drop position as well as the target position after dropping
-		# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
-		added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32) + 8),((floor(added_tile.tile.grid_index / 4) * 32) + 8))
-		# Based on the index, we tell it what column to drop from, and it spawns above.
-		added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32) + 8), -32)
-		update_bag_tiles.emit()
+		var grid_index = tiles_to_fill[i]
+		spawn_new_tile(grid_index)
 		await get_tree().create_timer(0.04).timeout
+		
 	rename_tiles()
 	word_from_tiles(letters_from_tiles)
 	update_bag_tiles.emit()
-	get_node("PlayButton").set_disabled(false)
 
 func rename_tiles():
 	for i in tile_grid.get_child_count():
@@ -486,3 +532,13 @@ func rename_tiles():
 	for i in tile_grid.get_child_count():
 		if not tile_grid.get_child(i).name == str("GridTile"+str(tile_grid.get_child(i).tile.grid_index)):
 			tile_grid.get_child(i).set_name(str("GridTile"+str(tile_grid.get_child(i).tile.grid_index)))
+			
+func calc_raw_word_score():
+	var letter_score = 0
+	var mult_score = 0
+	var raw_word_score = 0
+	for i in clicked_tile_array.size():
+		letter_score += clicked_tile_array[i].score_tile_quiet()
+		mult_score = mult_values[i]
+		raw_word_score = letter_score * mult_score
+	return raw_word_score

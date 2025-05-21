@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqjt02valdy3h"]
 
 [ext_resource type="Script" uid="uid://bb3rqno0akkdr" path="res://RELIC/relic_0.gd" id="1_g2roa"]
-[ext_resource type="Texture2D" uid="uid://bv14btkjpvew1" path="res://SPRITES/Relics.png" id="2_qrolw"]
+[ext_resource type="Texture2D" uid="uid://bhtpjsf0hlo4x" path="res://SPRITES/RELICS/Relics.png" id="2_qrolw"]
 
 [node name="relic_0" type="Control"]
 texture_filter = 1
@@ -12,6 +12,7 @@ offset_bottom = 32.0
 script = ExtResource("1_g2roa")
 
 [node name="Relic_Button" type="TextureButton" parent="."]
+layout_mode = 0
 offset_right = 32.0
 offset_bottom = 32.0
 

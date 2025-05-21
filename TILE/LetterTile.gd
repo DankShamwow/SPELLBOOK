@@ -1,3 +1,4 @@
+## LetterTile is a piece of data that defines what a tile's attributes are.
 class_name LetterTile
 extends Node2D
 
@@ -14,6 +15,7 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED}
 @export var grid_index: int
 @export var xth_letter_played: int
 @export var target: Vector2
+@export var temporary: bool
 
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
 	type = _type
@@ -24,3 +26,10 @@ func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterT
 	tile_index = _tile_index
 	return self
 	
+func generate_tile(_type, _letter, _notch1, _notch2, _notch3) -> LetterTile:
+	type = _type
+	letter = _letter
+	notch1 = _notch1
+	notch2 = _notch2
+	notch3 = _notch3
+	return self

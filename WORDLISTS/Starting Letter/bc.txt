@@ -1,4 +1,0 @@
-bcd
-bcf
-bch
-bchs

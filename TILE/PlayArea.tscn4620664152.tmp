@@ -1,0 +1,233 @@
+[gd_scene load_steps=13 format=3 uid="uid://b6y6pin36ci3a"]
+
+[ext_resource type="Script" uid="uid://vxaat8qahrnt" path="res://TILE/PlayArea.gd" id="1_7icpg"]
+[ext_resource type="Texture2D" uid="uid://dr5cl3kr8m0lj" path="res://SPRITES/TileGrid.png" id="2_71ry4"]
+[ext_resource type="Texture2D" uid="uid://bpbbgkfem8ghw" path="res://SPRITES/AttackButton.png" id="3_12lua"]
+[ext_resource type="Texture2D" uid="uid://rtabnxva3twx" path="res://SPRITES/ShuffleButton.png" id="4_jgciw"]
+[ext_resource type="Texture2D" uid="uid://cwhrs5vq2s7nb" path="res://SPRITES/DevButton.png" id="5_kna2x"]
+[ext_resource type="Texture2D" uid="uid://m7ubenfuulw" path="res://SPRITES/PauseButton.png" id="5_ngya2"]
+[ext_resource type="Texture2D" uid="uid://olyffrgm0x21" path="res://SPRITES/RelicButton.png" id="6_kna2x"]
+[ext_resource type="AudioStream" uid="uid://ujwwg2bw7xst" path="res://AUDIO/GOOD.ogg" id="8_7xumo"]
+[ext_resource type="AudioStream" uid="uid://cdgkmjcdnybfq" path="res://AUDIO/GREAT.ogg" id="9_h5lsd"]
+[ext_resource type="AudioStream" uid="uid://d00yt8ab1bj1n" path="res://AUDIO/EXCELLENT.ogg" id="10_5loyc"]
+[ext_resource type="AudioStream" uid="uid://dspgh8bhl5sjy" path="res://AUDIO/AMAZING.ogg" id="11_uar81"]
+[ext_resource type="AudioStream" uid="uid://4wn1hl0snedx" path="res://AUDIO/FANTASTIC.ogg" id="12_wpiv4"]
+
+[node name="PlayArea" type="Control" node_paths=PackedStringArray("tile_grid", "to_be_destroyed", "relics_collection")]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 496.0
+offset_top = 328.0
+offset_right = 640.0
+offset_bottom = 472.0
+scale = Vector2(2, 2)
+script = ExtResource("1_7icpg")
+tile_grid = NodePath("Grid_Area")
+to_be_destroyed = NodePath("ToKill")
+relics_collection = NodePath("RelicContainer")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("2_71ry4")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="GridContainer" type="GridContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="GuidePoints" type="Node2D" parent="."]
+visible = false
+
+[node name="Column1Drop" type="Marker2D" parent="GuidePoints"]
+position = Vector2(8, -32)
+
+[node name="TileBagStartPoint" type="Marker2D" parent="GuidePoints"]
+position = Vector2(360, -164)
+
+[node name="RelicBarStartPoint" type="Marker2D" parent="GuidePoints"]
+position = Vector2(-216, -132)
+
+[node name="Column1Drop2" type="Marker2D" parent="GuidePoints"]
+visible = false
+position = Vector2(8, 156)
+
+[node name="Column2Drop" type="Marker2D" parent="GuidePoints"]
+visible = false
+position = Vector2(40, -32)
+
+[node name="Column3Drop" type="Marker2D" parent="GuidePoints"]
+visible = false
+position = Vector2(72, -32)
+
+[node name="Column4Drop" type="Marker2D" parent="GuidePoints"]
+visible = false
+position = Vector2(104, -32)
+
+[node name="Index0" type="Marker2D" parent="GuidePoints"]
+position = Vector2(8, 8)
+
+[node name="Index1" type="Marker2D" parent="GuidePoints"]
+position = Vector2(40, 8)
+
+[node name="Index2" type="Marker2D" parent="GuidePoints"]
+position = Vector2(72, 8)
+
+[node name="Index3" type="Marker2D" parent="GuidePoints"]
+position = Vector2(104, 8)
+
+[node name="Index4" type="Marker2D" parent="GuidePoints"]
+position = Vector2(8, 40)
+
+[node name="Index5" type="Marker2D" parent="GuidePoints"]
+position = Vector2(40, 40)
+
+[node name="Index6" type="Marker2D" parent="GuidePoints"]
+position = Vector2(72, 40)
+
+[node name="Index7" type="Marker2D" parent="GuidePoints"]
+position = Vector2(104, 40)
+
+[node name="Index8" type="Marker2D" parent="GuidePoints"]
+position = Vector2(8, 72)
+
+[node name="Index9" type="Marker2D" parent="GuidePoints"]
+position = Vector2(40, 72)
+
+[node name="Index10" type="Marker2D" parent="GuidePoints"]
+position = Vector2(72, 72)
+
+[node name="Index11" type="Marker2D" parent="GuidePoints"]
+position = Vector2(104, 72)
+
+[node name="Index12" type="Marker2D" parent="GuidePoints"]
+position = Vector2(8, 104)
+
+[node name="Index13" type="Marker2D" parent="GuidePoints"]
+position = Vector2(40, 104)
+
+[node name="Index14" type="Marker2D" parent="GuidePoints"]
+position = Vector2(72, 104)
+
+[node name="Index15" type="Marker2D" parent="GuidePoints"]
+position = Vector2(104, 104)
+
+[node name="Grid_Area" type="Node2D" parent="."]
+z_as_relative = false
+
+[node name="ToKill" type="Node2D" parent="."]
+
+[node name="RelicContainer" type="Node2D" parent="."]
+
+[node name="PlayButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 8.0
+offset_top = 148.0
+offset_right = 136.0
+offset_bottom = 188.0
+disabled = true
+texture_normal = ExtResource("3_12lua")
+
+[node name="ShuffleButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = -120.0
+offset_top = 156.0
+offset_right = -24.0
+offset_bottom = 180.0
+texture_normal = ExtResource("4_jgciw")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="TestButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = -184.0
+offset_top = 64.0
+offset_right = -88.0
+offset_bottom = 88.0
+texture_normal = ExtResource("5_kna2x")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RelicButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 232.0
+offset_top = 64.0
+offset_right = 328.0
+offset_bottom = 88.0
+texture_normal = ExtResource("6_kna2x")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="PauseButton" type="TextureButton" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_left = 168.0
+offset_top = 156.0
+offset_right = 264.0
+offset_bottom = 180.0
+texture_normal = ExtResource("5_ngya2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="WordLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -132.0
+offset_right = 168.0
+offset_bottom = -109.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -36.0
+offset_right = 168.0
+offset_bottom = -13.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Good" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_7xumo")
+
+[node name="Great" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_h5lsd")
+
+[node name="Excellent" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_5loyc")
+
+[node name="Amazing" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_uar81")
+
+[node name="Fantastic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_wpiv4")
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]
+[connection signal="pressed" from="TestButton" to="." method="_on_test_button_pressed"]
+[connection signal="pressed" from="RelicButton" to="." method="_on_relic_button_pressed"]

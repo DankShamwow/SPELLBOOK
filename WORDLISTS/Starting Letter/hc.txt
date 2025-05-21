@@ -1,4 +1,0 @@
-hcb
-hcf
-hcl
-hconvert

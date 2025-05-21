@@ -1,0 +1,70 @@
+[gd_scene load_steps=7 format=3 uid="uid://bvh04nepjjv6e"]
+
+[ext_resource type="Script" uid="uid://co8j42sdeocbd" path="res://AttackMaker.gd" id="1_o581r"]
+[ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="3_sw5ai"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q67d8"]
+atlas = ExtResource("3_sw5ai")
+region = Rect2(0, 48, 96, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xp2i"]
+atlas = ExtResource("3_sw5ai")
+region = Rect2(192, 48, 96, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l7n2q"]
+atlas = ExtResource("3_sw5ai")
+region = Rect2(96, 48, 96, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qsvx"]
+atlas = ExtResource("3_sw5ai")
+region = Rect2(288, 48, 96, 24)
+
+[node name="AttackMaker" type="Control" node_paths=PackedStringArray("word_origin", "attack_list")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o581r")
+word_origin = NodePath("WordOrigin")
+attack_list = NodePath("ScrollContainer/VBoxContainer")
+
+[node name="LineEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 64.0
+offset_right = 1152.0
+offset_bottom = 128.0
+placeholder_text = "Write the word for the attack here!"
+keep_editing_on_text_submit = true
+
+[node name="WordOrigin" type="Node2D" parent="."]
+position = Vector2(640, 384)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 192.0
+offset_right = 1088.0
+offset_bottom = 640.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="TestButton" type="TextureButton" parent="."]
+texture_filter = 1
+offset_left = 128.0
+offset_top = 640.0
+offset_right = 384.0
+offset_bottom = 704.0
+texture_normal = SubResource("AtlasTexture_q67d8")
+texture_pressed = SubResource("AtlasTexture_4xp2i")
+texture_hover = SubResource("AtlasTexture_l7n2q")
+texture_disabled = SubResource("AtlasTexture_7qsvx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[connection signal="text_submitted" from="LineEdit" to="." method="_on_attack_word_submitted"]
+[connection signal="pressed" from="TestButton" to="." method="_on_export_button_pressed"]

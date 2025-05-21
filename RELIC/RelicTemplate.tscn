@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://ifhu6rkqu4wv"]
+
+[ext_resource type="Script" uid="uid://bah4qjng46cp3" path="res://RELIC/RelicTemplate.gd" id="1_n7jyl"]
+[ext_resource type="Texture2D" uid="uid://dd71a8v5w7204" path="res://SPRITES/CART_CHOW.png" id="2_o58pv"]
+
+[node name="RelicTemplate" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("1_n7jyl")
+
+[node name="Relic_Button" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[node name="Relic_Sprite" type="Sprite2D" parent="Relic_Button"]
+position = Vector2(16, 16)
+texture = ExtResource("2_o58pv")
+vframes = 2
+
+[node name="Relic_Mask" type="Sprite2D" parent="Relic_Button"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(16, 16)
+texture = ExtResource("2_o58pv")
+vframes = 2
+frame = 1

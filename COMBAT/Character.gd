@@ -1,0 +1,2 @@
+extends GameEntity
+class_name Character

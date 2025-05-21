@@ -1,3 +1,0 @@
-bpi
-bps
-bpt

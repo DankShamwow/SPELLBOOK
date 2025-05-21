@@ -8,18 +8,24 @@ signal relic_clicked(which: Relic, action: RelicAction)
 
 var original_z = self.z_index
 
-enum RelicAction {
-	FIDGET, VIEW
-}
+enum RelicAction {FIDGET, VIEW}
+enum RelicRarity {COMMON, UNCOMMON, RARE, BOSS, EVENT, CURSE, UNDEFINED}
 
 func _ready():
 	get_relic_name()
+	get_relic_rarity()
 	get_relic_description()
+	get_relic_flavor_text()
 	get_relic_sprite()
-
+	$Relic_Button.mouse_entered.connect(self._on_relic_button_mouse_entered)
+	$Relic_Button.mouse_exited.connect(self._on_relic_button_mouse_exited)
+	$Relic_Button.gui_input.connect(self._on_relic_button_gui_input)
+	self.pivot_offset = Vector2(16, 16)
+	
 ## Juicifier for when you hover the relic
 func _on_relic_button_mouse_entered():
 	#print("I've been entered!")
+	original_z = self.z_index
 	self.scale = Vector2(1.1, 1.1)
 	self.z_index = 128
 	relic_hovered.emit(self, true)
@@ -87,8 +93,14 @@ func word_retrigger_effect(_word):
 
 func get_relic_name():
 	return ""
+
+func get_relic_rarity():
+	return RelicRarity.UNDEFINED
 	
 func get_relic_description():
+	return ""
+	
+func get_relic_flavor_text():
 	return ""
 	
 func get_relic_sprite():

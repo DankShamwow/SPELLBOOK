@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+*.import
+*.aup3
+*.uid
+/WORDLISTS/STANDARD

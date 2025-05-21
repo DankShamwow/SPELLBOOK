@@ -4,6 +4,10 @@ class_name GridTile
 @onready var tile: LetterTile
 @onready var sprite = $Tile_Button/Tile_Sprite
 
+var tiles_in_play = GeneralManager.tiles_in_play
+var buffered_tiles = GeneralManager.buffered_tiles
+var available_tiles = GeneralManager.available_tiles
+
 var original_z = self.z_index
 
 enum GridTileAction {
@@ -12,20 +16,22 @@ enum GridTileAction {
 
 var point_values  	= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
+var bag_open = false
+
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
 
-func _make_custom_tooltip(_for_text: String) -> Object:
-	var tooltip_scene: PackedScene = load("res://TILE/TileTooltip.tscn")
-	var tile_tooltip: VBoxContainer = tooltip_scene.instantiate()
-	tile_tooltip.id_box.get_child(0).text = "Letter Tile"
-	tile_tooltip.type_box.get_child(1).text = str(tile.TileType.keys()[tile.type]).to_pascal_case()
-	tile_tooltip.letter_box.get_child(1).text = str(tile.TileLetter.keys()[tile.letter]).to_pascal_case()
-	tile_tooltip.notch1_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch1]).to_pascal_case()
-	tile_tooltip.notch2_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch2]).to_pascal_case()
-	tile_tooltip.notch3_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch3]).to_pascal_case()
-	tile_tooltip.tile_index_box.get_child(1).text = str(tile.tile_index)
-	return tile_tooltip
+#func _make_custom_tooltip(_for_text: String) -> Object:
+	#var tooltip_scene: PackedScene = load("res://TILE/TileTooltip.tscn")
+	#var tile_tooltip: VBoxContainer = tooltip_scene.instantiate()
+	#tile_tooltip.id_box.get_child(0).text = "Letter Tile"
+	#tile_tooltip.type_box.get_child(1).text = str(tile.TileType.keys()[tile.type]).to_pascal_case()
+	#tile_tooltip.letter_box.get_child(1).text = str(tile.TileLetter.keys()[tile.letter]).to_pascal_case()
+	#tile_tooltip.notch1_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch1]).to_pascal_case()
+	#tile_tooltip.notch2_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch2]).to_pascal_case()
+	#tile_tooltip.notch3_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch3]).to_pascal_case()
+	#tile_tooltip.tile_index_box.get_child(1).text = str(tile.tile_index)
+	#return tile_tooltip
 
 func _ready():
 	## For testing purposes only
@@ -72,8 +78,9 @@ func _on_tile_button_gui_input(event: InputEvent):
 
 func _on_tile_button_mouse_entered():
 	#print("I've been entered!")
+	original_z = self.z_index
 	self.scale = Vector2(1.1, 1.1)
-	self.z_index = 128
+	self.z_index = 1024
 	tile_hovered.emit(self, true)
 
 func _on_tile_button_mouse_exited():
@@ -82,11 +89,33 @@ func _on_tile_button_mouse_exited():
 	self.z_index = original_z
 	tile_hovered.emit(self, false)
 
+func spawned_in():
+	var tween = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.000001)
+	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.1)
+
+func spawned_from_bag():
+	var tween = get_tree().create_tween()
+	var tween2 = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.000001)
+	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.05)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.000001)
+	tween2.tween_property(sprite, "scale", Vector2(1, 1), 0.05)
+
 func is_dying():
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.5)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.5)
+	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.25)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.25)
+	
+func is_being_bagged():
+	var tween = get_tree().create_tween()
+	var tween2 = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 0), 0.25)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.05)
+	
+	await get_tree().create_timer(0.25).timeout
+	self.queue_free()
 	
 func scale_to_word_size(scaling_factor):
 	var tween = get_tree().create_tween()
@@ -102,27 +131,38 @@ func score_tile():
 	if self.tile.type == 0 or self.tile.type == 2:
 		letter_score += point_values[self.tile.letter]
 		juice_score()
-		return letter_score
 
-		
 	elif self.tile.type == 1:
 		letter_score += 0
 		juice_score()
-		return letter_score
-
-
+		
 	elif self.tile.type == 3:
 		letter_score += point_values[self.tile.letter]
 		juice_score()
-		return letter_score
-
-	
+		
 	elif self.tile.type == 4:
 		letter_score += point_values[self.tile.letter] - 1
 		if letter_score == 0:
 			letter_score += 1
 		juice_score()
-		return letter_score
+
+	return letter_score
+
+func score_tile_quiet():
+	var letter_score = 0
+	if self.tile.type == 0 or self.tile.type == 2:
+		letter_score += point_values[self.tile.letter]
+
+	elif self.tile.type == 1:
+		letter_score += 0
+		
+	elif self.tile.type == 3:
+		letter_score += point_values[self.tile.letter]
+		
+	elif self.tile.type == 4:
+		letter_score += point_values[self.tile.letter] - 1
+		if letter_score == 0:
+			letter_score += 1
 
 	return letter_score
 
