@@ -26,14 +26,14 @@ func _ready():
 func _on_relic_button_mouse_entered():
 	#print("I've been entered!")
 	original_z = self.z_index
-	self.scale = Vector2(1.1, 1.1)
+	self.scale = self.scale * 1.1
 	self.z_index = 128
 	relic_hovered.emit(self, true)
 
 ## Juicifier for when you unhover the relic
 func _on_relic_button_mouse_exited():
 	#print("I've been exited!")
-	self.scale = Vector2(1, 1)
+	self.scale = self.scale / 1.1
 	self.z_index = original_z
 	relic_hovered.emit(self, false)
 
@@ -50,12 +50,13 @@ func _on_relic_button_gui_input(event: InputEvent):
 				self, RelicAction.VIEW
 			)
 
-func juice_relic():
+func juice_relic(): 
+	var current_size = Vector2(1, 1)
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(self.scale.x*1.3, self.scale.y*1.3), 0.02)
+	tween.tween_property(sprite, "scale", self.scale * 1.05, 0.005)
 	tween2.tween_property($Relic_Button/Relic_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property(sprite, "scale", Vector2(1, 1), 0.1)
+	tween.tween_property(sprite, "scale", current_size, 0.1)
 	tween2.tween_property($Relic_Button/Relic_Mask, "modulate:a", 0, 0.01)
 
 # Everything below here pertains to individual relics.

@@ -1,0 +1,73 @@
+extends PanelContainer
+class_name TileTooltip
+
+@export var fade_seconds := 0.2
+
+@onready var tile_tooltip_header: 				RichTextLabel = %TileTooltipHeader
+ 
+@onready var tile_type_icon: 					TextureRect = %TileTypeSprite
+@onready var tile_letters_icon: 				TextureRect = %TileLettersSprite
+@onready var notch_1_icon: 						TextureRect = %Notch1Sprite
+@onready var notch_2_icon: 						TextureRect = %Notch2Sprite
+@onready var notch_3_icon: 						TextureRect = %Notch3Sprite
+
+@onready var tile_type_text: 					RichTextLabel = %TileTypeText
+@onready var tile_letters_text: 				RichTextLabel = %TileLettersText
+@onready var notch_1_text: 						RichTextLabel = %Notch1Text
+@onready var notch_2_text: 						RichTextLabel = %Notch2Text
+@onready var notch_3_text: 						RichTextLabel = %Notch3Text
+
+var tween: Tween
+var is_visible := false
+
+func _ready() -> void:
+	modulate = Color.TRANSPARENT
+	hide()
+	
+func _show_tooltip(which: GridTile) -> void:
+	is_visible = true
+	if tween:
+		tween.kill()
+
+	tile_type_icon.texture.region = Rect2(20*which.tile.type, 0, 20, 20)
+	tile_letters_icon.texture.region = Rect2(20*which.tile.letter, 0, 20, 20)
+	notch_1_icon.texture.region = Rect2(120, 0, 20, 20)
+	notch_2_icon.texture.region = Rect2(140, 0, 20, 20)
+	notch_3_icon.texture.region = Rect2(160, 0, 20, 20)
+	
+	tile_tooltip_header.text = "Letter Tile"
+	
+	tile_type_text.text = str("Type: " + str(which.tile.TileType.keys()[which.tile.type]).to_pascal_case())
+	
+	var current_letters_text = str('Letter: "' + str(which.tile.TileLetter.keys()[which.tile.letter]).to_pascal_case()) + '"'
+	if not which.tile.bonus_letter1 == "":
+		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter1) + '"'
+	if not which.tile.bonus_letter2 == "":
+		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter2) + '"'
+	if not which.tile.bonus_letter3 == "":
+		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter3) + '"'
+	
+	tile_letters_text.text = current_letters_text
+
+	notch_1_text.text = str("Notch 1: " + str(which.tile.NotchTypes.keys()[which.tile.notch1]).to_pascal_case())
+	notch_2_text.text = str("Notch 2: " + str(which.tile.NotchTypes.keys()[which.tile.notch2]).to_pascal_case())
+	notch_3_text.text = str("Notch 3: " + str(which.tile.NotchTypes.keys()[which.tile.notch3]).to_pascal_case())
+
+	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_callback(show)
+	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
+	
+func _hide_tooltip() -> void:
+	is_visible = false
+	if tween:
+		tween.kill()
+		
+	get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+	
+func hide_animation() -> void:
+	if not is_visible:
+		tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(self, "modulate", Color.TRANSPARENT, fade_seconds)
+		tween.tween_callback(hide)
+	else:
+		pass

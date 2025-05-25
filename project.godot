@@ -20,12 +20,15 @@ config/icon="res://icon.svg"
 StartingTiles="*res://TILE/StartingTiles.gd"
 GeneralManager="*res://GENERAL/GeneralManager.gd"
 WordListManager="*res://WORDLISTS/WordListManager.gd"
-StartingTiles2="*res://TILE/StartingTiles2.gd"
+RandomStartingTiles="*res://TILE/RandomStartingTiles.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="integer"
 
 [file_customization]
 
@@ -38,3 +41,11 @@ folder_colors={
 "res://TILE/": "orange",
 "res://WORDLISTS/": "green"
 }
+
+[gui]
+
+theme/custom_font="uid://dbl8tpudhrqen"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

@@ -4,18 +4,30 @@ extends Node2D
 
 enum TileType {BASIC, STONED, LOCKED, BURNING, PLAGUED, CRUMBLING}
 enum TileLetter {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}
-enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED}
+enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
 
 @export var type: TileType
 @export var letter: TileLetter
+@export var bonus_letter1 := ""
+@export var bonus_letter2 := ""
+@export var bonus_letter3 := ""
 @export var notch1: NotchTypes
 @export var notch2: NotchTypes
 @export var notch3: NotchTypes
 @export var tile_index: int
 @export var grid_index: int
-@export var xth_letter_played: int
+@export var xth_letter_played: int # Do I even need to keep this in a place so deep into things?
 @export var target: Vector2
-@export var temporary: bool
+@export var is_friendly := true
+@export var is_temporary := false
+
+# Notch-specific Flagging
+
+# echoNUM determines if a tile has Echoed this draw
+var echo1 := true
+var echo2 := true
+var echo3 := true
+var echoed_this_word := false
 
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
 	type = _type
@@ -26,10 +38,10 @@ func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterT
 	tile_index = _tile_index
 	return self
 	
-func generate_tile(_type, _letter, _notch1, _notch2, _notch3) -> LetterTile:
-	type = _type
-	letter = _letter
-	notch1 = _notch1
-	notch2 = _notch2
-	notch3 = _notch3
-	return self
+#func generate_tile(_type, _letter, _notch1, _notch2, _notch3) -> LetterTile:
+	#type = _type
+	#letter = _letter
+	#notch1 = _notch1
+	#notch2 = _notch2
+	#notch3 = _notch3
+	#return self

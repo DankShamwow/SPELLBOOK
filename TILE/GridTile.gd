@@ -7,14 +7,14 @@ class_name GridTile
 var tiles_in_play = GeneralManager.tiles_in_play
 var buffered_tiles = GeneralManager.buffered_tiles
 var available_tiles = GeneralManager.available_tiles
+var point_values  	= GeneralManager.point_values
+
 
 var original_z = self.z_index
 
 enum GridTileAction {
 	PLAY, VIEW
 }
-
-var point_values  	= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
 var bag_open = false
 
@@ -46,10 +46,22 @@ func _ready():
 	##This is the one we use outside of testing, at least when not testing the tile directly.
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
 	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 3))
-	#$Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(self.notch1, 4))
-	#$Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(self.notch2, 5))
-	#$Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(self.notch3, 6))
+	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
+	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
+	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
+	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
+
+func move_to_position(time:= 0.25):
+	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_QUINT)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", tile.target, time)
+	await get_tree().create_timer(time/2).timeout
+	return true
+
+func play_tile_sound():
+	if not $TileSoundAttempt3.is_playing():
+		$TileSoundAttempt3.play()
 
 func fade():
 	var tween = get_tree().create_tween()
@@ -63,29 +75,43 @@ func mark_buffer():
 	var tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(0.7, 0.3, 0.3, 0.7), 0.1)
 	
+func mark_destroyed():
+	var tween = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 1), 0.1)
+	
+func mark_vaporized():
+	var tween = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 1), 0.1)
+	
+func error_vision():
+	var tween = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(0, 0, 1, 1), 0.1)
+	
 func _on_tile_button_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			print("Left Clickety!")
+			play_tile_sound()
 			tile_clicked.emit(
 				self, GridTileAction.PLAY
 			)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			print("Right Clickety!")
+			play_tile_sound()
 			tile_clicked.emit(
-				self, GridTileAction.PLAY
+				self, GridTileAction.VIEW
 			)
 
 func _on_tile_button_mouse_entered():
 	#print("I've been entered!")
 	original_z = self.z_index
-	self.scale = Vector2(1.1, 1.1)
+	self.scale = self.scale * 1.1
 	self.z_index = 1024
 	tile_hovered.emit(self, true)
 
 func _on_tile_button_mouse_exited():
 	#print("I've been exited!")
-	self.scale = Vector2(1, 1)
+	self.scale = self.scale / 1.1
 	self.z_index = original_z
 	tile_hovered.emit(self, false)
 
@@ -105,8 +131,8 @@ func spawned_from_bag():
 func is_dying():
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.25)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.25)
+	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
 	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
@@ -128,23 +154,27 @@ func scale_back_to_grid():
 ## Function that handles the scoring of a tile.
 func score_tile():
 	var letter_score = 0
-	if self.tile.type == 0 or self.tile.type == 2:
+	if self.tile.type == LetterTile.TileType.BASIC or self.tile.type == LetterTile.TileType.LOCKED:
 		letter_score += point_values[self.tile.letter]
-		juice_score()
+		await juice_score()
 
-	elif self.tile.type == 1:
+	elif self.tile.type == LetterTile.TileType.STONED:
 		letter_score += 0
-		juice_score()
+		await juice_score()
 		
-	elif self.tile.type == 3:
+	elif self.tile.type == LetterTile.TileType.BURNING:
 		letter_score += point_values[self.tile.letter]
-		juice_score()
+		await juice_score()
 		
-	elif self.tile.type == 4:
+	elif self.tile.type == LetterTile.TileType.PLAGUED:
 		letter_score += point_values[self.tile.letter] - 1
 		if letter_score == 0:
 			letter_score += 1
-		juice_score()
+		await juice_score()
+
+	elif self.tile.type == LetterTile.TileType.CRUMBLING:
+		letter_score += point_values[self.tile.letter]
+		await juice_score()
 
 	return letter_score
 
@@ -167,13 +197,14 @@ func score_tile_quiet():
 	return letter_score
 
 func juice_score():
+	var current_size = self.scale
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(self.scale.x*1.2, self.scale.y*1.2), 0.1)
+	tween.tween_property(self, "scale", self.scale * 1.35, 0.1)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property(sprite, "scale", Vector2(self.scale.x/1.2, self.scale.y/1.2), 0.01)
+	tween.tween_property(self, "scale", current_size, 0.01)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
-
+	return true
 #set_tooltip_text("Letter Tile!\n 
 				  #Type: self.type\n 
 				  #Letter: self.letter\n 

@@ -1,0 +1,120 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnm2m6n8wfcxt"]
+
+[ext_resource type="Script" uid="uid://cv27xo6v0x8jn" path="res://COMBAT/GameEntity.gd" id="1_17bpw"]
+[ext_resource type="Texture2D" uid="uid://dukr586bs7ao4" path="res://SPRITES/ASEPRITE FILES/HealthBar.png" id="2_017la"]
+[ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="3_k6pca"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3gx1m"]
+atlas = ExtResource("2_017la")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3v7e"]
+atlas = ExtResource("2_017la")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iddio"]
+atlas = ExtResource("2_017la")
+region = Rect2(0, 20, 10, 10)
+
+[node name="GameEntity" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_17bpw")
+
+[node name="Entity_Button" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Entity_Sprite_Parts" type="Node2D" parent="Entity_Button"]
+
+[node name="Entity_Sprite" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+
+[node name="Entity_Mask" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+
+[node name="Entity_Border" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+
+[node name="EntityHealthBar" type="TextureProgressBar" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 128.0
+offset_top = 114.0
+offset_right = 176.0
+offset_bottom = 122.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 3
+stretch_margin_right = 3
+stretch_margin_bottom = 3
+texture_under = SubResource("AtlasTexture_3gx1m")
+texture_over = SubResource("AtlasTexture_m3v7e")
+texture_progress = SubResource("AtlasTexture_iddio")
+
+[node name="HealthBarLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 128.0
+offset_top = 114.0
+offset_right = 224.0
+offset_bottom = 130.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_k6pca")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlockLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = -8.0
+offset_right = 96.0
+offset_bottom = 8.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_k6pca")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TargetLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = -12.0
+offset_right = 96.0
+offset_bottom = 4.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_k6pca")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DataLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = 80.0
+offset_right = 96.0
+offset_bottom = 96.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_k6pca")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1

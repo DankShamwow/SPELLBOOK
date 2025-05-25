@@ -1,0 +1,6 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://cvdurvhk8f2l3"]
+
+[ext_resource type="FontFile" uid="uid://c6oujp2lydnk2" path="res://SPRITES/Spellbound.ttf" id="1_rbs1h"]
+
+[resource]
+base_font = ExtResource("1_rbs1h")

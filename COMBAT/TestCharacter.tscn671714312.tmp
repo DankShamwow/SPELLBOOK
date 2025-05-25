@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://bana3xn3p7bhq"]
+
+[ext_resource type="Script" uid="uid://bl22btmth1j5p" path="res://COMBAT/TestCharacter.gd" id="1_mpetk"]
+[ext_resource type="Texture2D" uid="uid://c22g72fcw7tru" path="res://SPRITES/COMBAT/SCRIPTWRITER.png" id="2_r3mwi"]
+[ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="3_qrq8c"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qrq8c"]
+atlas = ExtResource("2_r3mwi")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xjnqd"]
+atlas = ExtResource("2_r3mwi")
+region = Rect2(0, 96, 48, 48)
+
+[node name="TestCharacter" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1232.0
+offset_bottom = -672.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mpetk")
+
+[node name="Entity_Button" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+
+[node name="Entity_Sprite_Parts" type="Node2D" parent="Entity_Button"]
+texture_filter = 1
+position = Vector2(24, 24)
+
+[node name="Entity_Sprite" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+texture = SubResource("AtlasTexture_qrq8c")
+
+[node name="Entity_Mask" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+modulate = Color(1, 1, 1, 0)
+texture = SubResource("AtlasTexture_xjnqd")
+
+[node name="Entity_Border" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+modulate = Color(0, 0, 0, 1)
+texture = SubResource("AtlasTexture_xjnqd")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_top = 56.0
+offset_right = 48.0
+offset_bottom = 74.0
+theme_override_fonts/font = ExtResource("3_qrq8c")
+theme_override_font_sizes/font_size = 13
+allow_lesser = true

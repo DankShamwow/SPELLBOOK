@@ -55,6 +55,7 @@ layout_mode = 2
 
 [node name="TestButton" type="TextureButton" parent="."]
 texture_filter = 1
+layout_mode = 0
 offset_left = 128.0
 offset_top = 640.0
 offset_right = 384.0

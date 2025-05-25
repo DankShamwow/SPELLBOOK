@@ -1,9 +1,8 @@
 extends Node
 
-var current_scene = null
+var EnemyAttackCount = 3
 
-var tile: LetterTile
-var StartingTileArray = [
+var EnemyDeck = [
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.T, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 0),
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.E, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 1),
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.S, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 2),
@@ -20,4 +19,35 @@ LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.T, Le
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.I, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 13),
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.N, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 14),
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.G, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 15),
+]
+
+var EnemyAttack0 = [
+0,
+1,
+2,
+3,
+]
+
+var EnemyAttack1 = [
+4,
+5,
+6,
+7,
+8,
+]
+
+var EnemyAttack2 = [
+9,
+10,
+11,
+12,
+13,
+14,
+15,
+]
+
+var EnemyAttackList = [
+EnemyAttack0,
+EnemyAttack1,
+EnemyAttack2,
 ]

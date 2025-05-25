@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=5 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://gpp5u7s65rc0" path="res://TILE/GridTile.gd" id="1_34hk8"]
-[ext_resource type="Texture2D" uid="uid://dysw74du2p5vi" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
+[ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
 [ext_resource type="Texture2D" uid="uid://cbhs7wbjvvuwh" path="res://SPRITES/TILES/TileSpriteMask.png" id="3_l10u7"]
+[ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_l10u7"]
 
 [node name="GridTile" type="Control"]
 texture_filter = 1
@@ -25,27 +26,39 @@ position = Vector2(16, 16)
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_adt6t")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_adt6t")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 7
 
 [node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 7
 
 [node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_adt6t")
+hframes = 26
+vframes = 7
 
 [node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_adt6t")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_l10u7")
+
+[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_l10u7")
 
 [connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
 [connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]

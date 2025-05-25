@@ -1,8 +1,8 @@
 extends Control
 class_name PlayArea
 
+## filePath is the path to the wordlist file that will be used to check words.
 var filePath = "res://WORDLISTS/STANDARD/"
-
 
 ## current_deck is the list of LetterTiles in your deck.
 var current_deck = GeneralManager.current_deck
@@ -21,7 +21,7 @@ var buffered_tiles = GeneralManager.buffered_tiles
 var current_relics = GeneralManager.current_relics
 
 ## modified_wordlist is the list of words that has been added to by various Relics.
-var modified_wordlist 	= []
+var modified_wordlist 	:= []
 
 ## scored_letter_count is the sum total of the numbers that have been scored.
 var scored_letter_count = GeneralManager.scored_letter_count
@@ -29,36 +29,48 @@ var scored_letter_count = GeneralManager.scored_letter_count
 ## played_words_count is the sum total of the number of words that have been played.
 var played_words_count = GeneralManager.played_words_count
 
-## clicked_tile_array is a list of the GridTiles that have been clicked on.
-var clicked_tile_array = []
+## current_target is the last GameEntity that the player has clicked on for targeting.
+var current_target := GeneralManager.current_target
 
-## letters_from_tiles is a list of letters pulled from the GridTiles in clicked_tile_array
-var letters_from_tiles = PackedStringArray([])
-
-## word is the string that contains the word that we look up in the word lists.
-var word = ""
+## who_has_initiative is the GameEntity that currently has the initiative.
+var who_has_initiative := GeneralManager.who_has_initiative
 
 ## point_values determines the number of points that a letter scores for.
-var point_values  	= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
+var point_values  	:= GeneralManager.point_values
 
 ## mult_values determines the multiplier on the score based on the length of a word.
-var mult_values		= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 60, 80, 100]
+var mult_values		:= GeneralManager.mult_values
+
+## clicked_tile_array is a list of the GridTiles that have been clicked on.
+var clicked_tile_array := []
+
+## letters_from_tiles is a list of letters pulled from the GridTiles in clicked_tile_array
+var letters_from_tiles := PackedStringArray([])
+
+## word is the string that contains the word that we look up in the word lists.
+var word := ""
 
 ## possible_grid_positions lists all valid grid positions.
 ## If you're modding the game and you're seeing this, you're going to want to either increase the number of indeces here
 ## or rewrite the handling of this entirely. I did NOT want to make an item that increases the grid size, because
 ## it would completely fuck up the UI. You have been warned!!!
-var possible_grid_positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+var possible_grid_positions := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 ## bag_open determines if the Tile Bag is open or not.
-var bag_open = false
+var bag_open := false
 
 ## scoring_check determines if a word is currently being played. It prevents you from adding letters to a word while it's being played.
-var scoring_check = false
+var scoring_check := false
 
 @export var tile_scene: PackedScene = preload("res://TILE/LetterTile.tscn")
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GridTile.tscn")
 var relic_scene = preload("res://RELIC/Relic.gd")
+
+## attack_list is the VBoxContainer that contains all of an enemy's attacks. It loads the attacks of the current target.
+@export var attack_list: VBoxContainer
+
+## enemy_attack_container is the HBox container that contains the GridTiles that compose an enemy's attack.
+@export var enemy_attack_container: PackedScene = preload("res://h_box_container.tscn")
 
 ## bag_grid is the parent of all the tiles that spawn when you open the Tile Bag.
 @export var bag_grid: GridContainer
@@ -72,12 +84,30 @@ var relic_scene = preload("res://RELIC/Relic.gd")
 ## relics_collection is the parent of all relic nodes. Parent your relics to this.
 @export var relics_collection: Node2D
 
+## combatants is the parent of all GameEntity scenes. Parent characters and enemies to this.
+@export var combatants: Node2D
+
 var tiles: LetterTile
 var tile_slots: Array[GridTile]
 
 signal update_bag_tiles()
 signal update_buffered_tiles()
 signal disable_tile_bag(state)
+
+func _ready():
+	who_has_initiative = %TestCharacter
+	%TestCharacter.on_turn_start()
+	%TestCharacter.target_query()
+	%TestCharacter.update_buffered_tiles.connect(self._passthrough_function)
+	%TestEnemy.deal_damage_to_player.connect(self.deal_damage_to_player)
+	%TestEnemy.pass_turn.connect(self.pass_turn)
+	check_turn_status()
+
+func _passthrough_function():
+	update_buffered_tiles.emit()
+	
+func deal_damage_to_player(damage):
+	%TestCharacter.take_damage(damage)
 
 func spawn_new_tile(grid_index):
 	## added_tile is a GridTile with the data from a LetterTile
@@ -107,10 +137,7 @@ func spawn_new_tile(grid_index):
 	# Based on the index, we tell it what column to drop from, and it spawns above.
 	added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32) + 8), -32)
 	update_bag_tiles.emit()
-	
 
-## Instantiate each GridTile, pop a LetterTile from the available tile array, 
-## then give the data to our new Gridtile. We also give it a grid index.
 func _on_test_button_pressed():
 	get_node("TestButton").set_disabled(true)
 	
@@ -119,9 +146,6 @@ func _on_test_button_pressed():
 		spawn_new_tile(grid_index)
 		await get_tree().create_timer(0.04).timeout
 	
-	print(buffered_tiles.size())
-	print(available_tiles.size())
-	print(tiles_in_play.size())
 	get_node("TestButton").set_disabled(false)
 	
 func _on_relic_button_pressed():
@@ -138,13 +162,14 @@ func _on_relic_button_pressed():
 	get_node("RelicButton").set_disabled(false)
 	
 func _on_shuffle_button_pressed():
+	%TestCharacter.remove_energy(3)
 	update_buffered_tiles.emit()
-	get_node("ShuffleButton").set_disabled(true)
+	%ShuffleButton.set_disabled(true)
 	get_node("ScoreLabel").text = ""
 	tiles_in_play.clear()
 	letters_from_tiles.clear()
 	clicked_tile_array.clear()
-	word_from_tiles(letters_from_tiles)
+	check_turn_status()
 	
 	for i in tile_grid.get_child_count():
 		## tile_to_push is a GridTile that will be deleted.
@@ -165,11 +190,16 @@ func _on_shuffle_button_pressed():
 		update_bag_tiles.emit()
 		await get_tree().create_timer(0.04).timeout
 
-	get_node("ShuffleButton").set_disabled(false)
+	%ShuffleButton.set_disabled(false)
 	
 func _on_tile_bag_toggle(toggled_on):
 	bag_open = toggled_on
-	print(bag_open)
+	if toggled_on:
+		%ShuffleButton.set_disabled(true)
+		%PlayButton.set_disabled(true)
+	if not toggled_on:
+		%ShuffleButton.set_disabled(false)
+		word_from_tiles(letters_from_tiles)
 
 			# Vector2(((bag_tile.tile.tile_index % 10) * 32), ((floor(bag_tile.tile.tile_index / 10) * 32)))
 func _physics_process(delta):
@@ -229,98 +259,91 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 		which.scale_to_word_size(scaling_factor)
 
 func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
-	if scoring_check == false:
-		if bag_open == false:
-			print("This is working!")
+	if scoring_check == false and bag_open == false and %TestCharacter.has_initiative == true:
 			# If the clicked tile array does NOT have this tile, then add it to the array and do stuff.
-			if action == GridTile.GridTileAction.PLAY:
-				var first_tile = null
-				var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-				
-				if not clicked_tile_array.has(which):
-					$TileSound.play()
-					var clicked_tile = which
-					clicked_tile_array.append(clicked_tile)
-					letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
-					print(letters_from_tiles)
-					if clicked_tile_array.size() <= 6:
+		if action == GridTile.GridTileAction.PLAY:
+			var first_tile = null
+			var scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+			
+			if not clicked_tile_array.has(which):
+				$TileSound.play()
+				var clicked_tile = which
+				clicked_tile_array.append(clicked_tile)
+				letters_from_tiles.append(str(which.tile.TileLetter.keys()[which.tile.letter]).to_snake_case())
+				print(letters_from_tiles)
+				if clicked_tile_array.size() <= 6:
+					
+					# We need the first tile to be able to determine the positions of the rest of the tiles.
+					first_tile = clicked_tile_array.front()
+					first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19), -100) # Originally 20, change to 16?
+					var first_tile_x = first_tile.tile.target.x
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i), -100) # Originally 40, change to 32?
 						
-						# We need the first tile to be able to determine the positions of the rest of the tiles.
-						first_tile = clicked_tile_array.front()
+				elif clicked_tile_array.size() > 6:
+					scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+					first_tile = clicked_tile_array.front()
+					first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19)*scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
+					var first_tile_x = first_tile.tile.target.x
+					for i in clicked_tile_array.size():
+						clicked_tile_array[i].tile.target = Vector2((first_tile_x + (38 * i *scaling_factor)), -100) # Originally 40, change to 32?
+			
+			elif clicked_tile_array.has(which):
+				
+				# Get the tile we clicked on, then pop it from the arrays
+				var clicked_tile = which
+				
+				## popped_tile_index is the location of the tile that was just clicked on.
+				var popped_tile_index = clicked_tile_array.find(clicked_tile)
+				
+				letters_from_tiles.remove_at(popped_tile_index)
+				print(letters_from_tiles)
+				
+				## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
+				var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
+				popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
+				popped_tile.scale_back_to_grid()
+				
+				# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
+				if clicked_tile_array:
+					first_tile = clicked_tile_array.front()
+					if clicked_tile_array.size() > 6:
+						scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+						first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19) * scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
+						var first_tile_x = first_tile.tile.target.x
+						for i in clicked_tile_array.size():
+							clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i * scaling_factor), -100) # Originally 40, change to 32?
+					
+					elif clicked_tile_array.size() <= 6:
 						first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19), -100) # Originally 20, change to 16?
 						var first_tile_x = first_tile.tile.target.x
 						for i in clicked_tile_array.size():
 							clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i), -100) # Originally 40, change to 32?
-							
-					elif clicked_tile_array.size() > 6:
-						scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-						first_tile = clicked_tile_array.front()
-						first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19)*scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
-						var first_tile_x = first_tile.tile.target.x
-						for i in clicked_tile_array.size():
-							clicked_tile_array[i].tile.target = Vector2((first_tile_x + (38 * i *scaling_factor)), -100) # Originally 40, change to 32?
-				
-				elif clicked_tile_array.has(which):
-					
-					# Get the tile we clicked on, then pop it from the arrays
-					var clicked_tile = which
-					
-					## popped_tile_index is the location of the tile that was just clicked on.
-					var popped_tile_index = clicked_tile_array.find(clicked_tile)
-					
-					letters_from_tiles.remove_at(popped_tile_index)
-					print(letters_from_tiles)
-					
-					## popped_tile is a tile that was being used to form a word, but was clicked on and removed.
-					var popped_tile = clicked_tile_array.pop_at(clicked_tile_array.find(clicked_tile))
-					popped_tile.tile.target = Vector2((((popped_tile.tile.grid_index % 4) * 32) + 8),((floor(popped_tile.tile.grid_index / 4) * 32) + 8))
-					popped_tile.scale_back_to_grid()
-					
-					# Readjust tile goal positions based on the number of tiles in clicked_tiles_array
-					if clicked_tile_array:
-						first_tile = clicked_tile_array.front()
-						if clicked_tile_array.size() > 6:
-							scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
-							first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19) * scaling_factor, -100) # Originally 10 and 20, change to 8 and 16?
-							var first_tile_x = first_tile.tile.target.x
-							for i in clicked_tile_array.size():
-								clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i * scaling_factor), -100) # Originally 40, change to 32?
-						
-						elif clicked_tile_array.size() <= 6:
-							first_tile.tile.target = Vector2(56 - (19 * clicked_tile_array.size() - 19), -100) # Originally 20, change to 16?
-							var first_tile_x = first_tile.tile.target.x
-							for i in clicked_tile_array.size():
-								clicked_tile_array[i].tile.target = Vector2(first_tile_x + (38 * i), -100) # Originally 40, change to 32?
 
-				if clicked_tile_array.size() > 6:
-					scaling_factor = float(6.5 / (clicked_tile_array.size()+1))
-					print(scaling_factor)
-					for i in clicked_tile_array.size():
-						clicked_tile_array[i].scale_to_word_size(scaling_factor)
-				elif clicked_tile_array.size() <= 6:
-					print(scaling_factor)
-					scaling_factor = 1.0
-					for i in clicked_tile_array.size():
-						clicked_tile_array[i].scale_to_word_size(scaling_factor)
-				
+			if clicked_tile_array.size() > 6:
+				scaling_factor = float(7.0 / (clicked_tile_array.size()+1))
+				for i in clicked_tile_array.size():
+					clicked_tile_array[i].scale_to_word_size(scaling_factor)
+			elif clicked_tile_array.size() <= 6:
+				scaling_factor = 1.0
+				for i in clicked_tile_array.size():
+					clicked_tile_array[i].scale_to_word_size(scaling_factor)
+					
+		if %TestCharacter.current_energy > 0:
 			word_from_tiles(letters_from_tiles)
-		else:
-			pass
 	else:
 		pass
 
 func word_from_tiles(letters_from_tiles):
-	print("This is also working?")
 	word = "".join(letters_from_tiles)
 	print(word)
-	if word.length() >= 3:
+	if word.length() >= 3 and current_target is GameEntity:
 		
 		# Check the modified wordlist first, because it's faster.
 		if modified_wordlist.has(word):
 			
 			get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
-			print("Valid word found!")
-			get_node("PlayButton").set_disabled(false)
+			%PlayButton.set_disabled(false)
 			
 			var raw_word_score = calc_raw_word_score()
 			
@@ -331,18 +354,17 @@ func word_from_tiles(letters_from_tiles):
 				
 				if not line == word:
 					get_node("WordLabel").text = ""
-					get_node("PlayButton").set_disabled(true)
+					%PlayButton.set_disabled(true)
 				
 				if line == word:
 					get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
-					print("Valid word found!")
-					get_node("PlayButton").set_disabled(false)
+					%PlayButton.set_disabled(false)
 					list.close()
 	else:
 		get_node("WordLabel").text = ""
-		get_node("PlayButton").set_disabled(true)
+		%PlayButton.set_disabled(true)
 		
-	if not get_node("PlayButton").is_disabled():
+	if not %PlayButton.is_disabled():
 		var raw_word_score = calc_raw_word_score()
 		if raw_word_score >= 20 and raw_word_score < 50 and not $Good.is_playing():
 			$Good.play()
@@ -360,10 +382,15 @@ func word_from_tiles(letters_from_tiles):
 			$Fantastic.play()
 
 func _on_play_button_pressed():
+	if %TestCharacter.has_initiative and %TestCharacter.current_energy > 0:
+		score_word()
+	else:
+		pass_turn()
+
+func score_word():
 	scoring_check = true
-	get_node("PlayButton").set_disabled(true)
+	%PlayButton.set_disabled(true)
 	played_words_count += 1
-	
 	var points_score = 0
 	var mult_score = 0
 	var letter_score = 0
@@ -466,7 +493,6 @@ func _on_play_button_pressed():
 	for i in clicked_tile_array.size():
 		var last_letter = clicked_tile_array.pop_back()
 		buffered_tiles.append(last_letter.tile)
-		print(buffered_tiles.size())
 		last_letter.z_index = 120
 		last_letter.is_dying()
 		last_letter.tile.target = Vector2(340, -148)
@@ -476,7 +502,11 @@ func _on_play_button_pressed():
 	letters_from_tiles.clear()
 	word_from_tiles(letters_from_tiles)
 	move_tiles_into_place()
+	apply_score_to_target(total_score)
 	scoring_check = false
+	%TestCharacter.remove_energy(1)
+	check_turn_status()
+	print(%TestCharacter.current_energy)
 	await get_tree().create_timer(0.5).timeout
 	disable_tile_bag.emit(false)
 	
@@ -486,7 +516,6 @@ func move_tiles_into_place():
 		remaining_tiles.append(tile_grid.get_child(i).tile.grid_index)
 		var found_tile = tile_grid.get_child(i)
 		if found_tile.tile.grid_index < 12:
-			print(found_tile.tile.grid_index)
 			if found_tile.tile.grid_index < 4 && not remaining_tiles.has(found_tile.tile.grid_index + 4):
 				found_tile.tile.grid_index += 4
 				found_tile.tile.target = Vector2((((found_tile.tile.grid_index % 4) * 32) + 8),((floor(found_tile.tile.grid_index / 4) * 32) + 8))
@@ -520,6 +549,7 @@ func spawn_new_tiles(remaining_tiles):
 		
 	rename_tiles()
 	word_from_tiles(letters_from_tiles)
+	check_turn_status()
 	update_bag_tiles.emit()
 
 func rename_tiles():
@@ -542,3 +572,99 @@ func calc_raw_word_score():
 		mult_score = mult_values[i]
 		raw_word_score = letter_score * mult_score
 	return raw_word_score
+
+func apply_score_to_target(total_score):
+	print("Apply Score to Target: " + str(total_score))
+	for child in combatants.get_children():
+		if child is TestCharacter and child.is_target:
+			child.gain_block(total_score)
+			
+		if child is TestEnemy and child.is_target:
+			child.take_damage(total_score)
+
+func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) -> void:
+	print(current_target)
+	for child in combatants.get_children():
+		if child is TestCharacter or child is TestEnemy:
+			child.is_target = false
+
+	which.is_target = true
+
+	for child in combatants.get_children():
+		if child is TestCharacter or child is TestEnemy:
+			child.target_query()
+	
+	if which is Enemy:
+		for i in attack_list.get_child_count():
+			attack_list.get_child(i).queue_free()
+	
+		attack_list.add_spacer(true)
+		
+		for i in which.enemy_attack_list.size():
+			var new_attack = enemy_attack_container.instantiate()
+			attack_list.add_child(new_attack)
+			for j in which.enemy_attack_list[i].size():
+				var current_attack = which.enemy_attack_list[i]
+				var new_tile = grid_tile_scene.instantiate()
+				new_tile.tile = which.current_enemy_deck[current_attack[j]]
+				new_attack.add_child(new_tile)
+	
+	if which is not Enemy:
+		for i in attack_list.get_child_count():
+			attack_list.get_child(i).queue_free()
+	
+	current_target = which
+	check_turn_status()
+
+func pass_turn():
+	
+	# Perform end of turn procedures for whoever has the initiative:
+	who_has_initiative.on_turn_end()
+	
+	# Which GameEntity in the current combat has the initiative to take their turn?
+	var entity_number = who_has_initiative.get_index()
+
+	# Since we're passing the turn, we take that away from them
+	who_has_initiative.has_initiative = false
+	who_has_initiative = null
+
+	if entity_number + 1 < combatants.get_child_count():
+		# And give it to the sibling directly beneath them in the list.
+		combatants.get_child(entity_number + 1).has_initiative = true
+		who_has_initiative = combatants.get_child(entity_number + 1)
+		
+	# If they're at the bottom, we wrap around back to the top.
+	else:
+		combatants.get_child(0).has_initiative = true
+		who_has_initiative = combatants.get_child(0)
+	
+	who_has_initiative.on_turn_start()
+	check_turn_status()
+	
+func check_turn_status():
+	if %TestCharacter.is_target == false and %TestEnemy.is_target == false:
+		%PlayButton.texture_normal.region 	= Rect2(0.0, 80.0, 128.0, 40.0)
+		%PlayButton.texture_pressed.region 	= Rect2(256.0, 80.0, 128.0, 40.0)
+		%PlayButton.texture_hover.region 	= Rect2(128.0, 80.0, 128.0, 40.0)
+		%PlayButton.texture_disabled.region = Rect2(384.0, 80.0, 128.0, 40.0)
+	
+	elif %TestCharacter.current_energy <= 0:
+		%PlayButton.texture_normal.region 	= Rect2(0.0, 40.0, 128.0, 40.0)
+		%PlayButton.texture_pressed.region 	= Rect2(256.0, 40.0, 128.0, 40.0)
+		%PlayButton.texture_hover.region 	= Rect2(128.0, 40.0, 128.0, 40.0)
+		%PlayButton.texture_disabled.region = Rect2(384.0, 40.0, 128.0, 40.0)
+		%PlayButton.set_disabled(false)
+	
+	elif who_has_initiative is not TestCharacter:
+		%PlayButton.texture_normal.region 	= Rect2(0.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_pressed.region 	= Rect2(256.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_hover.region 	= Rect2(128.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_disabled.region = Rect2(384.0, 0.0, 128.0, 40.0)
+		%PlayButton.set_disabled(true)
+		
+	else: 
+		%PlayButton.texture_normal.region 	= Rect2(0.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_pressed.region 	= Rect2(256.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_hover.region 	= Rect2(128.0, 0.0, 128.0, 40.0)
+		%PlayButton.texture_disabled.region = Rect2(256.0, 0.0, 128.0, 40.0)
+		word_from_tiles(letters_from_tiles)

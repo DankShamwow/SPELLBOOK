@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cg20swu6v7qa7"]
 
 [ext_resource type="Script" uid="uid://6qch5jad6qt7" path="res://RELIC/Relic.gd" id="1_h6dk7"]
-[ext_resource type="Texture2D" uid="uid://bv14btkjpvew1" path="res://SPRITES/Relics.png" id="2_ct0xs"]
+[ext_resource type="Texture2D" uid="uid://bhtpjsf0hlo4x" path="res://SPRITES/RELICS/Relics.png" id="2_ct0xs"]
 
 [node name="Relic" type="Control"]
 layout_mode = 3

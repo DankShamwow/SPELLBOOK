@@ -22,11 +22,13 @@ func _on_attack_word_submitted(new_text: String):
 	%LineEdit.clear()
 	
 func _on_export_button_pressed():
-	var export = FileAccess.open("new_attack_export.gd", FileAccess.WRITE)
+	var export = FileAccess.open("res://COMBAT/new_enemy_deck.gd", FileAccess.WRITE)
 	export.store_line("extends Node")
 	export.store_line("")
+	export.store_line("var EnemyAttackCount = " + str(attack_list.get_child_count()))
+	export.store_line("")
+	export.store_line("var EnemyDeck = [")
 	for i in attack_list.get_child_count():
-		export.store_line("var EnemyAttack" + str(i) + " = [")
 		for j in attack_list.get_child(i).get_child_count():
 			var type 		= str(attack_list.get_child(i).get_child(j).tile.TileType.keys()[attack_list.get_child(i).get_child(j).tile.type])
 			var letter 		= str(attack_list.get_child(i).get_child(j).tile.TileLetter.keys()[attack_list.get_child(i).get_child(j).tile.letter])
@@ -35,5 +37,18 @@ func _on_export_button_pressed():
 			var notch3		= str(attack_list.get_child(i).get_child(j).tile.NotchTypes.keys()[attack_list.get_child(i).get_child(j).tile.notch3])
 			var tile_index 	= str(attack_list.get_child(i).get_child(j).tile.tile_index)
 			export.store_line("LetterTile.new().new_tile(" + "LetterTile.TileType." + type + ", " + "LetterTile.TileLetter." + letter + ", " + "LetterTile.NotchTypes." + notch1 + ", " + "LetterTile.NotchTypes." + notch2 + ", " + "LetterTile.NotchTypes." + notch3 + ", " + tile_index + ")" + ",")
+	export.store_line("]")
+	export.store_line("")
+	
+	for i in attack_list.get_child_count():
+		export.store_line("var EnemyAttack" + str(i) + " = [")
+		for j in attack_list.get_child(i).get_child_count():
+			var tile_index 	= str(attack_list.get_child(i).get_child(j).tile.tile_index)
+			export.store_line(tile_index + ",")
 		export.store_line("]")
 		export.store_line("")
+		
+	export.store_line("var EnemyAttackList = [")
+	for i in attack_list.get_child_count():
+		export.store_line(str("EnemyAttack" + str(i) + ","))
+	export.store_line("]")
