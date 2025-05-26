@@ -146,6 +146,14 @@ func _spawn_new_player_tile(grid_index: int):
 	added_tile.tile_clicked.connect(self._on_tile_clicked)
 	added_tile.tile_hovered.connect(self._is_tile_hovered)
 	
+	if added_tile.tile.notch1 == LetterTile.NotchTypes.ECHOING:
+		added_tile.tile.echo1 = true
+	if added_tile.tile.notch2 == LetterTile.NotchTypes.ECHOING:
+		added_tile.tile.echo2 = true
+	if added_tile.tile.notch3 == LetterTile.NotchTypes.ECHOING:
+		added_tile.tile.echo3 = true
+	
+	
 	# Set the tile's drop position as well as the target position after dropping
 	# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
 	added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 64.0) + 528.0), 288.0)
@@ -541,32 +549,49 @@ func _score_word():
 			tile_to_process.reparent(racked_tiles)
 			_send_back_to_grid(tile_to_process)
 		
-		# Crumbling.
-		elif tile_to_process.tile.type == LetterTile.TileType.CRUMBLING:
-			print("Crumbling!")
-			destroyed_tiles.append(tile_to_process.tile)
-			tile_to_process.reparent(tiles_to_kill)
-			tiles_in_play.remove_at(i)
-			tile_to_process.is_dying() # TODO: Replace with unique effect.
-		
-		# Deletion of temps.
-		elif tile_to_process.tile.is_temporary:
-			print("Scab!!!")
-			destroyed_tiles.append(tile_to_process.tile)
-			tile_to_process.reparent(tiles_to_kill)
-			tiles_in_play.remove_at(i)
-			tile_to_process.is_dying() # TODO: Replace with unique effect.
-		
 		# Vaporization.
 		elif tile_to_process.tile.notch1 == LetterTile.NotchTypes.VAPORIZING \
 		or tile_to_process.tile.notch2 == LetterTile.NotchTypes.VAPORIZING \
 		or tile_to_process.tile.notch3 == LetterTile.NotchTypes.VAPORIZING:
 			print("Vaporizing...")
 			vaporized_tiles.append(tile_to_process.tile)
+			tile_to_process.tile.no_buffer = true
+			tile_to_process.tile.vaporized = true
 			tile_to_process.reparent(tiles_to_kill)
 			#current_deck.remove_at(tile_to_process.tile.tile_index) # TODO: Figure out how to do this correctly.
 			tiles_in_play.remove_at(i)
 			tile_to_process.is_dying() # TODO: Replace with unique effect.
+		
+		# Deletion of temps.
+		elif tile_to_process.tile.is_temporary:
+			print("Scab!!!")
+			vaporized_tiles.append(tile_to_process.tile)
+			tile_to_process.tile.no_buffer = true
+			tile_to_process.tile.vaporized = true
+			tile_to_process.reparent(tiles_to_kill)
+			tiles_in_play.remove_at(i)
+			tile_to_process.is_dying() # TODO: Replace with unique effect.
+		
+		# Crumbling.
+		elif tile_to_process.tile.type == LetterTile.TileType.CRUMBLING:
+			print("Crumbling!")
+			destroyed_tiles.append(tile_to_process.tile)
+			tile_to_process.tile.no_buffer = true
+			tile_to_process.reparent(tiles_to_kill)
+			tiles_in_play.remove_at(i)
+			tile_to_process.is_dying() # TODO: Replace with unique effect.
+		
+		elif tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
+		or tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
+		or tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
+		and tile_to_process.tile.echo1 == false \
+		and tile_to_process.tile.echo2 == false \
+		and tile_to_process.tile.echo3 == false \
+		and tile_to_process.tile.no_buffer == false \
+		and tile_to_process.tile.vaporized == false:
+			tile_to_process.reparent(tiles_to_kill)
+			tile_to_process.tile.no_buffer = true
+			tiles_in_play.remove_at(i)
 		
 		else:
 			tile_to_process.reparent(tiles_to_kill)
@@ -580,16 +605,18 @@ func _cleanup(total_score):
 	for i in tiles_to_kill.get_child_count():
 		var last_letter = tiles_to_kill.get_child(i)
 		
+		# This is bad implementation, and might be the source of a bug.
 		if last_letter.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
 		or last_letter.tile.notch2 == LetterTile.NotchTypes.WEIGHTED \
 		or last_letter.tile.notch2 == LetterTile.NotchTypes.WEIGHTED \
 		and last_letter.tile.echo1 == false \
 		and last_letter.tile.echo2 == false \
 		and last_letter.tile.echo3 == false \
-		and not destroyed_tiles.has(last_letter.tile) or not vaporized_tiles.has(last_letter.tile):
+		and last_letter.tile.no_buffer == true \
+		and last_letter.tile.vaporized == false:
 			available_tiles.append(last_letter.tile)
 		
-		elif not destroyed_tiles.has(last_letter.tile) or not vaporized_tiles.has(last_letter.tile):
+		if last_letter.tile.no_buffer == false and last_letter.tile.vaporized == false:
 			buffered_tiles.append(last_letter.tile)
 
 		last_letter.z_index = 120
@@ -611,6 +638,7 @@ func _cleanup(total_score):
 	disable_tile_bag.emit(false)
 	
 func _move_tiles_into_place():
+	disable_tile_bag.emit(true)
 	var remaining_tiles = []
 	tiles_in_play.clear()
 	for i in racked_tiles.get_child_count():
@@ -663,6 +691,7 @@ func _move_tiles_into_place():
 	await get_tree().create_timer(0.01).timeout
 		
 	_spawn_replacement_tiles(remaining_tiles)
+	disable_tile_bag.emit(false)
 	
 func _spawn_replacement_tiles(remaining_tiles):
 	var tiles_to_fill = []
@@ -853,7 +882,8 @@ func _on_shuffle_button_pressed():
 			var tile_to_push_array = []
 		
 			## buffered_tiles is a list of the LetterTiles that are in the buffer area between played words and turns.
-			buffered_tiles.append(tile_to_push.tile)
+			if tiles_in_play.has(tile_to_push.tile):
+				buffered_tiles.append(tile_to_push.tile)
 			tile_to_push.tile.target = Vector2((((tile_to_push.tile.grid_index % 4) * 64.0) + 528.0), 642.0)
 			tile_to_push_array.append(tile_to_push)
 			tile_to_push.is_dying()
@@ -868,8 +898,7 @@ func _on_shuffle_button_pressed():
 			## tile_to_push_array is a list of tiles to push
 			var tile_to_push_array = []
 		
-			if not destroyed_tiles.has(tile_to_push.tile) or vaporized_tiles.has(tile_to_push.tile):
-				## buffered_tiles is a list of the LetterTiles that are in the buffer area between played words and turns.
+			if tile_to_push.tile.no_buffer == false:
 				buffered_tiles.append(tile_to_push.tile)
 				
 			tile_to_push.tile.target = Vector2((((tile_to_push.tile.grid_index % 4) * 64.0) + 528.0), 642.0)

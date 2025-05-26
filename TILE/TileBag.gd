@@ -48,8 +48,16 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 			if buffered_tiles.has(bag_tile.tile):
 				bag_tile.mark_buffer()
 
+			if destroyed_tiles.has(bag_tile.tile):
+				bag_tile.mark_destroyed()
+				
+			if vaporized_tiles.has(bag_tile.tile):
+				bag_tile.mark_vaporized()
+
 			if available_tiles.has(bag_tile.tile):
 				bag_tile.unfade()
+				
+			
 			
 	if toggled_on == false:
 		for i in bag_grid.get_child_count():

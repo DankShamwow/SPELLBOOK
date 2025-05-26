@@ -23,11 +23,16 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED,
 
 # Notch-specific Flagging
 
-# echoNUM determines if a tile has Echoed this draw
-var echo1 := true
-var echo2 := true
-var echo3 := true
+# echoNUM determines if a tile has Echoed this draw. True means that it has not.
+# Defaults to false for Weighted tiles. Flag is set to true when drawn if the
+# tile has the Echoing notch in the relevant slot.
+var echo1 := false
+var echo2 := false
+var echo3 := false
 var echoed_this_word := false
+
+var no_buffer := false
+var vaporized := false
 
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
 	type = _type

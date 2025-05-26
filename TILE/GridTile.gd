@@ -81,7 +81,7 @@ func mark_destroyed():
 	
 func mark_vaporized():
 	var tween = get_tree().create_tween()
-	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 1), 0.1)
+	tween.tween_property(sprite, "modulate", Color(0.2, 0.2, 0.2, 1), 0.1)
 	
 func error_vision():
 	var tween = get_tree().create_tween()

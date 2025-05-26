@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://bgn1buqfnev83"]
 
-[ext_resource type="Script" uid="uid://3ppt6o3qt407" path="res://COMBAT/TestEnemy.gd" id="1_fptij"]
-[ext_resource type="Texture2D" uid="uid://dd6aq4nvmwgm0" path="res://SPRITES/COMBAT/TestingSham.png" id="2_7hqk6"]
-[ext_resource type="Texture2D" uid="uid://dukr586bs7ao4" path="res://SPRITES/ASEPRITE FILES/HealthBar.png" id="3_3do4e"]
-[ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="4_twcpo"]
-[ext_resource type="Script" uid="uid://cp2wxleim8dg4" path="res://COMBAT/test_enemy_attacks.gd" id="5_twcpo"]
+[ext_resource type="Script" uid="uid://clf772oulo62b" path="res://COMBAT/TestEnemy.gd" id="1_fptij"]
+[ext_resource type="Texture2D" uid="uid://b1fwkvxgx2oig" path="res://SPRITES/COMBAT/TestingSham.png" id="2_7hqk6"]
+[ext_resource type="Texture2D" uid="uid://kpn8q7dobg5v" path="res://SPRITES/GUI/HealthBar.png" id="3_3do4e"]
+[ext_resource type="FontFile" uid="uid://ckbmj0q201iqa" path="res://SPRITES/Spellbound Revamped.ttf" id="4_twcpo"]
+[ext_resource type="Script" uid="uid://c0t7i152rv18y" path="res://COMBAT/test_enemy_attacks.gd" id="5_twcpo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fpio6"]
 atlas = ExtResource("2_7hqk6")

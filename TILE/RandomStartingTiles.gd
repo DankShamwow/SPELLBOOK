@@ -39,7 +39,7 @@ func _randomize_start_tiles():
 		var random_notch1 = randi() % 11
 		var random_notch2 = randi() % 11
 		var random_notch3 = randi() % 11
-		var tile_index = i + 25
+		var tile_index = StartingTileArray.size()
 		
 		if random_notch1 == 5 or random_notch2 == 5 or random_notch3 == 5:
 			random_tile_type = 0
