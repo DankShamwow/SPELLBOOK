@@ -24,6 +24,7 @@ hframes = 10
 vframes = 2
 
 [node name="Relic_Mask" type="Sprite2D" parent="Relic_Button"]
+modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("2_ct0xs")

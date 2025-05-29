@@ -37,6 +37,9 @@ var scored_letter_count = 0
 ## played_words_count is the sum total of the number of words that have been played.
 var played_words_count 	= 0
 
+## current_character is the player's character; this should NEVER be unloaded once instantiated.
+var current_character = null
+
 ## current_target is the last GameEntity that the player has clicked on for targeting.
 var current_target: GameEntity
 
@@ -49,6 +52,20 @@ var point_values  	:= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1,
 ## mult_values determines the multiplier on the score based on the length of a word.
 var mult_values		:= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 60, 80, 100]
 
+## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
+var word_list := {}
+
+var text_file_path = "res://WORDLISTS/words_alpha.txt"
+
 func rearrange_deck_tiles():
 	for i in current_deck.size():
 		current_deck[i].tile_index = i
+
+func prepare_word_dict():
+	var file = FileAccess.open(text_file_path, FileAccess.READ)
+	while file.get_position() < file.get_length():
+		var filter = file.get_line()
+		if filter.length() >= 3:
+			var filter_pass = str(filter[0] + filter[0] + filter[0])
+			if not filter == filter_pass:
+				word_list[str(filter)] = true

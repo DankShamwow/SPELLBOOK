@@ -44,6 +44,11 @@ content_margin_bottom = 0.0
 [resource]
 default_font = ExtResource("1_4n2gt")
 default_font_size = 13
+Label/colors/font_shadow_color = Color(0, 0, 0, 1)
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/constants/shadow_outline_size = 3
+Label/fonts/font = ExtResource("1_4n2gt")
 PanelContainer/font_sizes/Font = 16
 PanelContainer/fonts/Font = ExtResource("1_4n2gt")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_4n2gt")

@@ -1,9 +1,36 @@
-[gd_scene load_steps=5 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=8 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://gpp5u7s65rc0" path="res://TILE/GridTile.gd" id="1_34hk8"]
 [ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
 [ext_resource type="Texture2D" uid="uid://cbhs7wbjvvuwh" path="res://SPRITES/TILES/TileSpriteMask.png" id="3_l10u7"]
 [ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_l10u7"]
+
+[sub_resource type="Animation" id="Animation_l10u7"]
+resource_name = "ChangeToNewType"
+length = 0.125
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../..")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"update_tile_graphics"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_bq3va"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bq3va"]
+_data = {
+&"ChangeToNewType": SubResource("Animation_l10u7"),
+&"RESET": SubResource("Animation_bq3va")
+}
 
 [node name="GridTile" type="Control"]
 texture_filter = 1
@@ -56,6 +83,11 @@ vframes = 7
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_l10u7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Tile_Button/Tile_Sprite"]
+libraries = {
+&"": SubResource("AnimationLibrary_bq3va")
+}
 
 [node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_l10u7")

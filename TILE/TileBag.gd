@@ -57,8 +57,6 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 			if available_tiles.has(bag_tile.tile):
 				bag_tile.unfade()
 				
-			
-			
 	if toggled_on == false:
 		for i in bag_grid.get_child_count():
 			var tile_to_bag = bag_list.pop_back()
@@ -70,12 +68,12 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 
 func _on_update_bag_tiles() -> void:
 	#print("Emission Received!")
-	print(current_combat_deck.size())
-	print(buffered_tiles.size())
-	print(destroyed_tiles.size())
-	print(vaporized_tiles.size())
-	print(available_tiles.size())
-	print(tiles_in_play.size())
+	#print(current_combat_deck.size())
+	#print(buffered_tiles.size())
+	#print(destroyed_tiles.size())
+	#print(vaporized_tiles.size())
+	#print(available_tiles.size())
+	#print(tiles_in_play.size())
 	
 	for i in current_combat_deck.size():
 		if tiles_in_play.has(current_combat_deck[i]):
@@ -107,8 +105,6 @@ func _on_update_bag_tiles() -> void:
 			var tile_index = current_combat_deck[i].tile_index
 			if %TileBagButton.is_pressed():
 				bag_grid.get_child(tile_index).error_vision()
-
-
 
 func _on_update_buffered_tiles() -> void:
 	for i in buffered_tiles.size():

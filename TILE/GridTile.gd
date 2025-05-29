@@ -9,7 +9,6 @@ var buffered_tiles = GeneralManager.buffered_tiles
 var available_tiles = GeneralManager.available_tiles
 var point_values  	= GeneralManager.point_values
 
-
 var original_z = self.z_index
 
 enum GridTileAction {
@@ -21,19 +20,15 @@ var bag_open = false
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
 
-#func _make_custom_tooltip(_for_text: String) -> Object:
-	#var tooltip_scene: PackedScene = load("res://TILE/TileTooltip.tscn")
-	#var tile_tooltip: VBoxContainer = tooltip_scene.instantiate()
-	#tile_tooltip.id_box.get_child(0).text = "Letter Tile"
-	#tile_tooltip.type_box.get_child(1).text = str(tile.TileType.keys()[tile.type]).to_pascal_case()
-	#tile_tooltip.letter_box.get_child(1).text = str(tile.TileLetter.keys()[tile.letter]).to_pascal_case()
-	#tile_tooltip.notch1_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch1]).to_pascal_case()
-	#tile_tooltip.notch2_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch2]).to_pascal_case()
-	#tile_tooltip.notch3_box.get_child(1).text = str(tile.NotchTypes.keys()[tile.notch3]).to_pascal_case()
-	#tile_tooltip.tile_index_box.get_child(1).text = str(tile.tile_index)
-	#return tile_tooltip
-
 func _ready():
+	##This is the one we use outside of testing, at least when not testing the tile directly.
+	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
+	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
+	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
+	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
+
 	## For testing purposes only
 	#var hasOverlay = randi_range(0, 5)
 	#$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(hasOverlay, 0))
@@ -43,13 +38,25 @@ func _ready():
 	##$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 5))
 	##$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 6))
 
-	##This is the one we use outside of testing, at least when not testing the tile directly.
-	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
-	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
-	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
-	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
+func update_tile_graphics():
+	print("Updating graphics...")
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
+	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
+	
+	var new_type = tile.type
+	var new_letter = tile.letter
+	var new_notch1 = tile.notch1
+	var new_notch2 = tile.notch2
+	var new_notch3 = tile.notch3
+	
+	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(new_type, 0))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(new_letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 6))
+	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
+	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
+	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
 
 func move_to_position(time:= 0.25):
 	var tween = get_tree().create_tween()

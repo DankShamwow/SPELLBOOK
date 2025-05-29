@@ -21,7 +21,7 @@ func get_text_file_content(filePath, filePath2):
 			var filter_pass = str(filter[0] + filter[0] + filter[0])
 			if not filter == filter_pass:
 				var export
-				if cachedfilename == filter[0] + filter[1] +  filter[2]:
+				if cachedfilename == filter[0] + filter[1]:
 					export = cachedfile
 				else:
 					if cachedfile != null:

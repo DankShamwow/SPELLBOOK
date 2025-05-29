@@ -1,6 +1,7 @@
 extends Node
 
 var current_scene = null
+var tile_rng = RandomnessManager.tile_rng
 
 var tile: LetterTile
 var StartingTileArray = []
@@ -34,11 +35,12 @@ func _randomize_start_tiles():
 	StartingTileArray.append(LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.Z, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 25))
 	
 	for i in 72:
-		var random_tile_type = randi() % 6
-		var random_letter = randi() % 26
-		var random_notch1 = randi() % 11
-		var random_notch2 = randi() % 11
-		var random_notch3 = randi() % 11
+		#var random_tile_type = randi() % 6
+		var random_tile_type = 0
+		var random_letter = tile_rng.randi() % 26
+		var random_notch1 = tile_rng.randi() % 11
+		var random_notch2 = tile_rng.randi() % 11
+		var random_notch3 = tile_rng.randi() % 11
 		var tile_index = StartingTileArray.size()
 		
 		if random_notch1 == 5 or random_notch2 == 5 or random_notch3 == 5:

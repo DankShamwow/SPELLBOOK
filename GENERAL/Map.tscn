@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2hh8mwr7lhb6"]
+
+[ext_resource type="Script" uid="uid://rni3cy4uw38x" path="res://GENERAL/Map.gd" id="1_e3wo3"]
+[ext_resource type="Script" uid="uid://2ec3mlyrw3rc" path="res://GENERAL/MapGenerator.gd" id="1_g8obm"]
+
+[node name="Map" type="Node2D"]
+script = ExtResource("1_e3wo3")
+
+[node name="MapGenerator" type="Node" parent="."]
+script = ExtResource("1_g8obm")
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="Lines" type="Node2D" parent="Visuals"]
+unique_name_in_owner = true
+
+[node name="Rooms" type="Node2D" parent="Visuals"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="."]

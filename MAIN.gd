@@ -9,9 +9,10 @@ var tiles_in_play = GeneralManager.tiles_in_play
 var current_relics = GeneralManager.current_relics
 
 # Called when the node enters the scene tree for the first time.
-func _init():
+func _ready():
+	#RandomnessManager._set_rng_seed(hash("HELP ME PLEASE"))
+	GeneralManager.prepare_word_dict()
 	await RandomStartingTiles._randomize_start_tiles()
-	
 	for i in random_starting_tiles.size():
 		current_deck.append(random_starting_tiles[i])
 		current_combat_deck.append(random_starting_tiles[i])
@@ -19,4 +20,5 @@ func _init():
 
 	#for i in starting_bag.size():
 		#current_deck.append(starting_bag[i])
+		#current_combat_deck.append(starting_bag[i])
 		#available_tiles.append(starting_bag[i])

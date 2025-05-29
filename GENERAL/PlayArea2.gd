@@ -39,6 +39,9 @@ var scored_tile_count = GeneralManager.scored_letter_count
 ## played_words_count is the sum total of the number of words that have been played.
 var played_words_count = GeneralManager.played_words_count
 
+## current_character is the player's character; this should NEVER be unloaded once instantiated.
+var current_character = GeneralManager.current_character
+
 ## current_target is the last GameEntity that the player has clicked on for targeting.
 var current_target := GeneralManager.current_target
 
@@ -50,6 +53,15 @@ var point_values  	:= GeneralManager.point_values
 
 ## mult_values determines the multiplier on the score based on the length of a word.
 var mult_values		:= GeneralManager.mult_values
+
+## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
+var word_list = GeneralManager.word_list
+
+## relic_dictionary is a list of every relic in the game.
+var relic_dictionary = RelicDictionary.RelicList
+
+## tile_rng is the RandomNumberGenerator for tiles. This should be consistent if the seed is the same.
+var tile_rng = RandomnessManager.tile_rng
 
 ## letters_from_tiles is a list of letters pulled from the GridTiles in tiles_in_word
 var letters_from_tiles := PackedStringArray([])
@@ -69,9 +81,11 @@ var bag_open := false
 ## scoring_check determines if a word is currently being played. It prevents you from adding letters to a word while it's being played.
 var scoring_check := false
 
-@export var tile_scene: PackedScene = preload("res://TILE/LetterTile.tscn")
+## sticky_target is the Enemy whose tiles are currently shown in the enemy attack list
+var sticky_target = null
+
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GridTile.tscn")
-var relic_scene = preload("res://RELIC/Relic.gd")
+var relic_scene = preload("res://RELIC/Relic.tscn")
 
 ## enemy_attack_container is the HBox container that contains the GridTiles that compose an enemy's attack.
 @export var enemy_attack_container: PackedScene = preload("res://h_box_container.tscn")
@@ -104,6 +118,7 @@ signal tile_tooltip_hide_requested()
 
 func _ready():
 	who_has_initiative = %TestCharacter
+	current_character = %TestCharacter.get_path()
 	%TestCharacter.on_turn_start()
 	%TestCharacter.target_query()
 	
@@ -117,8 +132,12 @@ func _ready():
 	
 	self.enemy_attack_finished.connect(%TestEnemy._perform_next_attack)
 	
+	%TestCharacter.update_tile_graphics.connect(self._update_tile_graphics)
+	%TestEnemy.update_tooltip_tile_graphics.connect(self._update_tooltip_tile_graphics)
+	
 	_check_turn_status()
 	tile_tooltip_hide_requested.emit()
+
 
 func _update_buffered_tiles_call():
 	update_buffered_tiles.emit()
@@ -128,7 +147,7 @@ func _spawn_new_player_tile(grid_index: int):
 	var added_tile = grid_tile_scene.instantiate()
 	
 	## called_tile is a LetterTile
-	var called_tile = available_tiles.pop_at(randi() % available_tiles.size())
+	var called_tile = available_tiles.pop_at(tile_rng.randi() % available_tiles.size())
 	
 	# Add the LetterTile to the GridTile so it has data
 	added_tile.tile = called_tile
@@ -174,6 +193,9 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 	var total_score 	= 0
 	
 	for i in attack_to_perform.size():
+		if attack_letter_tiles[i].type == LetterTile.TileType.LOCKED:
+			continue
+		
 		var added_tile = grid_tile_scene.instantiate()
 		added_tile.tile = attack_letter_tiles[i]
 		added_tile.scale = Vector2(2, 2)
@@ -184,7 +206,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 		added_tile.spawned_in()
 		added_tile.position = %TestEnemy.position + %TestEnemy.pivot_offset
 		
-		if i == 0:
+		if tiles_in_word.get_child_count() == 1:
 			added_tile.tile.target = Vector2(624.0, 160.0)
 			
 		else:
@@ -198,7 +220,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 	
 	await get_tree().create_timer(0.4).timeout
 	
-	for i in attack_to_perform.size():
+	for i in tiles_in_word.get_child_count():
 		tile_score = enemy_letters[i].score_tile()
 		points_score += tile_score
 		mult_score = mult_values[i]
@@ -315,28 +337,38 @@ func _word_from_tiles(letters_from_tiles):
 	print(word)
 	if word.length() >= 3 and current_target is GameEntity:
 		
-		# Check the modified wordlist first, because it's faster.
-		if modified_wordlist.has(word):
-			
+		var is_word = word_list.get(word)
+		if is_word:
 			get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
 			get_node("PlayButton").set_disabled(false)
 			
-		else:
-			var list = FileAccess.open(filePath + word[0] + word[1] + ".txt", FileAccess.READ)
-			while list.get_position() < list.get_length():
-				var line = list.get_line()
-				
-				if not line == word:
-					get_node("WordLabel").text = ""
-					get_node("PlayButton").set_disabled(true)
-				
-				if line == word:
-					get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
-					get_node("PlayButton").set_disabled(false)
-					list.close()
+		elif not is_word:
+			get_node("WordLabel").text = ""
+			get_node("PlayButton").set_disabled(true)
+			
 	else:
 		get_node("WordLabel").text = ""
 		get_node("PlayButton").set_disabled(true)
+			
+		#if modified_wordlist.has(word):
+			#
+			#get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
+			#get_node("PlayButton").set_disabled(false)
+			#
+		#else:
+			#var list = FileAccess.open(filePath + word[0] + word[1] + ".txt", FileAccess.READ)
+			#while list.get_position() < list.get_length():
+				#var line = list.get_line()
+				#
+				#if not line == word:
+					#get_node("WordLabel").text = ""
+					#get_node("PlayButton").set_disabled(true)
+				#
+				#if line == word:
+					#get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
+					#get_node("PlayButton").set_disabled(false)
+					#list.close()
+
 	
 	#if not %PlayButton.is_disabled():
 		#var raw_word_score = _calc_raw_word_score()
@@ -374,15 +406,15 @@ func _score_word():
 			for k in current_relics.size():
 				
 				# Pull any letter retrigger effects from relics
-				tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.letter)
+				tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.letter, word)
 			
 				# Query for if a tile has bonus letters from anything
 				if not scored_tile.tile.bonus_letter1 == "":
-					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter1)
+					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter1, word)
 				if not scored_tile.tile.bonus_letter2 == "":
-					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter2)
+					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter2, word)
 				if not scored_tile.tile.bonus_letter3 == "":
-					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter3)
+					tile_retriggers += current_relics[k].letter_retrigger_effect(scored_tile.tile.bonus_letter3, word)
 					
 			# Query for Repeating notches
 			if scored_tile.tile.notch1 == LetterTile.NotchTypes.REPEATING:
@@ -402,10 +434,10 @@ func _score_word():
 				tile_score +=  await scored_tile.score_tile()
 				scored_tile_count += 1
 				
-				%LetterScoreLabel.text = str(tile_score)
+				%TileScoreLabel.text = str(tile_score)
 				# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 				
-				await get_tree().create_timer(0.15).timeout
+				await get_tree().create_timer(0.0025).timeout
 				
 				# TODO: Put Notch-based effects here? Or maybe they belong inside the tile scoring. I don't know.
 				
@@ -413,19 +445,23 @@ func _score_word():
 				for l in current_relics.size():
 					
 					# Grid index based effects
-					tile_score += current_relics[l].grid_index_effect(scored_tile.tile.grid_index)
+					tile_score += current_relics[l].grid_index_effect(scored_tile.tile.grid_index, word)
+					%TileScoreLabel.text = str(tile_score)
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
 					# Letter based effects
-					tile_score += current_relics[l].letter_score_effect(scored_tile.tile.letter)
+					tile_score += current_relics[l].letter_score_effect(scored_tile.tile.letter, word)
+					%TileScoreLabel.text = str(tile_score)
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
 					# Word based effects that trigger on each letter of a word
 					tile_score += current_relics[l].word_letter_bonus_score_effect(word)
+					%TileScoreLabel.text = str(tile_score)
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
 					# Effects based on the total count of scored tiles
-					tile_score += current_relics[l].x_letters_played_effect(scored_tile_count, tile_score)
+					tile_score += current_relics[l].x_letters_played_effect(scored_tile_count, tile_score, word)
+					%TileScoreLabel.text = str(tile_score)
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
 				# If a tile has Phantom, then add two dumb clones of it to the available tiles list.
@@ -485,6 +521,28 @@ func _score_word():
 						
 						current_combat_deck.append(new_clone)
 						available_tiles.append(new_clone)
+						
+				# If a tile has Reinforced, apply 5 block to the player.
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.REINFORCED:
+					%TestCharacter.gain_block(5)
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.REINFORCED:
+					%TestCharacter.gain_block(5)
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.REINFORCED:
+					%TestCharacter.gain_block(5)
+				
+				# If a tile has Rejuvenating, heal the player for 3.
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal1 == false:
+					%TestCharacter.gain_health(3)
+					scored_tile.tile.heal1 = true
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal2 == false:
+					%TestCharacter.gain_health(3)
+					scored_tile.tile.heal2 = true
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal3 == false:
+					%TestCharacter.gain_health(3)
+					scored_tile.tile.heal3 = true
+				
+				# If a tile has Flaming, don't do anything yet.
+				
 			
 			points_score += tile_score
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
@@ -581,18 +639,6 @@ func _score_word():
 			tiles_in_play.remove_at(i)
 			tile_to_process.is_dying() # TODO: Replace with unique effect.
 		
-		elif tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
-		or tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
-		or tile_to_process.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
-		and tile_to_process.tile.echo1 == false \
-		and tile_to_process.tile.echo2 == false \
-		and tile_to_process.tile.echo3 == false \
-		and tile_to_process.tile.no_buffer == false \
-		and tile_to_process.tile.vaporized == false:
-			tile_to_process.reparent(tiles_to_kill)
-			tile_to_process.tile.no_buffer = true
-			tiles_in_play.remove_at(i)
-		
 		else:
 			tile_to_process.reparent(tiles_to_kill)
 			tiles_in_play.remove_at(i)
@@ -608,23 +654,30 @@ func _cleanup(total_score):
 		# This is bad implementation, and might be the source of a bug.
 		if last_letter.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
 		or last_letter.tile.notch2 == LetterTile.NotchTypes.WEIGHTED \
-		or last_letter.tile.notch2 == LetterTile.NotchTypes.WEIGHTED \
-		and last_letter.tile.echo1 == false \
-		and last_letter.tile.echo2 == false \
-		and last_letter.tile.echo3 == false \
-		and last_letter.tile.no_buffer == true \
-		and last_letter.tile.vaporized == false:
-			available_tiles.append(last_letter.tile)
+		or last_letter.tile.notch2 == LetterTile.NotchTypes.WEIGHTED:
+			if last_letter.tile.echo1 == false \
+			and last_letter.tile.echo2 == false \
+			and last_letter.tile.echo3 == false \
+			and last_letter.tile.no_buffer == false \
+			and last_letter.tile.vaporized == false:
+				available_tiles.append(last_letter.tile)
+				last_letter.z_index = 120
+				last_letter.is_dying()
+				last_letter.tile.target = Vector2(1184.0, 64.0)
+				last_letter.move_to_position(0.35)
+				await get_tree().create_timer(0.04).timeout
 		
-		if last_letter.tile.no_buffer == false and last_letter.tile.vaporized == false:
+		elif last_letter.tile.no_buffer == false and last_letter.tile.vaporized == false:
 			buffered_tiles.append(last_letter.tile)
+			last_letter.z_index = 120
+			last_letter.is_dying()
+			last_letter.tile.target = Vector2(1184.0, 64.0)
+			last_letter.move_to_position(0.35)
+			await get_tree().create_timer(0.04).timeout
+		
+		else:
+			pass
 
-		last_letter.z_index = 120
-		last_letter.is_dying()
-		last_letter.tile.target = Vector2(1184.0, 64.0)
-		last_letter.move_to_position(0.35)
-		await get_tree().create_timer(0.04).timeout
-	
 	_cleanup_killed_tiles()
 	
 	update_bag_tiles.emit()
@@ -746,6 +799,7 @@ func _check_turn_status():
 		%PlayButton.texture_pressed.region 	= Rect2(256.0, 40.0, 128.0, 40.0)
 		%PlayButton.texture_hover.region 	= Rect2(128.0, 40.0, 128.0, 40.0)
 		%PlayButton.texture_disabled.region = Rect2(384.0, 40.0, 128.0, 40.0)
+		%ShuffleButton.set_disabled(true)
 		%PlayButton.set_disabled(false)
 	
 	elif not %TestCharacter.has_initiative:
@@ -753,6 +807,7 @@ func _check_turn_status():
 		%PlayButton.texture_pressed.region 	= Rect2(256.0, 40.0, 128.0, 40.0)
 		%PlayButton.texture_hover.region 	= Rect2(128.0, 40.0, 128.0, 40.0)
 		%PlayButton.texture_disabled.region = Rect2(384.0, 40.0, 128.0, 40.0)
+		%ShuffleButton.set_disabled(true)
 		%PlayButton.set_disabled(true)
 		
 	else: 
@@ -760,11 +815,18 @@ func _check_turn_status():
 		%PlayButton.texture_pressed.region 	= Rect2(256.0, 0.0, 128.0, 40.0)
 		%PlayButton.texture_hover.region 	= Rect2(128.0, 0.0, 128.0, 40.0)
 		%PlayButton.texture_disabled.region = Rect2(256.0, 0.0, 128.0, 40.0)
+		if %TestCharacter.has_initiative:
+			%ShuffleButton.set_disabled(false)
+
 		_tiles_in_word_update()
 
 func _pass_turn():
 	
 	_check_turn_status()
+	
+	if who_has_initiative is Character:
+		for i in current_relics.size():
+			current_relics[i].on_turn_end()
 	
 	# Perform end of turn procedures for whoever has the initiative:
 	who_has_initiative.on_turn_end()
@@ -787,6 +849,11 @@ func _pass_turn():
 		who_has_initiative = combatants.get_child(0)
 	
 	who_has_initiative.on_turn_start()
+	
+	if who_has_initiative is Character:
+		for i in current_relics.size():
+			current_relics[i].on_turn_start()
+	
 	_check_turn_status()
 	
 func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) -> void:
@@ -808,6 +875,7 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 		attack_list.add_spacer(true)
 		
 		for i in which.enemy_attack_list.size():
+			sticky_target = which
 			var new_attack = enemy_attack_container.instantiate()
 			attack_list.add_child(new_attack)
 			for j in which.enemy_attack_list[i].size():
@@ -816,13 +884,25 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 				new_tile.tile = which.current_enemy_deck[current_attack[j]]
 				new_tile.tile_hovered.connect(self._is_tile_hovered)
 				new_attack.add_child(new_tile)
-	
-	if which is not Enemy:
-		for i in attack_list.get_child_count():
-			attack_list.get_child(i).queue_free()
-	
+
 	current_target = which
+	print(current_target.name)
 	_check_turn_status()
+	
+func _update_tile_graphics(affected_tile_indices):
+	print("Updating Tile Graphics!")
+	for i in racked_tiles.get_child_count():
+		if affected_tile_indices.has(racked_tiles.get_child(i).tile.tile_index):
+			racked_tiles.get_child(i).update_tile_graphics()
+		
+func _update_tooltip_tile_graphics(affected_tile_indices):
+	print("Updating Tooltip Tile Graphics!")
+	for i in attack_list.get_child_count():
+		if i > 0:
+			var attack_list_child = attack_list.get_child(i)
+			for j in attack_list_child.get_child_count():
+				if affected_tile_indices.has(attack_list_child.get_child(j).tile.tile_index):
+					attack_list_child.get_child(j).update_tile_graphics()
 	
 func _apply_score_to_target(total_score):
 	print("Apply Score to Target: " + str(total_score))
@@ -846,21 +926,36 @@ func _on_test_button_pressed():
 		_spawn_new_player_tile(grid_index)
 		await get_tree().create_timer(0.04).timeout
 	
+	%TestCharacter.add_status("PLAGUED", 1, true, 3)
+	%TestEnemy.add_status("PLAGUED", 1, true, 3)
+	%TestCharacter.add_status("STONED", 1, true, 3)
+	%TestEnemy.add_status("STONED", 1, true, 3)
+	%TestCharacter.add_status("LOCKED", 1, true, 3)
+	%TestEnemy.add_status("LOCKED", 1, true, 3)
+	
 	get_node("TestButton").set_disabled(false)
 	
 func _on_relic_button_pressed():
 	get_node("RelicButton").set_disabled(true)
 	print("Giving you an Upper Case!")
-	var new_relic = preload("res://RELIC/relic_0.tscn").instantiate()
-	new_relic.scale = Vector2(2,2)
-	new_relic.position = Vector2((32 + (64 * current_relics.size())), 32)
-	current_relics.append(new_relic)
-	relics_collection.add_child(new_relic)
-	var new_relic_2 = preload("res://RELIC/relic_-1.tscn").instantiate()
-	new_relic_2.scale = Vector2(2,2)
-	new_relic_2.position = Vector2((32 + (64 * current_relics.size())), 32)
-	current_relics.append(new_relic_2)
-	relics_collection.add_child(new_relic_2)
+	var new_relic = relic_dictionary.get("1")
+	var new_relic_2 = relic_dictionary.get("3")
+	var relic_node = relic_scene.instantiate()
+	var relic_node_2 = relic_scene.instantiate()
+	
+	relic_node.set_script(new_relic)
+	relic_node_2.set_script(new_relic_2)
+	
+	relic_node.scale = Vector2(2,2)
+	relic_node.position = Vector2((32 + (64 * current_relics.size())), 32)
+	current_relics.append(relic_node)
+	relics_collection.add_child(relic_node)
+	
+	relic_node_2.scale = Vector2(2,2)
+	relic_node_2.position = Vector2((32 + (64 * current_relics.size())), 32)
+	current_relics.append(relic_node_2)
+	relics_collection.add_child(relic_node_2)
+	
 	get_node("RelicButton").set_disabled(false)
 
 func _on_shuffle_button_pressed():
@@ -868,10 +963,11 @@ func _on_shuffle_button_pressed():
 		#%TestCharacter.remove_energy(3)
 		update_buffered_tiles.emit()
 		%ShuffleButton.set_disabled(true)
+		%PlayButton.set_disabled(true)
 		get_node("ScoreLabel").text = ""
 		tiles_in_play.clear()
 		letters_from_tiles.clear()
-		_check_turn_status()
+		
 		
 		for i in tiles_in_word.get_child_count():
 			var tile_to_push = tiles_in_word.get_child(-1)
@@ -917,6 +1013,7 @@ func _on_shuffle_button_pressed():
 			await get_tree().create_timer(0.04).timeout
 
 		%ShuffleButton.set_disabled(false)
+		_check_turn_status()
 		
 	else:
 		pass
