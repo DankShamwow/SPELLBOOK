@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfpx8uvqq6h08"]
+
+[ext_resource type="Script" uid="uid://bpcavnatonf1s" path="res://GENERAL/OTHER/TestingArea.gd" id="1_rjqgs"]
+[ext_resource type="PackedScene" uid="uid://cuy52a8w0yxee" path="res://TILE/NOTCHES/NotchObject.tscn" id="1_vpmvl"]
+
+[node name="TestingArea" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rjqgs")
+
+[node name="NotchObject" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="NotchObject2" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 128.0
+offset_top = 8.0
+offset_right = 160.0
+offset_bottom = 40.0
+
+[node name="NotchObject3" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 64.0
+offset_top = 8.0
+offset_right = 96.0
+offset_bottom = 40.0
+
+[node name="NotchObject4" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 320.0
+offset_top = 8.0
+offset_right = 352.0
+offset_bottom = 40.0
+
+[node name="NotchObject5" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 256.0
+offset_top = 8.0
+offset_right = 288.0
+offset_bottom = 40.0
+
+[node name="NotchObject6" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 192.0
+offset_top = 8.0
+offset_right = 224.0
+offset_bottom = 40.0

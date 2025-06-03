@@ -116,3 +116,6 @@ func on_duration_expiry():
 
 func on_combat_end():
 	on_duration_expiry()
+
+func on_force_clear():
+	on_duration_expiry()

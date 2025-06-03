@@ -1,0 +1,159 @@
+[gd_scene load_steps=10 format=3 uid="uid://edlmf0f8whnf"]
+
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_f2n6x"]
+[ext_resource type="Script" uid="uid://r6f8w7lmyped" path="res://GENERAL/OTHER/TileTooltip.gd" id="2_k8fq8"]
+[ext_resource type="Texture2D" uid="uid://bxcw10d6b43p7" path="res://SPRITES/TILES/TilesSmall.png" id="3_iemis"]
+[ext_resource type="Texture2D" uid="uid://c06ikp1h0vj11" path="res://SPRITES/LETTERS/LettersMedium_White.png" id="4_qb7ig"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nweyu"]
+atlas = ExtResource("3_iemis")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w0pix"]
+atlas = ExtResource("4_qb7ig")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utpcq"]
+atlas = ExtResource("3_iemis")
+region = Rect2(120, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pwr6l"]
+atlas = ExtResource("3_iemis")
+region = Rect2(140, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6xkmg"]
+atlas = ExtResource("3_iemis")
+region = Rect2(160, 0, 20, 20)
+
+[node name="TileTooltip" type="PanelContainer"]
+texture_filter = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -56.0
+offset_right = 64.0
+offset_bottom = 136.0
+grow_horizontal = 2
+theme = ExtResource("1_f2n6x")
+script = ExtResource("2_k8fq8")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TileTooltipHeader" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 13
+text = "Letter Tile"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="TileTypeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TileTypeSprite" type="TextureRect" parent="MarginContainer/VBoxContainer/TileTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_nweyu")
+expand_mode = 3
+
+[node name="TileTypeText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TileTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 13
+text = "Type
+"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="TileLettersContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TileLettersSprite" type="TextureRect" parent="MarginContainer/VBoxContainer/TileLettersContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_w0pix")
+expand_mode = 3
+
+[node name="TileLettersText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TileLettersContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 13
+text = "Letters"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Notch1Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Notch1Sprite" type="TextureRect" parent="MarginContainer/VBoxContainer/Notch1Container"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_utpcq")
+expand_mode = 3
+
+[node name="Notch1Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch1Container"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 13
+text = "Notch 1"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Notch2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Notch2Sprite" type="TextureRect" parent="MarginContainer/VBoxContainer/Notch2Container"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_pwr6l")
+expand_mode = 3
+
+[node name="Notch2Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch2Container"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_f2n6x")
+text = "Notch 2"
+fit_content = true
+scroll_following = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="Notch3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Notch3Sprite" type="TextureRect" parent="MarginContainer/VBoxContainer/Notch3Container"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_6xkmg")
+expand_mode = 3
+
+[node name="Notch3Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch3Container"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_f2n6x")
+text = "Notch 3"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1

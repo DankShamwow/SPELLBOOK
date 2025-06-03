@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bya2f3knhd3w0" path="res://COMBAT/STATUSES/StatusEffect.gd" id="1_mbwx6"]
 [ext_resource type="Texture2D" uid="uid://c00krbggqsrbs" path="res://SPRITES/GUI/StatusIcons.png" id="2_bq3q3"]
-[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/SPELLBOOK_THEME.tres" id="3_8l33h"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="3_8l33h"]
 
 [node name="StatusEffect" type="Control"]
 layout_mode = 3

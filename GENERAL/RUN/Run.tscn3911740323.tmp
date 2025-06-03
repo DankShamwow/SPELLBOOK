@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=3 uid="uid://gx3didg4ceg8"]
+
+[ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
+[ext_resource type="PackedScene" uid="uid://b13djgqsb1eev" path="res://GENERAL/GAME_SCENES/MAP/Map.tscn" id="1_abike"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
+[ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
+
+[node name="Run" type="Node"]
+script = ExtResource("1_0uibq")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TileBag" parent="CanvasLayer" instance=ExtResource("2_n48is")]
+
+[node name="DebugButtons" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 122.0
+grow_vertical = 2
+theme = ExtResource("2_bybjp")
+
+[node name="MAP" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAP"
+
+[node name="COMBAT" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMBAT"
+
+[node name="RELIQUARY" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RELIQUARY"
+
+[node name="SHOP" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SHOP"
+
+[node name="REST" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "REST"
+
+[node name="RANDOM_EVENT" type="Button" parent="CanvasLayer/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RANDOM EVENT"
+
+[node name="Map" parent="." instance=ExtResource("1_abike")]
+position = Vector2(640, 360)
+
+[node name="CurrentView" type="Node2D" parent="."]
+position = Vector2(640, 360)
+
+[connection signal="tile_bag_toggle" from="CanvasLayer/TileBag" to="Map" method="_on_tile_bag_toggle"]

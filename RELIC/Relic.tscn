@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bhtpjsf0hlo4x" path="res://SPRITES/RELICS/Relics.png" id="2_ct0xs"]
 
 [node name="Relic" type="Control"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0

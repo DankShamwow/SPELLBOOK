@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://cpbsotfmvd85a"]
+
+[ext_resource type="Script" uid="uid://dvyxn4pwtw1ft" path="res://RELIC/RelicContainer.gd" id="1_k3xn7"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k3xn7"]
+blend_mode = 4
+light_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_hy7m7"]
+offsets = PackedFloat32Array(0, 0.03125, 0.96875, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+metadata/_snap_enabled = true
+metadata/_snap_count = 32
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_atwg8"]
+gradient = SubResource("Gradient_hy7m7")
+width = 128
+height = 32
+fill_to = Vector2(1, 0.0111732)
+
+[node name="RelicContainerGradient" type="TextureRect"]
+clip_children = 2
+z_as_relative = false
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_k3xn7")
+clip_contents = true
+offset_left = 16.0
+offset_right = 624.0
+offset_bottom = 48.0
+texture = SubResource("GradientTexture2D_atwg8")
+script = ExtResource("1_k3xn7")
+
+[node name="RelicContainer" type="ScrollContainer" parent="."]
+clip_contents = false
+layout_mode = 0
+offset_left = 48.0
+offset_top = 8.0
+offset_right = 560.0
+offset_bottom = 40.0
+follow_focus = true
+horizontal_scroll_mode = 4
+vertical_scroll_mode = 0
+
+[node name="RelicCollection" type="HBoxContainer" parent="RelicContainer"]
+unique_name_in_owner = true
+layout_mode = 2

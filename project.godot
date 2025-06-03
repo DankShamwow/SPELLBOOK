@@ -11,25 +11,25 @@ config_version=5
 [application]
 
 config/name="SPELLBOOK"
-run/main_scene="uid://xhd3gu2e1guy"
+run/main_scene="uid://eh1eet3fjoai"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-StartingTiles="*res://TILE/StartingTiles.gd"
+GeneralManager="*res://GENERAL/MANAGEMENT/GeneralManager.gd"
 StatusDictionary="*res://COMBAT/STATUSES/StatusDictionary.gd"
-RelicDictionary="*res://GENERAL/RelicDictionary.gd"
-RandomnessManager="*res://GENERAL/RandomnessManager.gd"
-GeneralManager="*res://GENERAL/GeneralManager.gd"
-RandomStartingTiles="*res://TILE/RandomStartingTiles.gd"
-WordListManager="*res://WORDLISTS/WordListManager.gd"
+RelicDictionary="*res://GENERAL/MANAGEMENT/RelicDictionary.gd"
+RandomnessManager="*res://GENERAL/MANAGEMENT/RandomnessManager.gd"
+GameEventHandler="*res://GENERAL/MANAGEMENT/GameEventHandler.gd"
+StartingTiles="*res://TILE/STARTING_DECKS/StartingTiles.gd"
+RandomStartingTiles="*res://TILE/STARTING_DECKS/RandomStartingTiles.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
-window/stretch/mode="viewport"
+window/size/viewport_width=640
+window/size/viewport_height=480
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [file_customization]
@@ -44,8 +44,14 @@ folder_colors={
 "res://WORDLISTS/": "green"
 }
 
+[global_group]
+
+"Notches to Add"=""
+"Tiles to Add"=""
+
 [gui]
 
+theme/custom="uid://6cu18c01b6a8"
 theme/custom_font="uid://dbl8tpudhrqen"
 
 [input]
@@ -74,6 +80,7 @@ scroll_down={
 [layer_names]
 
 2d_physics/layer_1="MapRooms"
+2d_physics/layer_2="Notches"
 
 [rendering]
 

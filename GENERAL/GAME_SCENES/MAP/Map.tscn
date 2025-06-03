@@ -1,0 +1,91 @@
+[gd_scene load_steps=11 format=3 uid="uid://b13djgqsb1eev"]
+
+[ext_resource type="Script" uid="uid://um3nttyeeix8" path="res://GENERAL/GAME_SCENES/MAP/Map.gd" id="1_almut"]
+[ext_resource type="Script" uid="uid://cbe4yqarh8efb" path="res://GENERAL/GAME_SCENES/MAP/MapGenerator.gd" id="2_mf7tc"]
+[ext_resource type="Script" uid="uid://dcvwlac78aotm" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea1.gd" id="3_4qpg6"]
+[ext_resource type="Texture2D" uid="uid://bmvy0sic8twxp" path="res://SPRITES/GUI/MapIcon.png" id="3_fldo8"]
+[ext_resource type="Script" uid="uid://cooqxj3seamkg" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea2.gd" id="4_4y51t"]
+[ext_resource type="Script" uid="uid://bbb1cx365gdcv" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea3.gd" id="5_4y51t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6tolv"]
+atlas = ExtResource("3_fldo8")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j0h8n"]
+atlas = ExtResource("3_fldo8")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4ltm"]
+atlas = ExtResource("3_fldo8")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gxh31"]
+atlas = ExtResource("3_fldo8")
+region = Rect2(64, 0, 32, 32)
+
+[node name="Map" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_almut")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="MapButton" type="TextureButton" parent="CanvasLayer2"]
+unique_name_in_owner = true
+offset_left = 552.0
+offset_top = 8.0
+offset_right = 584.0
+offset_bottom = 40.0
+toggle_mode = true
+texture_normal = SubResource("AtlasTexture_6tolv")
+texture_pressed = SubResource("AtlasTexture_j0h8n")
+texture_hover = SubResource("AtlasTexture_q4ltm")
+texture_disabled = SubResource("AtlasTexture_gxh31")
+
+[node name="MapGenerator" type="Node" parent="."]
+script = ExtResource("2_mf7tc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="Fade-in" type="ColorRect" parent="CanvasLayer"]
+modulate = Color(0, 0, 0, 0)
+z_index = -3
+offset_left = -320.0
+offset_top = 48.0
+offset_right = 1408.0
+offset_bottom = 480.0
+mouse_filter = 2
+script = ExtResource("3_4qpg6")
+
+[node name="MapBackground" type="ColorRect" parent="CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+z_index = -3
+offset_left = -320.0
+offset_top = 64.0
+offset_right = 1408.0
+offset_bottom = 464.0
+mouse_filter = 2
+color = Color(0.768627, 0.607843, 0.294118, 1)
+script = ExtResource("4_4y51t")
+
+[node name="Visuals" type="Node2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+y_sort_enabled = true
+script = ExtResource("5_4y51t")
+
+[node name="Lines" type="Node2D" parent="CanvasLayer/Visuals"]
+unique_name_in_owner = true
+
+[node name="Rooms" type="Node2D" parent="CanvasLayer/Visuals"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+position = Vector2(320, 240)
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[connection signal="map_toggle" from="." to="CanvasLayer/Fade-in" method="_on_map_toggle"]
+[connection signal="map_toggle" from="." to="CanvasLayer/MapBackground" method="_on_map_toggle"]
+[connection signal="map_toggle" from="." to="CanvasLayer/Visuals" method="_on_map_toggle"]
+[connection signal="toggled" from="CanvasLayer2/MapButton" to="." method="_on_map_button_toggled"]

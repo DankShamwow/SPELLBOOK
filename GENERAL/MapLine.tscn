@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bo567k7lxibl5"]
-
-[ext_resource type="Texture2D" uid="uid://c23f2urb0yuv0" path="res://SPRITES/GUI/MapLine.png" id="1_5aqgx"]
-
-[node name="MapLine" type="Line2D"]
-texture_filter = 1
-texture_repeat = 2
-texture = ExtResource("1_5aqgx")
-texture_mode = 1

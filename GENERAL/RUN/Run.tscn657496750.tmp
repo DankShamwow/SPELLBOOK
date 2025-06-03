@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://gx3didg4ceg8"]
+
+[ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
+[ext_resource type="PackedScene" uid="uid://b13djgqsb1eev" path="res://GENERAL/GAME_SCENES/MAP/Map.tscn" id="1_abike"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
+[ext_resource type="PackedScene" uid="uid://cpbsotfmvd85a" path="res://RELIC/RelicContainer.tscn" id="2_l3v56"]
+[ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
+
+[node name="Run" type="Node"]
+script = ExtResource("1_0uibq")
+
+[node name="Permanent UI" type="CanvasLayer" parent="."]
+
+[node name="RelicContainer" parent="Permanent UI" instance=ExtResource("2_l3v56")]
+offset_top = 88.0
+offset_bottom = 120.0
+
+[node name="TileBag" parent="Permanent UI" instance=ExtResource("2_n48is")]
+
+[node name="DebugButtons" type="VBoxContainer" parent="Permanent UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -152.0
+offset_right = 122.0
+grow_vertical = 0
+theme = ExtResource("2_bybjp")
+
+[node name="MAP" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAP"
+
+[node name="COMBAT" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMBAT"
+
+[node name="RELIQUARY" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RELIQUARY"
+
+[node name="SHOP" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SHOP"
+
+[node name="REST" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "REST"
+
+[node name="RANDOM_EVENT" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RANDOM EVENT"
+
+[node name="RELIC" type="Button" parent="Permanent UI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RELIC
+"
+
+[node name="Character" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Map" parent="." instance=ExtResource("1_abike")]
+position = Vector2(640, 360)
+
+[node name="CurrentView" type="Node2D" parent="."]
+position = Vector2(640, 360)
+
+[connection signal="add_relic" from="." to="Permanent UI/RelicContainer" method="add_relic"]
+[connection signal="tile_bag_toggle" from="Permanent UI/TileBag" to="Map" method="_on_tile_bag_toggle"]
+[connection signal="pressed" from="Permanent UI/DebugButtons/RELIC" to="." method="_on_relic_button_pressed"]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://w25pn5imqac2"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_j0ebq"]
+
+[resource]
+script = ExtResource("1_j0ebq")
+character_name = "The Scriptwriter"
+character_description = "A playwrite that has yet to see success. Currently writing a play
+based on his travels. They seek the Spellbook for inspiration on
+what to write for the world's greatest play."
+starting_max_health = 100
+starting_relic = "The Script"
+starting_gold = 50
+starting_deck = "Standard"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

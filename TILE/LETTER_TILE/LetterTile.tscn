@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c71vae5h3el3p"]
+
+[ext_resource type="Script" uid="uid://3aa7lf0g10bx" path="res://TILE/LETTER_TILE/LetterTile.gd" id="1_ekjij"]
+
+[node name="LetterTile" type="Node2D"]
+script = ExtResource("1_ekjij")

@@ -1,0 +1,125 @@
+[gd_scene load_steps=7 format=3 uid="uid://gx3didg4ceg8"]
+
+[ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
+[ext_resource type="PackedScene" uid="uid://b13djgqsb1eev" path="res://GENERAL/GAME_SCENES/MAP/Map.tscn" id="1_abike"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
+[ext_resource type="PackedScene" uid="uid://cpbsotfmvd85a" path="res://RELIC/RelicContainer.tscn" id="2_l3v56"]
+[ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_s26kh"]
+
+[node name="Run" type="Node"]
+script = ExtResource("1_0uibq")
+
+[node name="PermanentUI" type="CanvasLayer" parent="."]
+
+[node name="DebugButtons" type="VBoxContainer" parent="PermanentUI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -176.0
+offset_right = 122.0
+offset_bottom = 2.0
+grow_vertical = 0
+theme = ExtResource("2_bybjp")
+
+[node name="MAP" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAP"
+
+[node name="COMBAT" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "COMBAT"
+
+[node name="RELIQUARY" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RELIQUARY"
+
+[node name="SHOP" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SHOP"
+
+[node name="REST" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "REST"
+
+[node name="RANDOM_EVENT" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RANDOM EVENT"
+
+[node name="RELIC" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RELIC
+"
+
+[node name="TopBarGUI" type="NinePatchRect" parent="PermanentUI"]
+texture_filter = 1
+offset_left = -8.0
+offset_right = 648.0
+offset_bottom = 48.0
+texture = ExtResource("5_s26kh")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="RelicContainerGradient" parent="PermanentUI" instance=ExtResource("2_l3v56")]
+offset_top = 48.0
+offset_bottom = 96.0
+
+[node name="TileBag" parent="PermanentUI" instance=ExtResource("2_n48is")]
+
+[node name="ColorRect" type="ColorRect" parent="PermanentUI"]
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 96.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="PermanentUI/ColorRect"]
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 32.0
+theme = ExtResource("2_bybjp")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "HEALTH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColorRect2" type="ColorRect" parent="PermanentUI"]
+offset_left = 112.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="PermanentUI/ColorRect2"]
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 32.0
+theme = ExtResource("2_bybjp")
+theme_override_colors/font_color = Color(1, 0.686275, 0, 1)
+text = "GOLD"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CurrentView" type="CanvasLayer" parent="."]
+
+[node name="CharacterLayer" type="CanvasLayer" parent="."]
+
+[node name="Character" type="Node2D" parent="CharacterLayer"]
+unique_name_in_owner = true
+
+[node name="Map" parent="." instance=ExtResource("1_abike")]
+
+[connection signal="add_relic" from="." to="PermanentUI/RelicContainerGradient" method="add_relic"]
+[connection signal="pressed" from="PermanentUI/DebugButtons/RELIC" to="." method="_on_relic_button_pressed"]
+[connection signal="tile_bag_toggle" from="PermanentUI/TileBag" to="Map" method="_on_tile_bag_toggle"]
+[connection signal="map_toggle" from="Map" to="PermanentUI/TileBag" method="_on_map_toggle"]

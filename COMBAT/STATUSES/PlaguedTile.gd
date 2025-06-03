@@ -98,13 +98,6 @@ func on_application(status_amount: int, does_status_decay: bool, status_duration
 	
 func on_turn_start():
 	var current_grid_tiles = []
-	if does_decay:
-		duration -= 1
-		%NumberLabel.text = str(duration)
-	
-	if duration == 0:
-		on_duration_expiry()
-		return
 	
 	for i in affected_tile_list.size():
 		var potential_tiles = []
@@ -130,7 +123,7 @@ func on_turn_start():
 				or tiles_in_play[j].grid_index == spreader_index - 1 ):
 					potential_tiles.append(tiles_in_play[j])
 					
-			if not potential_tiles.size() == 0:
+			if not potential_tiles.size() == 0 and affected_tile_list[i].type == LetterTile.TileType.PLAGUED:
 				var infected_tile = potential_tiles[debuff_rng.randi() % potential_tiles.size()]
 			
 				if infected_tile.notch1 == LetterTile.NotchTypes.INERT \
@@ -154,7 +147,7 @@ func on_turn_start():
 				or enemy_deck[j].tile_index == spreader_index - 1 ):
 					potential_tiles.append(enemy_deck[j])
 					
-			if not potential_tiles.size() == 0:
+			if not potential_tiles.size() == 0 and affected_tile_list[i].type == LetterTile.TileType.PLAGUED:
 				var infected_tile = potential_tiles[debuff_rng.randi() % potential_tiles.size()]
 				
 				if infected_tile.notch1 == LetterTile.NotchTypes.INERT \
@@ -169,6 +162,15 @@ func on_turn_start():
 	
 	return affected_tile_indices
 
+func on_turn_end():
+	if does_decay:
+		duration -= 1
+		%NumberLabel.text = str(duration)
+	
+	if duration == 0:
+		on_duration_expiry()
+		return
+
 func on_duration_expiry():
 	# When the duration hits zero, do all this stuff.
 	for i in affected_tile_list.size():
@@ -180,4 +182,7 @@ func on_duration_expiry():
 	return affected_tile_indices
 
 func on_combat_end():
+	on_duration_expiry()
+
+func on_force_clear():
 	on_duration_expiry()

@@ -1,0 +1,213 @@
+[gd_scene load_steps=4 format=3 uid="uid://bi26r28wn6ymm"]
+
+[ext_resource type="Script" uid="uid://hoorjwsxy1r2" path="res://GENERAL/GAME_SCENES/MAIN_MENU/CharacterSelector.gd" id="1_r65tm"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_n4bra"]
+[ext_resource type="ButtonGroup" uid="uid://bqepc7tkfmywv" path="res://GENERAL/OTHER/CharacterSelectButtonGroup.tres" id="3_n4bra"]
+
+[node name="CharacterSelector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r65tm")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+
+[node name="CharacterText" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -256.0
+offset_top = 8.0
+offset_right = 256.0
+offset_bottom = 112.0
+grow_horizontal = 2
+
+[node name="CharacterName" type="Label" parent="CharacterText"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 26
+text = "THE BOOK KEEPER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CharacterDescription" type="Label" parent="CharacterText"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+text = "A Librarian and writer. Currently working on a book containing vast
+knowledge about monsters. They seek the Spellbook to learn all that
+there is to know about the denizens of the world."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CharacterInformation" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 440.0
+offset_top = 104.0
+offset_right = 624.0
+offset_bottom = 287.0
+theme = ExtResource("2_n4bra")
+theme_override_constants/separation = 7
+
+[node name="StartingMaxHealth" type="Label" parent="CharacterInformation"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Starting Max Health:
+"
+horizontal_alignment = 1
+
+[node name="StartingRelic" type="Label" parent="CharacterInformation"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Starting Relic:
+"
+horizontal_alignment = 1
+
+[node name="StartingGold" type="Label" parent="CharacterInformation"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Starting Gold:
+"
+horizontal_alignment = 1
+
+[node name="StartingDeck" type="Label" parent="CharacterInformation"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Starting Deck:
+"
+horizontal_alignment = 1
+
+[node name="WordListType" type="Label" parent="CharacterInformation"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Word List Type:
+"
+horizontal_alignment = 1
+
+[node name="CharacterButtons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -104.0
+offset_top = -224.0
+offset_right = 96.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BookKeeper" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "THE BOOK KEEPER
+"
+
+[node name="Scriptwriter" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "THE SCRIPTWRITER
+"
+
+[node name="Archivist" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "THE ARCHIVIST
+"
+
+[node name="Translator" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "THE TRANSLATOR
+"
+
+[node name="Inquisitor" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "THE INQUISITOR
+"
+
+[node name="SimianTypewriter" type="Button" parent="CharacterButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_group = ExtResource("3_n4bra")
+text = "SIMIAN TYPEWRITER
+"
+
+[node name="CharacterPortrait" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.622
+anchor_bottom = 0.622
+offset_top = -95.92
+offset_right = 192.0
+offset_bottom = 136.08
+
+[node name="StartButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -64.0
+offset_right = -12.0
+offset_bottom = -12.0
+theme = ExtResource("2_n4bra")
+theme_override_font_sizes/font_size = 26
+text = "START RUN"
+
+[connection signal="pressed" from="CharacterButtons/BookKeeper" to="." method="_on_book_keeper_pressed"]
+[connection signal="pressed" from="CharacterButtons/Scriptwriter" to="." method="_on_scriptwriter_pressed"]
+[connection signal="pressed" from="CharacterButtons/Archivist" to="." method="_on_archivist_pressed"]
+[connection signal="pressed" from="CharacterButtons/Translator" to="." method="_on_translator_pressed"]
+[connection signal="pressed" from="CharacterButtons/Inquisitor" to="." method="_on_inquisitor_pressed"]
+[connection signal="pressed" from="CharacterButtons/SimianTypewriter" to="." method="_on_simian_typewriter_pressed"]
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]

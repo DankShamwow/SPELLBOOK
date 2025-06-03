@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsjnwee5ar4ff"]
+
+[ext_resource type="Script" uid="uid://dxofyi7glv82x" path="res://GENERAL/GAME_SCENES/REST/Rest.gd" id="1_pt3us"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_e01ig"]
+
+[node name="Rest" type="Control"]
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 480.0
+script = ExtResource("1_pt3us")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.0
+offset_top = -60.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+theme = ExtResource("2_e01ig")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_e01ig")
+theme_override_font_sizes/font_size = 26
+text = "Rest"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Go back to Map"
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://d272di2fcsjve"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_nfwlu"]
+
+[resource]
+script = ExtResource("1_nfwlu")
+character_name = "The Archivist"
+character_description = "A recordkeeper. Currently searching for information that will
+fill the gaps in historical records. They seek the Spellbook to learn
+all of the worlds history, so that they may put it to paper."
+starting_max_health = 100
+starting_relic = "Archival Checklist"
+starting_gold = 100
+starting_deck = "Standard"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

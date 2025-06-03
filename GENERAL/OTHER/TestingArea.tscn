@@ -1,0 +1,84 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfpx8uvqq6h08"]
+
+[ext_resource type="Script" uid="uid://bpcavnatonf1s" path="res://GENERAL/OTHER/TestingArea.gd" id="1_rjqgs"]
+[ext_resource type="PackedScene" uid="uid://cuy52a8w0yxee" path="res://TILE/NOTCHES/NotchObject.tscn" id="1_vpmvl"]
+
+[node name="TestingArea" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rjqgs")
+
+[node name="NotchObject" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="NotchObject2" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 104.0
+offset_top = 8.0
+offset_right = 136.0
+offset_bottom = 40.0
+notch_type = 1
+
+[node name="NotchObject3" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 56.0
+offset_top = 8.0
+offset_right = 88.0
+offset_bottom = 40.0
+notch_type = 2
+
+[node name="NotchObject4" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 224.0
+offset_top = 32.0
+offset_right = 256.0
+offset_bottom = 64.0
+notch_type = 3
+
+[node name="NotchObject5" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 200.0
+offset_top = 8.0
+offset_right = 232.0
+offset_bottom = 40.0
+notch_type = 4
+
+[node name="NotchObject6" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 128.0
+offset_top = 32.0
+offset_right = 160.0
+offset_bottom = 64.0
+notch_type = 5
+
+[node name="NotchObject7" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 152.0
+offset_top = 8.0
+offset_right = 184.0
+offset_bottom = 40.0
+notch_type = 6
+
+[node name="NotchObject8" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 80.0
+offset_top = 32.0
+offset_right = 112.0
+offset_bottom = 64.0
+notch_type = 7
+
+[node name="NotchObject9" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 64.0
+offset_bottom = 64.0
+notch_type = 8
+
+[node name="NotchObject10" parent="." instance=ExtResource("1_vpmvl")]
+offset_left = 176.0
+offset_top = 32.0
+offset_right = 208.0
+offset_bottom = 64.0
+notch_type = 9

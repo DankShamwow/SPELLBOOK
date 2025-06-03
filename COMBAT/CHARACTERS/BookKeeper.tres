@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://b06qjo84lo1nn"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_uun8x"]
+
+[resource]
+script = ExtResource("1_uun8x")
+character_name = "The Book Keeper"
+character_description = "A librarian and writer. Currently working on a book containing vast
+knowledge about monsters. They seek the Spellbook to learn all that
+there is to know about the denizens of the world."
+starting_max_health = 100
+starting_relic = "Monster Manuscript"
+starting_gold = 100
+starting_deck = "Standard"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=3 uid="uid://flte7kmhw232"]
+
+[ext_resource type="Script" uid="uid://bm7cgb5kw4tdg" path="res://TILE/GRID_TILE/MiniGridTile.gd" id="1_633ix"]
+[ext_resource type="Texture2D" uid="uid://b545guknb6ilo" path="res://SPRITES/TILES/MiniLetterTiles.png" id="2_ea6j7"]
+[ext_resource type="Texture2D" uid="uid://boi2gknw4asto" path="res://SPRITES/TILES/MiniTileMask.png" id="3_633ix"]
+[ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_u2d7c"]
+
+[sub_resource type="Animation" id="Animation_l10u7"]
+resource_name = "ChangeToNewType"
+length = 0.125
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../..")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"update_tile_graphics"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_bq3va"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bq3va"]
+_data = {
+&"ChangeToNewType": SubResource("Animation_l10u7"),
+&"RESET": SubResource("Animation_bq3va")
+}
+
+[node name="MiniGridTile" type="Control"]
+texture_filter = 1
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2(16, 16)
+script = ExtResource("1_633ix")
+
+[node name="Tile_Button" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+
+[node name="Tile_Sprite" type="Node2D" parent="Tile_Button"]
+position = Vector2(10, 10)
+
+[node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+visible = false
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+visible = false
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+visible = false
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+texture = ExtResource("2_ea6j7")
+hframes = 26
+vframes = 4
+
+[node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("3_633ix")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Tile_Button/Tile_Sprite"]
+libraries = {
+&"": SubResource("AnimationLibrary_bq3va")
+}
+
+[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_u2d7c")
+
+[connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
+[connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]
+[connection signal="mouse_exited" from="Tile_Button" to="." method="_on_tile_button_mouse_exited"]

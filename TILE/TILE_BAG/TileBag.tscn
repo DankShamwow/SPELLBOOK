@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=3 uid="uid://d1peqv2s6qtuo"]
+
+[ext_resource type="Texture2D" uid="uid://0iq2qawpqr7a" path="res://SPRITES/GUI/TileBagButton.png" id="1_hy7m7"]
+[ext_resource type="Script" uid="uid://bimuhn6gspaqt" path="res://TILE/TILE_BAG/TileBag.gd" id="1_ufeyo"]
+[ext_resource type="Script" uid="uid://dfw3kvi3i4osl" path="res://TILE/MaskArea.gd" id="2_yg64d"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hy7m7"]
+atlas = ExtResource("1_hy7m7")
+region = Rect2(0, 0, 32, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yg64d"]
+atlas = ExtResource("1_hy7m7")
+region = Rect2(64, 0, 32, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_huid4"]
+atlas = ExtResource("1_hy7m7")
+region = Rect2(32, 0, 32, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8k3sf"]
+atlas = ExtResource("1_hy7m7")
+region = Rect2(64, 0, 32, 0)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hy7m7"]
+blend_mode = 4
+light_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_ufeyo"]
+offsets = PackedFloat32Array(0, 0.05, 0.95, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+metadata/_snap_count = 20
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_yg64d"]
+gradient = SubResource("Gradient_ufeyo")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[node name="TileBag" type="Control" node_paths=PackedStringArray("no_click_area", "fade_in_mask", "bag_scroller", "bag_grid")]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ufeyo")
+no_click_area = NodePath("CanvasLayer")
+fade_in_mask = NodePath("CanvasLayer/ColorRect")
+bag_scroller = NodePath("CanvasLayer/TextureRect/ScrollContainer")
+bag_grid = NodePath("CanvasLayer/TextureRect/ScrollContainer/GridContainer")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="TileBagButton" type="TextureButton" parent="CanvasLayer2"]
+unique_name_in_owner = true
+z_index = 10
+z_as_relative = false
+offset_left = 592.0
+offset_top = 8.0
+offset_right = 624.0
+offset_bottom = 40.0
+toggle_mode = true
+texture_normal = SubResource("AtlasTexture_hy7m7")
+texture_pressed = SubResource("AtlasTexture_yg64d")
+texture_hover = SubResource("AtlasTexture_huid4")
+texture_disabled = SubResource("AtlasTexture_8k3sf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -128
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+modulate = Color(0, 0, 0, 0)
+offset_right = 640.0
+offset_bottom = 480.0
+script = ExtResource("2_yg64d")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+clip_children = 2
+z_as_relative = false
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_hy7m7")
+clip_contents = true
+offset_left = 40.0
+offset_top = 48.0
+offset_right = 640.0
+offset_bottom = 448.0
+texture = SubResource("GradientTexture2D_yg64d")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/TextureRect"]
+clip_contents = false
+layout_mode = 0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 576.0
+offset_bottom = 368.0
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/TextureRect/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 12
+columns = 10
+
+[node name="StartPoseMarker" type="Marker2D" parent="."]
+position = Vector2(8, 24)
+
+[node name="GridStartMarker" type="Marker2D" parent="."]
+position = Vector2(-544, 48)
+
+[connection signal="toggled" from="CanvasLayer2/TileBagButton" to="." method="_on_tile_bag_button_toggled"]
+[connection signal="toggled" from="CanvasLayer2/TileBagButton" to="CanvasLayer/ColorRect" method="_on_tile_bag_button_toggled"]

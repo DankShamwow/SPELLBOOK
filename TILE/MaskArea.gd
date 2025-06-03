@@ -1,6 +1,5 @@
 extends ColorRect
 
-
 func _on_tile_bag_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		var tween = get_tree().create_tween()

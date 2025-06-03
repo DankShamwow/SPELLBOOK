@@ -1,0 +1,236 @@
+[gd_scene load_steps=8 format=3 uid="uid://cuy52a8w0yxee"]
+
+[ext_resource type="Script" uid="uid://tjo26k7oihea" path="res://TILE/NOTCHES/NotchObject.gd" id="1_6qluw"]
+[ext_resource type="Texture2D" uid="uid://b6hm2su2m2bsp" path="res://SPRITES/NOTCHES/Notches.png" id="2_7pub2"]
+
+[sub_resource type="Animation" id="Animation_tieq6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NotchSprite/LeftWingControl:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NotchSprite/RightWingControl:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("NotchSprite/Nub:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_el1gj"]
+resource_name = "fold"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NotchSprite/LeftWingControl:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-1.5708, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NotchSprite/RightWingControl:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.5708, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_7pub2"]
+resource_name = "unfold"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NotchSprite/LeftWingControl:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -1.5708]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NotchSprite/RightWingControl:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.5708]
+}
+
+[sub_resource type="Animation" id="Animation_lyh3g"]
+resource_name = "pairing"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("NotchSprite/LeftWingControl:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [-1.5708, 0.0, 0.0, -1.5708]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("NotchSprite/RightWingControl:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [1.5708, 0.0, 0.0, 1.5708]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("NotchSprite/Nub:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tieq6"]
+_data = {
+&"RESET": SubResource("Animation_tieq6"),
+&"fold": SubResource("Animation_el1gj"),
+&"pairing": SubResource("Animation_lyh3g"),
+&"unfold": SubResource("Animation_7pub2")
+}
+
+[node name="NotchObject" type="Control"]
+z_index = 144
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+pivot_offset = Vector2(16, 32)
+script = ExtResource("1_6qluw")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+toggle_mode = true
+
+[node name="NotchSprite" type="Node2D" parent="."]
+position = Vector2(16, 16)
+
+[node name="LeftWingControl" type="Control" parent="NotchSprite"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(-2, 2)
+
+[node name="LeftWing" type="Sprite2D" parent="NotchSprite/LeftWingControl"]
+unique_name_in_owner = true
+texture = ExtResource("2_7pub2")
+hframes = 10
+vframes = 4
+
+[node name="RightWingControl" type="Control" parent="NotchSprite"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+pivot_offset = Vector2(2, 2)
+
+[node name="RightWing" type="Sprite2D" parent="NotchSprite/RightWingControl"]
+unique_name_in_owner = true
+texture = ExtResource("2_7pub2")
+hframes = 10
+vframes = 4
+frame = 10
+
+[node name="Nub" type="Sprite2D" parent="NotchSprite"]
+unique_name_in_owner = true
+texture = ExtResource("2_7pub2")
+hframes = 10
+vframes = 4
+frame = 20
+
+[node name="Marker" type="Sprite2D" parent="NotchSprite"]
+unique_name_in_owner = true
+texture = ExtResource("2_7pub2")
+hframes = 10
+vframes = 4
+frame = 30
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_tieq6")
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(16, 16)
+polygon = PackedVector2Array(0, -16, 8, 0, 0, 16, -8, 0)
+
+[connection signal="button_down" from="TextureButton" to="." method="_on_texture_button_down"]
+[connection signal="button_up" from="TextureButton" to="." method="_on_texture_button_up"]
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://bilgm44di3wup"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_27ffm"]
+
+[resource]
+script = ExtResource("1_27ffm")
+character_name = "The Simian Typewriter"
+character_description = "A gorilla. Currently confused as to where they are and what's
+happening.  They aren't seeking anything in particular, and are just
+along for the ride."
+starting_max_health = 150
+starting_relic = "Magic Typewriter"
+starting_gold = 0
+starting_deck = "Alphabetic + Randomized"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

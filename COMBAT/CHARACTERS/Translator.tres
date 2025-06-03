@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://ule7r0orqscd"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_ag4j5"]
+
+[resource]
+script = ExtResource("1_ag4j5")
+character_name = "The Translator"
+character_description = "A wandering polyglot. Currently learning as many languages as
+they can. They seek the Spellbook to create a world in which people
+can speak in their native tongue, and still be understood by all."
+starting_max_health = 100
+starting_relic = "Translation Guide"
+starting_gold = 100
+starting_deck = "Standard"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

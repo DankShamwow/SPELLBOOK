@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://ddu5v2ejkaqnc"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_67l2f"]
+
+[resource]
+script = ExtResource("1_67l2f")
+character_name = "The Inquisitor"
+character_description = "A zealot following a well-known faith. Currently enforces the
+doctrine of their faith, and crushes those who dare stray 
+from its path. They seek the Spellbook to learn which
+religion is the most just, righteous, and true."
+starting_max_health = 125
+starting_relic = "The Teachings"
+starting_gold = 100
+starting_deck = "Standard"
+word_list_type = "Biblical"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

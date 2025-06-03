@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://bd0lr286l77p6"]
+
+[ext_resource type="Script" uid="uid://bp8bvfyf80dsg" path="res://COMBAT/CHARACTERS/CharacterData.gd" id="1_rdgw8"]
+
+[resource]
+script = ExtResource("1_rdgw8")
+character_name = "Test Character"
+character_description = "Lorem Ipsum, la de da de da, hit the grotesque bababooey"
+starting_max_health = 100
+starting_relic = "Test Relic"
+starting_gold = 100
+starting_deck = "Standard"
+word_list_type = "Standard"
+metadata/_custom_type_script = "uid://bp8bvfyf80dsg"

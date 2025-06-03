@@ -1,0 +1,84 @@
+[gd_scene load_steps=3 format=3 uid="uid://eh1eet3fjoai"]
+
+[ext_resource type="Script" uid="uid://cbk4wahasxevy" path="res://GENERAL/GAME_SCENES/MAIN_MENU/MainMenu.gd" id="1_fcx43"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_r4xnu"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fcx43")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 616.0
+offset_bottom = 96.0
+theme = ExtResource("1_r4xnu")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 26
+text = "SPELLBOOK SUPER MEGA ALPHA BUILD"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PLACEHOLDER" type="Label" parent="."]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 104.0
+offset_right = 984.0
+offset_bottom = 392.0
+rotation = 1.5708
+theme = ExtResource("1_r4xnu")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 85
+text = "BOOK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 32.0
+offset_top = 168.0
+offset_right = 266.0
+offset_bottom = 408.0
+theme_override_constants/separation = 24
+
+[node name="NewRun" type="Button" parent="ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("1_r4xnu")
+theme_override_font_sizes/font_size = 26
+text = "NEW RUN"
+
+[node name="ContinueRun" type="Button" parent="ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("1_r4xnu")
+theme_override_font_sizes/font_size = 26
+disabled = true
+text = "CONTINUE RUN
+"
+
+[node name="ExitGame" type="Button" parent="ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("1_r4xnu")
+theme_override_font_sizes/font_size = 26
+text = "EXIT GAME"
+
+[connection signal="pressed" from="ButtonContainer/NewRun" to="." method="_on_new_run_pressed"]
+[connection signal="pressed" from="ButtonContainer/ContinueRun" to="." method="_on_continue_run_pressed"]
+[connection signal="pressed" from="ButtonContainer/ExitGame" to="." method="_on_exit_game_pressed"]

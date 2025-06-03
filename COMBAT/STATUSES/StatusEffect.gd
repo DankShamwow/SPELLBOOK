@@ -34,7 +34,10 @@ func on_duration_expiry():
 ## What does this status do at the end of combat, if anything?
 func on_combat_end():
 	pass
-	
+
+func on_force_clear():
+	pass
+
 ## What does this status do when its parent dies, if anything?
 func on_parent_death():
 	pass

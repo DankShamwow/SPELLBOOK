@@ -33,4 +33,8 @@ func on_turn_start():
 	parent.lose_health(amount)
 
 func on_duration_expiry():
-	return
+	amount = 0
+	duration = 0
+	
+func on_force_clear():
+	on_duration_expiry()

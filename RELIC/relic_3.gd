@@ -18,11 +18,11 @@ func _ready():
 	super()
 
 func on_turn_start():
-	get_parent().get_parent().find_child("Combatants").get_child(0).add_status("IRRADIATED_DEBUFF", 3, false, 100000)
+	GeneralManager.character_path.add_status("IRRADIATED_DEBUFF", 3, false, 100000)
 
 ## Function that handles what should happen when a specific letter, kind of letter, etc.
 func letter_score_effect(_letter, _word):
-	var irradiation = get_parent().get_parent().find_child("Combatants").get_child(0).query_status_value(8)
+	var irradiation = GeneralManager.character_path.query_status_value(8)
 	if irradiation:
 		juice_relic()
 		return (3 * irradiation)

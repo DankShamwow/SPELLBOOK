@@ -1,0 +1,394 @@
+[gd_scene load_steps=5 format=3 uid="uid://cngb2lpnr1tax"]
+
+[ext_resource type="Script" uid="uid://bkf7r888o7ewh" path="res://COMBAT/TOOLS/CombatRewards.gd" id="1_xefhy"]
+[ext_resource type="Texture2D" uid="uid://durpkgsmk6tsg" path="res://SPRITES/Godot_v4.4.1-stable_win64_BKfDCCflzc.png" id="2_4m7xu"]
+[ext_resource type="PackedScene" uid="uid://cuy52a8w0yxee" path="res://TILE/NOTCHES/NotchObject.tscn" id="2_o1a6g"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_ca8vk"]
+
+[node name="CombatRewards" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xefhy")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TEST_PARENT" type="Node2D" parent="CanvasLayer"]
+visible = false
+
+[node name="NotchObject" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 208.0
+offset_top = 120.0
+offset_right = 240.0
+offset_bottom = 152.0
+
+[node name="NotchObject2" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 232.0
+offset_top = 88.0
+offset_right = 264.0
+offset_bottom = 120.0
+
+[node name="NotchObject3" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 256.0
+offset_top = 120.0
+offset_right = 288.0
+offset_bottom = 152.0
+
+[node name="NotchObject4" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 280.0
+offset_top = 88.0
+offset_right = 312.0
+offset_bottom = 120.0
+
+[node name="NotchObject5" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_top = 120.0
+offset_bottom = 152.0
+
+[node name="NotchObject6" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 328.0
+offset_top = 88.0
+offset_right = 360.0
+offset_bottom = 120.0
+
+[node name="NotchObject7" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 352.0
+offset_top = 120.0
+offset_right = 384.0
+offset_bottom = 152.0
+
+[node name="NotchObject8" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 376.0
+offset_top = 88.0
+offset_right = 408.0
+offset_bottom = 120.0
+
+[node name="NotchObject9" parent="CanvasLayer/TEST_PARENT" instance=ExtResource("2_o1a6g")]
+offset_left = 400.0
+offset_top = 120.0
+offset_right = 432.0
+offset_bottom = 152.0
+
+[node name="NotchesParent" type="Node2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+position = Vector2(320, 120)
+
+[node name="PlayerTileParent" type="Node2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+position = Vector2(304, 192)
+
+[node name="NewTilesParent" type="Node2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+position = Vector2(304, 384)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(208, 88)
+
+[node name="Marker2D2" type="Marker2D" parent="."]
+position = Vector2(400, 120)
+
+[node name="ReferenceImage" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 480.0
+texture = ExtResource("2_4m7xu")
+
+[node name="NotchBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 200.0
+offset_top = 80.0
+offset_right = 440.0
+offset_bottom = 160.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchBox"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 26
+text = "NOTCHES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerTileBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 24.0
+offset_top = 152.0
+offset_right = 616.0
+offset_bottom = 328.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="PlayerTileBox"]
+visible = false
+layout_mode = 0
+offset_right = 592.0
+offset_bottom = 176.0
+theme_override_font_sizes/font_size = 26
+text = "P. TILES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(16, 8)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(80, 0)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(144, 8)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(208, 0)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(272, 8)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(336, 0)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D7" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(400, 8)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D8" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(464, 0)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D9" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(80, 48)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D10" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(208, 48)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D11" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(336, 48)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D12" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(464, 48)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D13" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(16, 88)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D14" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(144, 88)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D15" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(272, 88)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D16" type="CollisionPolygon2D" parent="PlayerTileBox"]
+visible = false
+position = Vector2(400, 88)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox"]
+position = Vector2(240, 32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17"]
+position = Vector2(80, 32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17/CollisionPolygon2D17"]
+position = Vector2(80, -32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17"]
+position = Vector2(80, 32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17"]
+position = Vector2(-320, 0)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17"]
+position = Vector2(-80, -32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="CollisionPolygon2D17" type="CollisionPolygon2D" parent="PlayerTileBox/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17/CollisionPolygon2D17"]
+position = Vector2(-80, 32)
+polygon = PackedVector2Array(8, 8, 104, 8, 104, 40, 72, 40, 72, 72, 40, 72, 40, 40, 8, 40)
+
+[node name="SeparatorBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 200.0
+offset_top = 320.0
+offset_right = 440.0
+offset_bottom = 368.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="SeparatorBox"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 13
+text = "or choose any number of these:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewTileBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 200.0
+offset_top = 360.0
+offset_right = 440.0
+offset_bottom = 440.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NewTileBox"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 26
+text = "Nu TILES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SkipButtonBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 472.0
+offset_top = 376.0
+offset_right = 584.0
+offset_bottom = 424.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="SkipButtonBox"]
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 48.0
+text = "SKIP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SkipButtonBox2" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 56.0
+offset_top = 376.0
+offset_right = 168.0
+offset_bottom = 424.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="SkipButtonBox2"]
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 48.0
+text = "CONFIRM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SeparatorBox2" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 200.0
+offset_top = 40.0
+offset_right = 440.0
+offset_bottom = 88.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="SeparatorBox2"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 13
+text = "Add any number of
+these to your tiles:"
+horizontal_alignment = 1
+vertical_alignment = 1
