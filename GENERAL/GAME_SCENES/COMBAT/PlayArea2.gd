@@ -1035,6 +1035,7 @@ func on_combat_end():
 	# TODO: add trigger for on_combat_end Statuses
 	
 	character_path.clear_status_effects()
+	character_path.current_energy = 0
 	_flush_player_tiles()
 
 	# Clear out all these arrays, sans the vaporized array.
