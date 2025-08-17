@@ -1,11 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://cngb2lpnr1tax"]
+[gd_scene load_steps=9 format=3 uid="uid://cngb2lpnr1tax"]
 
 [ext_resource type="Script" uid="uid://bkf7r888o7ewh" path="res://COMBAT/TOOLS/CombatRewards.gd" id="1_xefhy"]
 [ext_resource type="Texture2D" uid="uid://durpkgsmk6tsg" path="res://SPRITES/Godot_v4.4.1-stable_win64_BKfDCCflzc.png" id="2_4m7xu"]
+[ext_resource type="Texture2D" uid="uid://byxxi45b53k5b" path="res://SPRITES/GUI/GoldIcon.png" id="2_vlvc1"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_ca8vk"]
+[ext_resource type="Texture2D" uid="uid://dxere4fwlhw26" path="res://SPRITES/GUI/NotchesIcon.png" id="3_sp64j"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="4_o1a6g"]
+[ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="7_ouwry"]
 
-[node name="CombatRewards" type="Control"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ouwry"]
+atlas = ExtResource("2_vlvc1")
+region = Rect2(0, 0, 32, 32)
+
+[node name="CombatRewards" type="Control" node_paths=PackedStringArray("fade_in_mask", "button_container")]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,270 +21,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xefhy")
-
-[node name="ReferenceImage" type="TextureRect" parent="."]
-visible = false
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 480.0
-texture = ExtResource("2_4m7xu")
-
-[node name="NotchBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 192.0
-offset_top = 80.0
-offset_right = 448.0
-offset_bottom = 160.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Label" type="Label" parent="NotchBox"]
-visible = false
-layout_mode = 0
-offset_right = 240.0
-offset_bottom = 80.0
-theme_override_font_sizes/font_size = 26
-text = "NOTCHES HERE"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PlayerTileBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 24.0
-offset_top = 152.0
-offset_right = 616.0
-offset_bottom = 328.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Label" type="Label" parent="PlayerTileBox"]
-visible = false
-layout_mode = 0
-offset_right = 592.0
-offset_bottom = 176.0
-theme_override_font_sizes/font_size = 26
-text = "P. TILES HERE"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SeparatorBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 200.0
-offset_top = 320.0
-offset_right = 440.0
-offset_bottom = 368.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Label" type="Label" parent="SeparatorBox"]
-layout_mode = 0
-offset_right = 240.0
-offset_bottom = 48.0
-theme_override_font_sizes/font_size = 13
-text = "or Click to add any number 
-of these new tiles:"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="NewTileBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 192.0
-offset_top = 360.0
-offset_right = 448.0
-offset_bottom = 440.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Label" type="Label" parent="NewTileBox"]
-visible = false
-layout_mode = 0
-offset_right = 256.0
-offset_bottom = 80.0
-theme_override_font_sizes/font_size = 26
-text = "NEW TILES HERE"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SkipButtonBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 504.0
-offset_top = 376.0
-offset_right = 616.0
-offset_bottom = 424.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="SkipButton" type="Button" parent="SkipButtonBox"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 104.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="SkipButtonBox/SkipButton"]
-layout_mode = 0
-offset_right = 96.0
-offset_bottom = 32.0
-text = "SKIP"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ConfirmButtonBox" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 24.0
-offset_top = 376.0
-offset_right = 136.0
-offset_bottom = 424.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="ConfirmButton" type="Button" parent="ConfirmButtonBox"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 104.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="ConfirmButtonBox/ConfirmButton"]
-layout_mode = 0
-offset_right = 96.0
-offset_bottom = 32.0
-text = "CONFIRM"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SeparatorBox2" type="NinePatchRect" parent="."]
-texture_filter = 1
-clip_contents = true
-layout_mode = 1
-anchors_preset = -1
-offset_left = 200.0
-offset_top = 40.0
-offset_right = 440.0
-offset_bottom = 88.0
-texture = ExtResource("3_ca8vk")
-draw_center = false
-region_rect = Rect2(0, 0, 48, 48)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Label" type="Label" parent="SeparatorBox2"]
-layout_mode = 0
-offset_right = 240.0
-offset_bottom = 48.0
-theme_override_font_sizes/font_size = 13
-text = "Click and drag to add any
-number of these to your tiles:"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(208, 88)
-
-[node name="Marker2D2" type="Marker2D" parent="."]
-visible = false
-position = Vector2(224, 120)
-
-[node name="Marker2D3" type="Marker2D" parent="."]
-visible = false
-position = Vector2(64, 224)
-
-[node name="Marker2D4" type="Marker2D" parent="."]
-visible = false
-position = Vector2(304, 384)
-
-[node name="Marker2D7" type="Marker2D" parent="."]
-visible = false
-position = Vector2(352, 384)
-
-[node name="Marker2D8" type="Marker2D" parent="."]
-visible = false
-position = Vector2(400, 384)
-
-[node name="Marker2D5" type="Marker2D" parent="."]
-visible = false
-position = Vector2(256, 384)
-
-[node name="Marker2D6" type="Marker2D" parent="."]
-position = Vector2(208, 392)
-
-[node name="NotchesParent" type="Node2D" parent="."]
-unique_name_in_owner = true
-
-[node name="NewTilesParent" type="Node2D" parent="."]
-unique_name_in_owner = true
-
-[node name="PlayerTilesParent" type="Node2D" parent="."]
-unique_name_in_owner = true
-
-[node name="TilesToKill" type="Node2D" parent="."]
-unique_name_in_owner = true
+fade_in_mask = NodePath("ColorRect")
+button_container = NodePath("RewardsButtonList/RewardsBox/ButtonContainer")
+reward_gold_button_icon = SubResource("AtlasTexture_ouwry")
+reward_notch_button_icon = ExtResource("3_sp64j")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -298,4 +46,352 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="ConfirmButtonBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]
+[node name="ReferenceImage" type="TextureRect" parent="."]
+visible = false
+z_index = -255
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 480.0
+texture = ExtResource("2_4m7xu")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(0, 0, 0, 0.65)
+z_as_relative = false
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 480.0
+
+[node name="RewardsButtonList" type="Node2D" parent="."]
+unique_name_in_owner = true
+z_index = 50
+
+[node name="RewardsLabelBox" type="NinePatchRect" parent="RewardsButtonList"]
+texture_filter = 1
+clip_contents = true
+offset_left = 200.0
+offset_top = 96.0
+offset_right = 440.0
+offset_bottom = 144.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="RewardsLabel" type="Label" parent="RewardsButtonList/RewardsLabelBox"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 13
+text = "Claim Your Combat Rewards!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RewardsBox" type="NinePatchRect" parent="RewardsButtonList"]
+texture_filter = 1
+clip_contents = true
+offset_left = 192.0
+offset_top = 136.0
+offset_right = 448.0
+offset_bottom = 432.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="ButtonContainer" type="VBoxContainer" parent="RewardsButtonList/RewardsBox"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 248.0
+offset_bottom = 288.0
+
+[node name="RewardsSkipButtonBox" type="NinePatchRect" parent="RewardsButtonList"]
+texture_filter = 1
+clip_contents = true
+offset_left = 504.0
+offset_top = 400.0
+offset_right = 616.0
+offset_bottom = 448.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="RewardsSkipButton" type="Button" parent="RewardsButtonList/RewardsSkipButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+
+[node name="RewardsSkipButtonLabel" type="Label" parent="RewardsButtonList/RewardsSkipButtonBox/RewardsSkipButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 32.0
+text = "SKIP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NotchAndTileRewardParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="TileTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("7_ouwry")]
+unique_name_in_owner = true
+offset_left = 472.0
+offset_top = 64.0
+offset_right = 592.0
+offset_bottom = 200.0
+
+[node name="SeparatorBox2" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 200.0
+offset_top = 96.0
+offset_right = 440.0
+offset_bottom = 144.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/SeparatorBox2"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 13
+text = "Click and drag to add any
+number of these to your tiles:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NotchBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 192.0
+offset_top = 136.0
+offset_right = 448.0
+offset_bottom = 216.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/NotchBox"]
+visible = false
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 26
+text = "NOTCHES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerTileBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 24.0
+offset_top = 208.0
+offset_right = 616.0
+offset_bottom = 352.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/PlayerTileBox"]
+visible = false
+layout_mode = 0
+offset_right = 592.0
+offset_bottom = 176.0
+theme_override_font_sizes/font_size = 26
+text = "P. TILES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SeparatorBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 200.0
+offset_top = 344.0
+offset_right = 440.0
+offset_bottom = 392.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/SeparatorBox"]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 13
+text = "or Click to add any number 
+of these new tiles:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NewTileBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 192.0
+offset_top = 384.0
+offset_right = 448.0
+offset_bottom = 464.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/NewTileBox"]
+visible = false
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 26
+text = "NEW TILES HERE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SkipButtonBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 504.0
+offset_top = 400.0
+offset_right = 616.0
+offset_bottom = 448.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="SkipButton" type="Button" parent="NotchAndTileRewardParent/SkipButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/SkipButtonBox/SkipButton"]
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 32.0
+text = "SKIP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ConfirmButtonBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 24.0
+offset_top = 400.0
+offset_right = 136.0
+offset_bottom = 448.0
+texture = ExtResource("3_ca8vk")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="ConfirmButton" type="Button" parent="NotchAndTileRewardParent/ConfirmButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="NotchAndTileRewardParent/ConfirmButtonBox/ConfirmButton"]
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 32.0
+text = "CONFIRM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NotchesParent" type="Node2D" parent="NotchAndTileRewardParent"]
+unique_name_in_owner = true
+
+[node name="NewTilesParent" type="Node2D" parent="NotchAndTileRewardParent"]
+unique_name_in_owner = true
+
+[node name="PlayerTilesParent" type="Node2D" parent="NotchAndTileRewardParent"]
+unique_name_in_owner = true
+
+[node name="MarkerParent" type="Node2D" parent="."]
+visible = false
+
+[node name="Marker2D" type="Marker2D" parent="MarkerParent"]
+position = Vector2(208, 88)
+
+[node name="Marker2D2" type="Marker2D" parent="MarkerParent"]
+position = Vector2(224, 120)
+
+[node name="Marker2D3" type="Marker2D" parent="MarkerParent"]
+position = Vector2(64, 224)
+
+[node name="Marker2D4" type="Marker2D" parent="MarkerParent"]
+position = Vector2(304, 384)
+
+[node name="Marker2D7" type="Marker2D" parent="MarkerParent"]
+position = Vector2(352, 384)
+
+[node name="Marker2D8" type="Marker2D" parent="MarkerParent"]
+position = Vector2(400, 384)
+
+[node name="Marker2D5" type="Marker2D" parent="MarkerParent"]
+position = Vector2(256, 384)
+
+[node name="Marker2D6" type="Marker2D" parent="MarkerParent"]
+position = Vector2(208, 392)
+
+[node name="TilesToKill" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[connection signal="tile_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_hide_tooltip"]
+[connection signal="tile_tooltip_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_show_tooltip"]
+[connection signal="pressed" from="RewardsButtonList/RewardsSkipButtonBox/RewardsSkipButton" to="." method="_on_rewards_skip_button_pressed"]
+[connection signal="pressed" from="NotchAndTileRewardParent/SkipButtonBox/SkipButton" to="." method="_on_skip_button_pressed"]
+[connection signal="pressed" from="NotchAndTileRewardParent/ConfirmButtonBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]

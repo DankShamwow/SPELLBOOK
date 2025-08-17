@@ -17,6 +17,8 @@ enum GridTileAction {
 
 var bag_open = false
 
+var hovering = false;
+
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
 
@@ -148,14 +150,14 @@ func _on_tile_button_gui_input(event: InputEvent):
 			)
 
 func _on_tile_button_mouse_entered():
-	#print("I've been entered!")
+	print("I've been entered!")
 	original_z = self.z_index
 	self.scale = self.scale * 1.1
 	self.z_index = 128
 	tile_hovered.emit(self, true)
 
 func _on_tile_button_mouse_exited():
-	#print("I've been exited!")
+	print("I've been exited!")
 	self.scale = self.scale / 1.1
 	self.z_index = original_z
 	tile_hovered.emit(self, false)
@@ -259,7 +261,6 @@ func juice_score():
 	
 func toggle_monitorable(state: bool) -> void:
 	%Area2D.monitorable = state
-
 
 #set_tooltip_text("Letter Tile!\n 
 				  #Type: self.type\n 

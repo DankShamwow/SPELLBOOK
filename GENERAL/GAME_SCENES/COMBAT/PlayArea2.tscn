@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://d12fqxkjylbeu"]
+[gd_scene load_steps=30 format=3 uid="uid://d12fqxkjylbeu"]
 
 [ext_resource type="Script" uid="uid://bkuymnlsmqvfo" path="res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.gd" id="1_d7kxf"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="2_dvygu"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bgn1buqfnev83" path="res://COMBAT/ENEMIES/TestEnemy.tscn" id="3_dvygu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="4_fhfjg"]
 [ext_resource type="Texture2D" uid="uid://bf4pb80s3hnmj" path="res://SPRITES/GUI/AttackButton.png" id="5_idy2k"]
+[ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="9_gbtod"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="9_lhr36"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lhr36"]
@@ -89,7 +90,7 @@ region = Rect2(96, 0, 96, 24)
 atlas = ExtResource("4_fhfjg")
 region = Rect2(288, 0, 96, 24)
 
-[node name="PlayArea2" type="Control" node_paths=PackedStringArray("racked_tiles", "tiles_in_word", "tiles_to_kill", "relics_collection", "combatants", "attack_list")]
+[node name="PlayArea2" type="Control" node_paths=PackedStringArray("racked_tiles", "tiles_in_word", "tiles_to_kill", "combatants", "attack_list")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 640.0
@@ -98,7 +99,6 @@ script = ExtResource("1_d7kxf")
 racked_tiles = NodePath("RackedTiles")
 tiles_in_word = NodePath("TilesInWord")
 tiles_to_kill = NodePath("TilesToKill")
-relics_collection = NodePath("RelicContainer")
 combatants = NodePath("Combatants")
 attack_list = NodePath("EnemyAttackListGUI/ScrollContainer/EnemyAttackList")
 
@@ -131,9 +131,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0
 anchor_right = 0.0
-offset_left = 128.0
+offset_left = 24.0
 offset_top = 304.0
-offset_right = 248.0
+offset_right = 144.0
 offset_bottom = 434.0
 grow_vertical = 0
 
@@ -298,10 +298,6 @@ z_as_relative = false
 
 [node name="TilesToKill" type="Node2D" parent="."]
 
-[node name="RelicContainer" type="Node2D" parent="."]
-visible = false
-position = Vector2(32, 32)
-
 [node name="Combatants" type="Node2D" parent="."]
 
 [node name="TestEnemy" parent="Combatants" instance=ExtResource("3_dvygu")]
@@ -420,6 +416,10 @@ texture_hover = SubResource("AtlasTexture_2i31q")
 texture_disabled = SubResource("AtlasTexture_5xfyi")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="CombatRewards" parent="." instance=ExtResource("9_gbtod")]
+unique_name_in_owner = true
+layout_mode = 1
 
 [connection signal="tile_mini_tooltip_requested" from="." to="TileTooltip" method="_show_mini_tooltip"]
 [connection signal="tile_tooltip_hide_requested" from="." to="TileTooltip" method="_hide_tooltip"]

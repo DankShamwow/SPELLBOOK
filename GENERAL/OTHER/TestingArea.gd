@@ -16,7 +16,6 @@ func _ready():
 			notch2 = 0
 			notch3 = 0
 			
-			
 		if i == 1:
 			notch1 = randi_range(1, 11)
 			notch2 = randi_range(1, 11)

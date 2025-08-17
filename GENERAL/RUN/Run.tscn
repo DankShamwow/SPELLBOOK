@@ -110,12 +110,12 @@ text = "GOLD"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CurrentView" type="CanvasLayer" parent="."]
-
 [node name="CharacterLayer" type="CanvasLayer" parent="."]
 
 [node name="Character" type="Node2D" parent="CharacterLayer"]
 unique_name_in_owner = true
+
+[node name="CurrentView" type="CanvasLayer" parent="."]
 
 [node name="Map" parent="." instance=ExtResource("1_abike")]
 

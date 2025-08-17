@@ -21,9 +21,7 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED,
 @export var is_friendly := true
 @export var is_temporary := false
 
-
-# Notch-specific Flagging
-
+### Notch-specific Flagging
 # echoNUM determines if a tile has Echoed this draw. True means that it has not.
 # Defaults to false due to Weighted tiles. Flag is set to true when drawn if the
 # tile has the Echoing notch in the relevant slot.
@@ -42,8 +40,12 @@ var heal3 := false
 var no_buffer := false
 var vaporized := false
 
-# Functions
-## new_tile creates a tile based on the information given.
+### Other Data
+var times_played := 0
+
+### Functions
+## new_tile creates a tile based on the information given, for the purpose
+## of creating the player's initial deck.
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
 	type = _type
 	letter = _letter
@@ -52,7 +54,8 @@ func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterT
 	notch3 = _notch3
 	tile_index = _tile_index
 	return self
-	
+
+## generate_tile creates a tile to be added to the deck.
 func generate_tile(_type, _letter, _notch1, _notch2, _notch3) -> LetterTile:
 	type = _type
 	letter = _letter

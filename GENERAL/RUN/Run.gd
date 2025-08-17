@@ -33,6 +33,7 @@ func _ready() -> void:
 	if not character:
 		var test_character = TEST_CHARACTER_SCENE
 		character = test_character
+		#RandomStartingTiles._randomize_start_tiles()
 		_start_new_run()
 
 func _start_new_run() -> void:

@@ -96,7 +96,7 @@ func on_application(status_amount: int, does_status_decay: bool, status_duration
 	
 	return affected_tile_indices
 	
-func on_turn_start():
+func on_turn_end():
 	if does_decay:
 		duration -= 1
 		%NumberLabel.text = str(duration)

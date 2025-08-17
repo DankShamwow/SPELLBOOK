@@ -8,12 +8,10 @@ func _ready():
 	max_energy = 3
 	defense = 10
 	super()
-	
 
 func on_turn_start():
 	super()
 	_perform_next_attack()
-
 
 func _perform_next_attack():
 	if self.current_energy == 3:

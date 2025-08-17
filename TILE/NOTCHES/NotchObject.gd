@@ -25,6 +25,7 @@ var has_affected_notch2 := false
 var has_affected_notch3 := false
 
 signal send_back_home(which: NotchObject)
+signal update_tooltip(which: GridTile)
 
 func _ready():
 	print(notch_type)
@@ -83,6 +84,7 @@ func _on_texture_button_up():
 				print("Pairing found!")
 				paired_tile = overlaps[i].get_parent()
 				_snap_to_paired_tile(paired_tile)
+				update_tooltip.emit(paired_tile)
 				break
 	
 	get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
@@ -92,7 +94,8 @@ func _on_texture_button_up():
 		tween.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", spin_when_dropped, 0.05)
 		_send_back_home()
-				
+	
+	
 
 func _resnap_to_paired_tile():
 	# NOTE: I'm not sure I need to have a safeguard against someone clicking the notch while it's doing this stuff.

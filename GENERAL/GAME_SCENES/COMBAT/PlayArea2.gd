@@ -84,6 +84,9 @@ var scoring_check := false
 ## sticky_target is the Enemy whose tiles are currently shown in the enemy attack list
 var sticky_target = null
 
+## This is here while I try and figure out a good way to end combat.
+var end_of_combat = false
+
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/GridTile.tscn")
 @export var mini_grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/MiniGridTile.tscn")
 var relic_scene = preload("res://RELIC/Relic.tscn")
@@ -155,6 +158,54 @@ func _ready():
 	_check_turn_status()
 	tile_tooltip_hide_requested.emit()
 
+func _input(event):
+	if event is InputEventKey:
+		if event.pressed:
+			if event.keycode == KEY_BACKSPACE:
+				for tile: GridTile in racked_tiles.get_children():
+					if tile.hovering:
+						tile.scale = self.scale / 1.1
+						tile.z_index = tile.original_z
+						tile.tile_hovered.emit(tile, false)
+						return;
+				if tiles_in_word.get_children().size() > 0:
+					await _send_back_to_grid(tiles_in_word.get_child(-1))
+					tiles_in_word.get_child(-1).reparent(racked_tiles)
+					_tiles_in_word_update()
+					await get_tree().create_timer(0.004).timeout
+					_normalize_grid_tile_size()
+				return;
+			var string_letter = event.as_text().to_upper()
+			var tile_list = [];
+			for tile: GridTile in racked_tiles.get_children():
+				if tile.tile.TileLetter.keys()[tile.tile.letter] == string_letter:
+					tile_list.push_back(tile);
+				elif tile.hovering:
+					tile.scale = self.scale / 1.1
+					tile.z_index = tile.original_z
+					tile.tile_hovered.emit(tile, false)
+					tile.play_tile_sound()
+					tile.tile_clicked.emit(
+						tile, tile.GridTileAction.PLAY
+					)
+
+			tile_list.sort_custom(func(a,b): return a.tile.grid_index < b.tile.grid_index);
+			var start_index = -1;
+			var end_index = -1;
+			for tile in tile_list:
+				end_index = tile.tile.grid_index;
+				if tile.hovering:
+					tile.tile_hovered.emit(tile, false)
+					start_index = tile.tile.grid_index;
+
+			for tile in tile_list:
+				if start_index < end_index && start_index < tile.tile.grid_index:
+					tile.original_z = tile.z_index
+					tile.scale = tile.scale * 1.1
+					tile.z_index = 128
+					tile.tile_hovered.emit(tile, true)
+					break;
+
 func on_combat_start():
 	GeneralManager.is_combat_active = true
 	character_path.on_turn_start()
@@ -172,6 +223,8 @@ func _update_buffered_tiles_call():
 	update_buffered_tiles.emit()
 
 func _spawn_new_player_tile(grid_index: int):
+	if GeneralManager.is_combat_active == false:
+		return
 	## added_tile is a GridTile with the data from a LetterTile
 	var added_tile = grid_tile_scene.instantiate()
 	
@@ -199,7 +252,6 @@ func _spawn_new_player_tile(grid_index: int):
 		added_tile.tile.echo2 = true
 	if added_tile.tile.notch3 == LetterTile.NotchTypes.ECHOING:
 		added_tile.tile.echo3 = true
-	
 	
 	# Set the tile's drop position as well as the target position after dropping
 	# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
@@ -718,6 +770,9 @@ func _cleanup(total_score):
 	GameEventHandler.disable_tile_bag.emit(false)
 	
 func _move_tiles_into_place():
+	if GeneralManager.is_combat_active == false or end_of_combat == true:
+		return
+	
 	GameEventHandler.disable_tile_bag.emit(true)
 	var remaining_tiles = []
 	tiles_in_play.clear()
@@ -747,6 +802,8 @@ func _move_tiles_into_place():
 	#!#
 
 	for i in racked_tiles.get_child_count():
+		if GeneralManager.is_combat_active == false or end_of_combat == true:
+			return
 		var found_tile = racked_tiles.get_child(i)
 		if found_tile.tile.grid_index < 12:
 			if found_tile.tile.grid_index < 4 && not remaining_tiles.has(found_tile.tile.grid_index + 4):
@@ -774,6 +831,8 @@ func _move_tiles_into_place():
 	disable_tile_bag.emit(false)
 	
 func _spawn_replacement_tiles(remaining_tiles):
+	if GeneralManager.is_combat_active == false:
+		return
 	var tiles_to_fill = []
 	
 	for i in possible_grid_positions.size():
@@ -788,10 +847,10 @@ func _spawn_replacement_tiles(remaining_tiles):
 		await get_tree().create_timer(0.04).timeout
 		
 	_rename_tiles()
-	_check_turn_status()
 	_tiles_in_word_update()
 	GameEventHandler.update_bag_tiles.emit()
 	scoring_check = false
+	_check_turn_status()
 
 func _rename_tiles():
 	for i in racked_tiles.get_child_count():
@@ -814,7 +873,11 @@ func _calc_raw_word_score():
 		raw_word_score = letter_score * mult_score
 	return raw_word_score
 
-func _check_turn_status():
+func _check_turn_status():	
+	if GeneralManager.is_combat_active == false or end_of_combat == true:
+		on_combat_end()
+		return
+	
 	if character_path.is_target == false and %TestEnemy.is_target == false:
 		%PlayButton.texture_normal.region 	= Rect2(0.0, 80.0, 128.0, 40.0)
 		%PlayButton.texture_pressed.region 	= Rect2(256.0, 80.0, 128.0, 40.0)
@@ -848,7 +911,9 @@ func _check_turn_status():
 		_tiles_in_word_update()
 
 func _pass_turn():
-	
+	if GeneralManager.is_combat_active == false:
+		return
+		
 	_check_turn_status()
 	
 	if who_has_initiative is Character:
@@ -958,8 +1023,7 @@ func _check_for_dead_enemies(which: GameEntity):
 			remaining_enemies += 1
 			
 	if remaining_enemies == 0:
-		on_combat_end()
-	
+		end_of_combat = true
 	
 func on_combat_end():
 	GeneralManager.is_combat_active = false
@@ -972,7 +1036,7 @@ func on_combat_end():
 	
 	character_path.clear_status_effects()
 	_flush_player_tiles()
-	
+
 	# Clear out all these arrays, sans the vaporized array.
 	buffered_tiles.clear()
 	destroyed_tiles.clear()
@@ -982,7 +1046,9 @@ func on_combat_end():
 	GeneralManager.remove_tiles_from_deck()
 	
 	character_path.reparent(GeneralManager.replace_character_path)
-	GameEventHandler.combat_exited.emit()
+	# TODO: Replace these values with values from the Encounter System that will be implemented later.
+	%CombatRewards._bringup_combat_rewards(50, 5, 0) 
+	
 
 ### Buttons and stuff below here!
 func _on_test_button_pressed():
@@ -993,12 +1059,12 @@ func _on_test_button_pressed():
 		_spawn_new_player_tile(grid_index)
 		await get_tree().create_timer(0.04).timeout
 	
-	character_path.add_status("PLAGUED", 1, true, 3)
-	%TestEnemy.add_status("PLAGUED", 1, true, 3)
-	character_path.add_status("STONED", 1, true, 3)
-	%TestEnemy.add_status("STONED", 1, true, 3)
-	character_path.add_status("LOCKED", 1, true, 3)
-	%TestEnemy.add_status("LOCKED", 1, true, 3)
+	#character_path.add_status("PLAGUED", 1, true, 3)
+	#%TestEnemy.add_status("PLAGUED", 1, true, 3)
+	#character_path.add_status("STONED", 1, true, 3)
+	#%TestEnemy.add_status("STONED", 1, true, 3)
+	#character_path.add_status("LOCKED", 1, true, 3)
+	#%TestEnemy.add_status("LOCKED", 1, true, 3)
 	
 	get_node("TestButton").set_disabled(false)
 	
@@ -1120,7 +1186,6 @@ func _flush_player_tiles():
 	
 	_cleanup_killed_tiles()
 	
-
 func _on_tile_bag_toggle(toggled_on):
 	bag_open = toggled_on
 	if toggled_on:
@@ -1147,9 +1212,11 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 		#which.scale_to_word_size(scaling_factor)
 		
 	if is_hovering == true:
+		which.hovering = is_hovering
 		tile_tooltip_requested.emit(which)
 	
 	if is_hovering == false:
+		which.hovering = is_hovering
 		tile_tooltip_hide_requested.emit()
 
 func _is_mini_tile_hovered(which: MiniGridTile, is_hovering: bool):
