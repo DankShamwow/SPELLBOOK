@@ -130,7 +130,7 @@ func gain_block(block_value):
 	update_health_bar()
 
 func check_for_death():
-	if self.health < 0:
+	if self.health <= 0:
 		entity_has_died.emit(self)
 
 func remove_energy(value: int):
