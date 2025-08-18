@@ -220,7 +220,7 @@ func on_combat_start():
 	_on_test_button_pressed()
 
 func _update_buffered_tiles_call():
-	update_buffered_tiles.emit()
+	GameEventHandler.update_buffered_tiles.emit()
 
 func _spawn_new_player_tile(grid_index: int):
 	if GeneralManager.is_combat_active == false:
@@ -262,7 +262,7 @@ func _spawn_new_player_tile(grid_index: int):
 	added_tile.spawned_in()
 	await added_tile.move_to_position()
 	added_tile.play_tile_sound()
-	update_bag_tiles.emit()
+	GameEventHandler.update_bag_tiles.emit()
 
 func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_position, target):
 	
@@ -726,7 +726,7 @@ func _score_word():
 	
 func _cleanup(total_score):
 	# Make the bag look pretty just before the tiles go into it.
-	disable_tile_bag.emit(true)
+	GameEventHandler.disable_tile_bag.emit(true)
 	for i in tiles_to_kill.get_child_count():
 		var last_letter = tiles_to_kill.get_child(i)
 		
@@ -1145,7 +1145,7 @@ func _shuffle_player_tiles():
 	for i in range(0, 16):
 		var grid_index = 15 - i
 		_spawn_new_player_tile(grid_index)
-		update_bag_tiles.emit()
+		GameEventHandler.update_bag_tiles.emit()
 		await get_tree().create_timer(0.04).timeout
 
 	%ShuffleButton.set_disabled(false)
@@ -1229,7 +1229,7 @@ func _is_mini_tile_hovered(which: MiniGridTile, is_hovering: bool):
 		tile_tooltip_hide_requested.emit()
 
 func _on_update_buffered_tiles() -> void:
-	update_buffered_tiles.emit()
+	GameEventHandler.update_buffered_tiles.emit()
 
 func _cleanup_killed_tiles():
 	await get_tree().create_timer(0.5).timeout
