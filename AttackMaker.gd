@@ -1,22 +1,21 @@
 extends Control
 
-@export var grid_tile_scene: PackedScene = preload("res://TILE/GridTile.tscn")
+@export var grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/GridTile.tscn")
 @export var word_origin: Node2D
 @export var attack_list: VBoxContainer
-@export var attack_letters: PackedScene = preload("res://h_box_container.tscn")
 
 var attack_tiles = []
 
 func _on_attack_word_submitted(new_text: String):
-	var new_attack = attack_letters.instantiate()
+	var new_attack = HBoxContainer.new()
 	attack_list.add_child(new_attack)
 	for i in len(new_text):
 		var letter = LetterTile.TileLetter[new_text[i].to_upper()]
 		print(letter)
 		var new_LetterTile = LetterTile.new().new_tile(LetterTile.TileType.BASIC, letter, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, attack_tiles.size())		
 		var attack_tile = grid_tile_scene.instantiate()
-		attack_tile.scale = Vector2(4, 4)
 		attack_tile.tile = new_LetterTile
+		attack_tile.toggle_monitorable(true)
 		new_attack.add_child(attack_tile)
 		attack_tiles.append(attack_tile)
 	%LineEdit.clear()

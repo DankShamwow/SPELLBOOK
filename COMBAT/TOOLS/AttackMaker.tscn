@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://bvh04nepjjv6e"]
+[gd_scene load_steps=9 format=3 uid="uid://bvh04nepjjv6e"]
 
 [ext_resource type="Script" uid="uid://co8j42sdeocbd" path="res://AttackMaker.gd" id="1_o581r"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_5fbpu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="3_sw5ai"]
+[ext_resource type="PackedScene" uid="uid://x7ouxihlqulb" path="res://COMBAT/TOOLS/NotchGenerator.tscn" id="4_ym842"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q67d8"]
 atlas = ExtResource("3_sw5ai")
@@ -28,44 +30,105 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o581r")
 word_origin = NodePath("WordOrigin")
-attack_list = NodePath("ScrollContainer/VBoxContainer")
+attack_list = NodePath("ScrollContainer/MarginContainer/VBoxContainer")
 
 [node name="LineEdit" type="LineEdit" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 128.0
-offset_top = 64.0
-offset_right = 1152.0
-offset_bottom = 128.0
+offset_left = 80.0
+offset_top = 24.0
+offset_right = 560.0
+offset_bottom = 88.0
 placeholder_text = "Write the word for the attack here!"
 keep_editing_on_text_submit = true
 
 [node name="WordOrigin" type="Node2D" parent="."]
-position = Vector2(640, 384)
+position = Vector2(32, 160)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 192.0
-offset_right = 1088.0
-offset_bottom = 640.0
+offset_left = 16.0
+offset_top = 112.0
+offset_right = 496.0
+offset_bottom = 416.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
 layout_mode = 2
 
 [node name="TestButton" type="TextureButton" parent="."]
 texture_filter = 1
 layout_mode = 0
-offset_left = 128.0
-offset_top = 640.0
-offset_right = 384.0
-offset_bottom = 704.0
+offset_left = 272.0
+offset_top = 448.0
+offset_right = 368.0
+offset_bottom = 472.0
 texture_normal = SubResource("AtlasTexture_q67d8")
 texture_pressed = SubResource("AtlasTexture_4xp2i")
 texture_hover = SubResource("AtlasTexture_l7n2q")
 texture_disabled = SubResource("AtlasTexture_7qsvx")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 496.0
+offset_top = 104.0
+offset_right = 640.0
+offset_bottom = 456.0
+texture = ExtResource("3_5fbpu")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="NotchGenerators" type="Node2D" parent="."]
+
+[node name="Repeating" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 504.0
+offset_top = 112.0
+offset_right = 504.0
+offset_bottom = 112.0
+
+[node name="Inert" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 536.0
+offset_top = 112.0
+offset_right = 536.0
+offset_bottom = 112.0
+generator_notch_type = 4
+
+[node name="Rejuvenating" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 568.0
+offset_top = 112.0
+offset_right = 568.0
+offset_bottom = 112.0
+generator_notch_type = 8
+
+[node name="Reinforced" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 600.0
+offset_top = 112.0
+offset_right = 600.0
+offset_bottom = 112.0
+generator_notch_type = 9
+
+[node name="Flaming" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 504.0
+offset_top = 144.0
+offset_right = 504.0
+offset_bottom = 144.0
+generator_notch_type = 7
+
+[node name="NotchesParent" type="Node2D" parent="."]
+unique_name_in_owner = true
 
 [connection signal="text_submitted" from="LineEdit" to="." method="_on_attack_word_submitted"]
 [connection signal="pressed" from="TestButton" to="." method="_on_export_button_pressed"]

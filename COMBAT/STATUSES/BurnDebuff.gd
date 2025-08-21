@@ -35,12 +35,11 @@ func on_turn_end():
 			var amount_remaining = abs(parent.block)
 			parent.block = 0
 			parent.lose_health(amount_remaining)
-			amount -= 1
-			
 	
 	else:
 		parent.lose_health(amount)
-		amount -= 1
+		
+	amount -= 1
 	
 	%NumberLabel.text = str(amount)
 	

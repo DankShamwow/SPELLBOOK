@@ -23,7 +23,7 @@ signal tile_clicked(which: MiniGridTile, action: MiniGridTileAction)
 func _ready():
 	##This is the one we use outside of testing, at least when not testing the tile directly.
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
 	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 3))
 	#$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
 	#$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
@@ -46,13 +46,14 @@ func update_tile_graphics():
 	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	
 	var new_type = tile.type
-	var new_letter = tile.letter
+	var played_letter = tile.played_letter
+	var visual_letter = tile.visual_letter
 	var new_notch1 = tile.notch1
 	var new_notch2 = tile.notch2
 	var new_notch3 = tile.notch3
 	
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(new_type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(new_letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(visual_letter, 1))
 	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 3))
 	#$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
 	#$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))

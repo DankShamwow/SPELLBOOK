@@ -131,9 +131,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0
 anchor_right = 0.0
-offset_left = 64.0
+offset_left = 24.0
 offset_top = 304.0
-offset_right = 192.0
+offset_right = 144.0
 offset_bottom = 434.0
 grow_vertical = 0
 
@@ -421,9 +421,6 @@ stretch_mode = 0
 unique_name_in_owner = true
 layout_mode = 1
 
-[connection signal="tile_mini_tooltip_requested" from="." to="TileTooltip" method="_show_mini_tooltip"]
-[connection signal="tile_tooltip_hide_requested" from="." to="TileTooltip" method="_hide_tooltip"]
-[connection signal="tile_tooltip_requested" from="." to="TileTooltip" method="_show_tooltip"]
 [connection signal="pressed" from="TestButton" to="." method="_on_test_button_pressed"]
 [connection signal="pressed" from="RelicButton" to="." method="_on_relic_button_pressed"]
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]

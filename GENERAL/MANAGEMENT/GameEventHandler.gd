@@ -21,6 +21,7 @@ signal pass_turn()
 signal selected(room: Room)
 
 # Scene Transition Signals
+signal combat_started
 signal combat_won
 signal combat_exited
 signal shop_exited

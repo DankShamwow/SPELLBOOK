@@ -25,7 +25,7 @@ signal tile_clicked(which: GridTile, action: GridTileAction)
 func _ready():
 	##This is the one we use outside of testing, at least when not testing the tile directly.
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
 	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
 	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
 	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
@@ -48,13 +48,14 @@ func update_tile_graphics():
 	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	
 	var new_type = tile.type
-	var new_letter = tile.letter
+	var played_letter = tile.played_letter
+	var visual_letter = tile.visual_letter
 	var new_notch1 = tile.notch1
 	var new_notch2 = tile.notch2
 	var new_notch3 = tile.notch3
 	
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(new_type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(new_letter, 1))
+	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(visual_letter, 1))
 	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 6))
 	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
 	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
@@ -208,7 +209,7 @@ func is_being_added_to_deck():
 func score_tile():
 	var letter_score = 0
 	if self.tile.type == LetterTile.TileType.BASIC or self.tile.type == LetterTile.TileType.LOCKED:
-		letter_score += point_values[self.tile.letter]
+		letter_score += point_values[self.tile.played_letter]
 		await juice_score()
 
 	elif self.tile.type == LetterTile.TileType.STONED:
@@ -216,17 +217,17 @@ func score_tile():
 		await juice_score()
 		
 	elif self.tile.type == LetterTile.TileType.BURNING:
-		letter_score += point_values[self.tile.letter]
+		letter_score += point_values[self.tile.played_letter]
 		await juice_score()
 		
 	elif self.tile.type == LetterTile.TileType.PLAGUED:
-		letter_score += point_values[self.tile.letter] - 1
+		letter_score += point_values[self.tile.played_letter] - 1
 		if letter_score == 0:
 			letter_score += 1
 		await juice_score()
 
 	elif self.tile.type == LetterTile.TileType.CRUMBLING:
-		letter_score += point_values[self.tile.letter]
+		letter_score += point_values[self.tile.played_letter]
 		await juice_score()
 
 	return letter_score
@@ -234,16 +235,16 @@ func score_tile():
 func score_tile_quiet():
 	var letter_score = 0
 	if self.tile.type == 0 or self.tile.type == 2:
-		letter_score += point_values[self.tile.letter]
+		letter_score += point_values[self.tile.played_letter]
 
 	elif self.tile.type == 1:
 		letter_score += 0
 		
 	elif self.tile.type == 3:
-		letter_score += point_values[self.tile.letter]
+		letter_score += point_values[self.tile.played_letter]
 		
 	elif self.tile.type == 4:
-		letter_score += point_values[self.tile.letter] - 1
+		letter_score += point_values[self.tile.played_letter] - 1
 		if letter_score == 0:
 			letter_score += 1
 

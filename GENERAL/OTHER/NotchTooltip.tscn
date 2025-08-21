@@ -1,0 +1,67 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjvffdnl0v751"]
+
+[ext_resource type="Script" uid="uid://bas0eqrc5v0p4" path="res://GENERAL/OTHER/NotchTooltip.gd" id="1_bplmj"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_avgxt"]
+[ext_resource type="Texture2D" uid="uid://b30istbrpksgs" path="res://SPRITES/GUI/NotchesSmall_v2.png" id="3_tpqvv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rt1gd"]
+atlas = ExtResource("3_tpqvv")
+region = Rect2(0, 0, 20, 20)
+
+[node name="NotchTooltip" type="PanelContainer"]
+anchors_preset = -1
+anchor_left = 0.094
+anchor_right = 0.094
+offset_left = -60.16
+offset_right = 99.84
+offset_bottom = 120.0
+script = ExtResource("1_bplmj")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NotchTooltipHeader" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_avgxt")
+theme_override_font_sizes/normal_font_size = 13
+text = "Notch"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="NotchTypeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NotchTypeSprite" type="TextureRect" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_rt1gd")
+expand_mode = 3
+
+[node name="NotchTypeText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_avgxt")
+theme_override_font_sizes/normal_font_size = 13
+text = "Type
+"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="NotchTypeDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Notch Description Text"
+fit_content = true
+autowrap_mode = 2

@@ -30,6 +30,9 @@ var tiles = []
 signal tile_tooltip_requested(which)
 signal tile_tooltip_hide_requested()
 
+signal notch_tooltip_requested(which)
+signal notch_tooltip_hide_requested()
+
 #func _ready() -> void:
 	#for i in starting_bag.size():
 		#current_deck.append(starting_bag[i])
@@ -62,6 +65,14 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 	if is_hovering == false:
 		which.hovering = is_hovering
 		tile_tooltip_hide_requested.emit()
+		
+func _is_notch_hovered(which: NotchObject, is_hovering: bool):
+	if is_hovering == true:
+		notch_tooltip_requested.emit(which)
+		
+	if is_hovering == false:
+		notch_tooltip_hide_requested.emit()
+
 
 func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int):
 	if reward_gold > 0:
@@ -121,7 +132,6 @@ func _on_reward_relic_button_pressed():
 		await get_tree().create_timer(0.05).timeout
 		%RewardsSkipButtonLabel.text = str("PROCEED")
 
-
 # INFO: It is safe to call this multiple times, as this only populates the UI that appears when you click the notch reward button.
 func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array):
 	var tween = %NotchAndTileRewardParent.create_tween()
@@ -138,7 +148,8 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			var new_notch = NOTCH_OBJECT_SCENE.instantiate()
 			new_notch.notch_type = notches[i]
 			%NotchesParent.add_child(new_notch)
-			new_notch.update_tooltip.connect(%TileTooltip._show_tooltip)
+			new_notch.update_tooltip.connect(%StickyTileTooltip._show_tooltip)
+			new_notch.notch_hovered.connect(self._is_notch_hovered)
 			var notch_tween = new_notch.create_tween()
 			notch_tween.tween_property(new_notch, "modulate:a", 0, 0.001)
 			notch_tween.tween_property(new_notch, "modulate:a", 1, 0.15)
@@ -234,6 +245,17 @@ func _on_skip_button_pressed() -> void:
 		var tween2 = %RewardsButtonList.create_tween()
 		tween2.tween_property(%RewardsButtonList, "visible", true, 0.001)
 		tween2.tween_property(%RewardsButtonList, "modulate:a", 1, 0.15)
+	
+	await get_tree().create_timer(0.15).timeout
+	
+	for notch in %NotchesParent.get_children():
+		notch._force_home()
+		
+	for tile in %NewTilesParent.get_children():
+		if tile.is_in_group("Tiles to Add"):
+			tile.remove_from_group("Tiles to Add")
+			tile.tile.target = Vector2(tile.position.x, 416)
+			tile.move_to_position()
 
 func _on_confirm_button_pressed() -> void:
 	if %NotchAndTileRewardParent.visible == true:

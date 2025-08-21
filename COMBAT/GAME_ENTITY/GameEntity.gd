@@ -67,7 +67,6 @@ func on_turn_start():
 		remove_status_check()
 
 func on_turn_end():
-	
 	for i in %Statuses.get_child_count():
 		var affected_tile_indices = %Statuses.get_child(i).on_turn_end()
 		if affected_tile_indices:

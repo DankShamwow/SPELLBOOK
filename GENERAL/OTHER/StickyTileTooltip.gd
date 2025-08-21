@@ -1,5 +1,5 @@
 extends PanelContainer
-class_name TileTooltip
+class_name StickyTileTooltip
 
 var point_values  	= GeneralManager.point_values
 
@@ -92,20 +92,6 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 	tile_tooltip_header.text = "Letter Tile"
 	
 	tile_type_text.text = str("Type: " + str(which.tile.TileType.keys()[which.tile.type]).to_pascal_case())
-	
-	if which.tile.type == LetterTile.TileType.BASIC or which.tile.type == LetterTile.TileType.LOCKED \
-	or which.tile.type == LetterTile.TileType.BURNING or which.tile.type == LetterTile.TileType.CRUMBLING:
-		current_score = point_values[which.tile.visual_letter]
-	
-	elif which.tile.type == LetterTile.TileType.STONED:
-		current_score = 0
-		
-	elif which.tile.type == LetterTile.TileType.PLAGUED:
-		current_score = point_values[which.tile.visual_letter] - 1
-		if current_score == 0:
-			current_score += 1
-	
-	tile_score_text.text = "(Score: " + str(current_score) + ")"
 
 	var current_letters_text = str('Letter: "' + str(which.tile.TileLetter.keys()[which.tile.visual_letter]).to_pascal_case()) + '"'
 	if not which.tile.bonus_letter1 == "":
@@ -116,6 +102,8 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter3) + '"'
 	
 	tile_letters_text.text = current_letters_text
+	
+
 
 	notch_1_text.text = str("Notch 1: " + str(which.tile.NotchTypes.keys()[which.tile.notch1]).to_pascal_case())
 	notch_2_text.text = str("Notch 2: " + str(which.tile.NotchTypes.keys()[which.tile.notch2]).to_pascal_case())
@@ -130,7 +118,7 @@ func _hide_tooltip() -> void:
 	if tween:
 		tween.kill()
 		
-	get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+	#get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
 	
 func hide_animation() -> void:
 	if not is_visible:

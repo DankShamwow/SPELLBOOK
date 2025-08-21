@@ -3,6 +3,19 @@ class_name NotchObject
 
 enum NotchTypes {REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
 
+var NotchDescriptions = {
+"REPEATING": 	"This tile scores an additional time when played, repeating any extra effects.",
+"ECHOING":		"This Tile returns to the rack once when played.",
+"VAPORIZING":	"This Tile is permanently removed from your Bag when played.",
+"WEIGHTED":		"This Tile skips the Tile Buffer after being played.",
+"INERT":		"This Tile becomes immune to negative Statuses.",
+"GILDED":		"+5 gold at the end of combat if this Tile is Racked.",
+"PHANTOM":		"Creates two Temporary copies of this Tile when played.",
+"FLAMING":		"When targeting an enemy, this Tile inflicts 3 Burn.",
+"REJUVENATING":	"Once per combat, heal for 3 when playing this Tile.",
+"REINFORCED":	"When this Tile is played, you gain 5 block."
+						}
+
 @export var notch_type: NotchTypes
 
 const UPPER_CORNER = Vector2(208, 88)
@@ -17,6 +30,8 @@ var home_pose = Vector2(0, 0)
 
 var folded := true
 
+var original_z = self.z_index
+
 var tween: Tween
 var tween2: Tween
 
@@ -25,7 +40,13 @@ var has_affected_notch2 := false
 var has_affected_notch3 := false
 
 signal send_back_home(which: NotchObject)
+signal has_paired()
+signal notch_hovered(which: NotchObject, is_hovering: bool)
 signal update_tooltip(which: GridTile)
+
+func new_notch(_type) -> NotchObject:
+	notch_type = _type
+	return self
 
 func _ready():
 	print(notch_type)
@@ -85,6 +106,7 @@ func _on_texture_button_up():
 				paired_tile = overlaps[i].get_parent()
 				_snap_to_paired_tile(paired_tile)
 				update_tooltip.emit(paired_tile)
+				has_paired.emit(self)
 				break
 	
 	get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
@@ -94,8 +116,6 @@ func _on_texture_button_up():
 		tween.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", spin_when_dropped, 0.05)
 		_send_back_home()
-	
-	
 
 func _resnap_to_paired_tile():
 	# NOTE: I'm not sure I need to have a safeguard against someone clicking the notch while it's doing this stuff.
@@ -162,6 +182,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
+			notch_hovered.emit(self, true)
 	
 	elif paired_tile.tile.notch2 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
@@ -178,6 +199,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
+			notch_hovered.emit(self, true)
 		
 	elif paired_tile.tile.notch3 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
@@ -195,6 +217,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
+			notch_hovered.emit(self, true)
 
 	else:
 		return
@@ -203,14 +226,55 @@ func _process(delta):
 	if dragging:
 		global_position = get_global_mouse_position() - offset
 
-func _on_texture_button_mouse_entered() -> void:
+func _on_texture_button_mouse_entered():
 	has_mouse = true
 	print(has_mouse)
-
-func _on_texture_button_mouse_exited() -> void:
+	original_z = self.z_index
+	self.scale = self.scale * 1.1
+	self.z_index = 128
+	notch_hovered.emit(self, true)
+	
+func _on_texture_button_mouse_exited():
 	has_mouse = false
 	print(has_mouse)
+	self.scale = self.scale / 1.1
+	self.z_index = original_z
+	notch_hovered.emit(self, false)
+
+func _force_home():
+	if has_affected_notch1 == true:
+		$AnimationPlayer.play("fold")
+		folded = true
+		has_affected_notch1 = false
+		paired_tile.tile.notch1 = LetterTile.NotchTypes.EMPTY
+		paired_tile.update_notch_graphics(1, true)
+		
+		paired_tile = null
+		
+	elif has_affected_notch2 == true:
+		$AnimationPlayer.play("fold")
+		folded = true
+		has_affected_notch2 = false
+		paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
+		paired_tile.update_notch_graphics(2, true)
+		
+		paired_tile = null
+		
+	elif has_affected_notch3 == true:
+		$AnimationPlayer.play("fold")
+		folded = true
+		has_affected_notch3 = false
+		paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
+		paired_tile.update_notch_graphics(3, true)
+		
+		paired_tile = null
+		
+	tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_SPRING)
+	tween.tween_property(self, "rotation_degrees", 0.0, 0.15)
 	
+	_send_back_home()
+
 func _send_back_home():
 	tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)

@@ -7,7 +7,9 @@ enum TileLetter {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, 
 enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
 
 @export var type: TileType
-@export var letter: TileLetter
+@export var true_letter: TileLetter
+@export var played_letter: TileLetter
+@export var visual_letter: TileLetter
 @export var bonus_letter1 := ""
 @export var bonus_letter2 := ""
 @export var bonus_letter3 := ""
@@ -48,7 +50,9 @@ var times_played := 0
 ## of creating the player's initial deck.
 func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
 	type = _type
-	letter = _letter
+	true_letter = _letter
+	played_letter = _letter
+	visual_letter = _letter
 	notch1 = _notch1
 	notch2 = _notch2
 	notch3 = _notch3
@@ -58,7 +62,9 @@ func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterT
 ## generate_tile creates a tile to be added to the deck.
 func generate_tile(_type, _letter, _notch1, _notch2, _notch3) -> LetterTile:
 	type = _type
-	letter = _letter
+	true_letter = _letter
+	played_letter = _letter
+	visual_letter = _letter
 	notch1 = _notch1
 	notch2 = _notch2
 	notch3 = _notch3
