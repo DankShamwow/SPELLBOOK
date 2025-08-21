@@ -60,6 +60,9 @@ var word_list = GeneralManager.word_list
 ## relic_dictionary is a list of every relic in the game.
 var relic_dictionary = RelicDictionary.RelicList
 
+## status_dictionary is a list of every status effect in the game.
+var status_dictionary = StatusDictionary.StatusEffectList
+
 ## tile_rng is the RandomNumberGenerator for tiles. This should be consistent if the seed is the same.
 var tile_rng = RandomnessManager.tile_rng
 
@@ -89,6 +92,7 @@ var end_of_combat = false
 
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/GridTile.tscn")
 @export var mini_grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/MiniGridTile.tscn")
+@export var status_effect_scene: PackedScene = preload("res://COMBAT/STATUSES/StatusEffect.tscn")
 var relic_scene = preload("res://RELIC/Relic.tscn")
 
 ## racked_tiles is the parent of all the tiles in the rack. We use the grid_index of a GridTile to recognize which child it is.
@@ -267,8 +271,10 @@ func _spawn_new_player_tile(grid_index: int):
 	added_tile.play_tile_sound()
 	GameEventHandler.update_bag_tiles.emit()
 
-## TODO: REWORK THIS
-func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_position, target):
+# TODO: REWORK THIS
+func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_package, _pivot_position, target, attacker):
+	
+	print(target)
 	
 	var enemy_letters = []
 	var tile_score 		= 0
@@ -286,7 +292,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 		
 		tiles_in_word.add_child(added_tile)
 		enemy_letters.append(added_tile)
-		added_tile.position = %TestEnemy.position + %TestEnemy.pivot_offset
+		added_tile.position = _pivot_position
 		added_tile.spawned_in()
 		
 		if tiles_in_word.get_child_count() == 1:
@@ -311,12 +317,29 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 		await get_tree().create_timer(0.075).timeout
 	
-	if target == Character:
+	if target == "PLAYER":
 		var damage = total_score
 		character_path.take_damage(damage)
-	else:
+		
+	elif target == "SELF":
 		%TestEnemy.gain_block(total_score)
+		
+	else:
+		var damage = total_score
+		character_path.take_damage(damage)
 	
+	if not status_package.is_empty():
+		var status_name = status_package[0]
+		var amount = status_package[1]
+		var decay_type = status_package[2]
+		var duration = status_package[3]
+		
+		if status_package[4] == "PLAYER":
+			character_path.add_status(status_name, amount, decay_type, duration)
+		
+		if status_package[4] == "SELF":
+			attacker.add_status(status_name, amount, decay_type, duration)
+		
 	await get_tree().create_timer(1.25).timeout
 	
 	for i in tiles_in_word.get_child_count():
@@ -325,7 +348,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, _pivot_positi
 		tiles_in_word.get_child(-1).is_dying()
 		tiles_in_word.get_child(-1).reparent(tiles_to_kill)
 		await get_tree().create_timer(0.04).timeout
-	
+		
 	_cleanup_killed_tiles()
 	enemy_attack_finished.emit()
 
@@ -1030,13 +1053,24 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 				new_tile.tile = which.current_enemy_deck[current_attack[j]]
 				new_tile.tile_hovered.connect(self._is_mini_tile_hovered)
 				new_attack.add_child(new_tile)
-				
+			
 			var attack_score_value = RichTextLabel.new()
 			attack_score_value.text = str(_calc_enemy_word_score(which, which.enemy_attack_list[i]))
 			attack_score_value.set_fit_content(true)
 			attack_score_value.set_autowrap_mode(0)
 			attack_score_value.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 			new_attack.add_child(attack_score_value)
+			
+			if not which.enemy_status_package_list[i].is_empty():
+				var status_package = which.enemy_status_package_list[i]
+				var new_status = status_dictionary.get(status_package[0])
+				var status_icon = status_effect_scene.instantiate()
+				status_icon.set_script(new_status)
+				new_attack.add_child(status_icon)
+				status_icon.amount = status_package[1]
+				status_icon.does_decay = bool(status_package[2])
+				status_icon.duration = status_package[3]
+				status_icon._update_graphics()
 
 	current_target = which
 	print(current_target.name)

@@ -58,7 +58,7 @@ func _on_map_button_toggled(toggled_on):
 			%MapButton.set_disabled(false)
 
 func _input(event: InputEvent) -> void:
-	if bag_open == false:
+	if bag_open == false and camera_2d.enabled == true:
 		if event.is_action_pressed("scroll_up"):
 			print("scrolling up!")
 			camera_2d.position.x += SCROLL_SPEED

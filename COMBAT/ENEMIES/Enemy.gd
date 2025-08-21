@@ -8,19 +8,22 @@ extends GameEntity
 ## inside of that particular enemy's scene and script.
 class_name Enemy
 
-
 var enemy_deck: Array
 var enemy_attack_count: int
 
 var enemy_attack_list := []
+var enemy_attack_targets := []
+var enemy_status_package_list := []
 var current_enemy_deck := []
 
-signal perform_attack(attack_to_perform: Array, attack_letter_tiles: Array, pivot_position: Vector2)
+signal perform_attack(attack_to_perform: Array, attack_letter_tiles: Array, debuff_package: Array, pivot_position: Vector2, attacker: Enemy)
 signal pass_turn()
 
 func _ready():
 	enemy_deck = %EnemyAttackData.EnemyDeck
 	enemy_attack_count = %EnemyAttackData.EnemyAttackCount
+	enemy_attack_targets = %EnemyAttackData.EnemyAttackTargets
+	enemy_status_package_list = %EnemyAttackData.EnemyStatusPackageList
 	
 	for i in enemy_deck.size():
 		current_enemy_deck.append(enemy_deck[i])
@@ -32,11 +35,14 @@ func _ready():
 	print(enemy_attack_list)
 	super()
 
-func perform_enemy_attack(attack_number, target):
+func perform_enemy_attack(attack_number):
 	remove_energy(1)
 	var attack_letter_tiles = []
 	var attack_to_perform = enemy_attack_list[attack_number]
+	var debuff_package = enemy_status_package_list[attack_number]
+	var target = enemy_attack_targets[attack_number]
+	
 	for i in attack_to_perform.size():
 		attack_letter_tiles.append(current_enemy_deck[attack_to_perform[i]])
 		
-	perform_attack.emit(attack_to_perform, attack_letter_tiles, self.pivot_offset, target)
+	perform_attack.emit(attack_to_perform, attack_letter_tiles, debuff_package, (self.position + self.pivot_offset), target, self)

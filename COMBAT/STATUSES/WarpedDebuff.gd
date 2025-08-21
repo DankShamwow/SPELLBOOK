@@ -96,6 +96,8 @@ func on_application(status_amount: int, does_status_decay: bool, status_duration
 					affected_tile.visual_letter = warped_letter
 					affected_tile.played_letter = warped_letter
 					affected_tile_list.append(affected_tile)
+	
+	return affected_tile_indices
 
 func on_turn_start():
 	if does_decay:
@@ -109,4 +111,5 @@ func on_duration_expiry():
 	# When the duration hits zero, do all this stuff.
 	for i in affected_tile_list.size():
 		affected_tile_list[i].visual_letter = affected_tile_list[i].true_letter
+		affected_tile_list[i].played_letter = affected_tile_list[i].true_letter
 	return affected_tile_indices

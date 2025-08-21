@@ -1,5 +1,5 @@
 extends Control
-class_name NotchObject
+class_name EditorNotchObject
 
 enum NotchTypes {REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
 
@@ -23,7 +23,7 @@ const LOWER_CORNER = Vector2(400, 120)
 
 var has_mouse := false
 var dragging := false
-var offset = Vector2(16, 16)
+var offset = Vector2(8, 8)
 var paired_tile: GridTile
 
 var home_pose = Vector2(0, 0)
@@ -43,10 +43,6 @@ signal send_back_home(which: NotchObject)
 signal has_paired()
 signal notch_hovered(which: NotchObject, is_hovering: bool)
 signal update_tooltip(which: GridTile)
-
-func new_notch(_type) -> NotchObject:
-	notch_type = _type
-	return self
 
 func _ready():
 	print(notch_type)
@@ -173,7 +169,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween.set_trans(Tween.TRANS_SPRING)
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", 180.0, 0.15)
-		tween2.tween_property(self, "position", paired_tile_pose, 0.15)
+		tween2.tween_property(self, "position", paired_tile_pose + Vector2(0, -8), 0.15)
 		paired_tile.tile.notch1 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
 		paired_tile.update_notch_graphics(1, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
@@ -190,7 +186,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween.set_trans(Tween.TRANS_SPRING)
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", -90.0, 0.15)
-		tween2.tween_property(self, "position", paired_tile_pose + Vector2(-16, -16), 0.15)
+		tween2.tween_property(self, "position", paired_tile_pose + Vector2(-8, -16), 0.15)
 		paired_tile.tile.notch2 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
 		paired_tile.update_notch_graphics(2, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
@@ -209,7 +205,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween2.set_ease(Tween.EASE_IN_OUT)
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", 90.0, 0.15)
-		tween2.tween_property(self, "position", paired_tile_pose + Vector2(16, -16), 0.15)
+		tween2.tween_property(self, "position", paired_tile_pose + Vector2(8, -16), 0.15)
 		paired_tile.tile.notch3 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
 		paired_tile.update_notch_graphics(3, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch3]).to_pascal_case())

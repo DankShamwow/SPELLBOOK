@@ -15,10 +15,10 @@ func on_turn_start():
 
 func _perform_next_attack():
 	if self.current_energy == 3:
-		perform_enemy_attack(0, Character)
+		perform_enemy_attack(0)
 	elif self.current_energy == 2:
-		perform_enemy_attack(1, self)
+		perform_enemy_attack(1)
 	elif self.current_energy == 1:
-		perform_enemy_attack(2, Character)
+		perform_enemy_attack(2)
 	else:
 		pass_turn.emit()

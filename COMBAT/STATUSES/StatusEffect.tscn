@@ -15,7 +15,8 @@ script = ExtResource("1_mbwx6")
 unique_name_in_owner = true
 position = Vector2(12, 12)
 texture = ExtResource("2_bq3q3")
-hframes = 9
+hframes = 10
+vframes = 2
 
 [node name="NumberLabel" type="Label" parent="."]
 unique_name_in_owner = true

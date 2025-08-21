@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://bvh04nepjjv6e"]
 
-[ext_resource type="Script" uid="uid://co8j42sdeocbd" path="res://COMBAT/TOOLS/AttackMaker.gd" id="1_o581r"]
+[ext_resource type="Script" uid="uid://co8j42sdeocbd" path="res://AttackMaker.gd" id="1_o581r"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_5fbpu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="3_sw5ai"]
 [ext_resource type="PackedScene" uid="uid://x7ouxihlqulb" path="res://COMBAT/TOOLS/NotchGenerator.tscn" id="4_ym842"]
@@ -39,7 +39,7 @@ offset_left = 16.0
 offset_top = 24.0
 offset_right = 288.0
 offset_bottom = 88.0
-placeholder_text = "WORD, TARGET"
+placeholder_text = "Write the word for the attack here!"
 keep_editing_on_text_submit = true
 
 [node name="DebuffText" type="LineEdit" parent="."]
@@ -149,15 +149,6 @@ unique_name_in_owner = true
 [node name="StatusParent" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="EmptyStatusButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 464.0
-offset_top = 440.0
-offset_right = 632.0
-offset_bottom = 472.0
-text = "ADD EMPTY STATUS"
-
 [connection signal="text_submitted" from="LineEdit" to="." method="_on_attack_word_submitted"]
 [connection signal="text_submitted" from="DebuffText" to="." method="_on_attack_debuff_submitted"]
 [connection signal="pressed" from="TestButton" to="." method="_on_export_button_pressed"]
-[connection signal="pressed" from="EmptyStatusButton" to="." method="_add_blank_debuff_package"]

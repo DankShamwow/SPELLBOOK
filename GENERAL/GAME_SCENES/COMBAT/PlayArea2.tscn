@@ -177,7 +177,7 @@ offset_bottom = 152.0
 
 [node name="EnemyAttackList" type="VBoxContainer" parent="EnemyAttackListGUI/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/separation = 9
+theme_override_constants/separation = 16
 
 [node name="PlayButtonGUI" type="NinePatchRect" parent="."]
 texture_filter = 1
