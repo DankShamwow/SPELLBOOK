@@ -27,11 +27,11 @@ var EnemyAttack1 = [4,5,6,7,8,]
 
 var EnemyAttack2 = [9,10,11,12,13,14,15,]
 
-var EnemyStatusPackage0 = ["WARPED_DEBUFF", 3, 1, 3, "PLAYER"]
+var EnemyStatusPackage0 = [["WARPED_DEBUFF", 3, 1, 3, "PLAYER"],]
 
 var EnemyStatusPackage1 = []
 
-var EnemyStatusPackage2 = ["BLEED_DEBUFF", 3, 1, 3, "PLAYER"]
+var EnemyStatusPackage2 = [["BLEED_DEBUFF", 3, 1, 3, "PLAYER"],]
 
 var EnemyAttackList = [
 EnemyAttack0,

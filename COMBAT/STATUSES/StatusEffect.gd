@@ -8,8 +8,12 @@ enum StackType {NONE, AMOUNT, DURATION, BOTH}
 @export var does_decay:= false
 @export var has_icon := true
 @export var tile_status := false
-@export var duration := 0
-@export var amount := 0
+@export var duration: int
+@export var amount: int
+@export var status_name := ""
+@export var status_description := ""
+
+signal status_hovered(which: StatusEffect, is_hovering: bool)
 
 func _ready():
 	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
@@ -18,10 +22,16 @@ func _ready():
 func _update_graphics():
 	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
 	if does_decay:
-		%NumberLabel.text = str(amount)
+		%NumberLabel.text = str(self.amount)
 
 	if not does_decay:
 		%NumberLabel.text = ""
+
+func _on_status_effect_mouse_entered():
+	status_hovered.emit(self, true)
+	
+func _on_status_effect_mouse_exited():
+	status_hovered.emit(self, false)
 
 ## When this status is applied, this determines the amount of the status applied, if it decays each turn, and the duration of it.
 func on_application(status_amount: int, does_status_decay: bool, status_duration: int):

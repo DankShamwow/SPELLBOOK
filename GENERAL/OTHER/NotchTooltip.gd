@@ -24,7 +24,6 @@ func _show_tooltip(which: NotchObject) -> void:
 		tween.kill()
 
 	notch_type_icon.texture.region = Rect2(20*which.notch_type, 0, 20, 20)
-	print(20*which.notch_type)
 	
 	notch_tooltip_header.text = "Notch"
 	

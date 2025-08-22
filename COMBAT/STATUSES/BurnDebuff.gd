@@ -3,9 +3,20 @@ class_name BurnDebuff
 
 func _ready():
 	id = 5
+	status_name = "Burn"
+	status_description = str("At the end of turn, take " + str(self.amount) + " damage. Mitigated by Block.")
 	tile_status = false
 	stack_type = StatusEffect.StackType.BOTH
 	print("STATUS ID: " + str(id))
+	super()
+
+func _update_graphics():
+	status_name = "Burn"
+	status_description = str("At the end of turn, take " + str(self.amount) + " damage. Mitigated by Block.")
+	super()
+
+func _on_status_effect_mouse_entered():
+	status_description = str("At the end of turn, take " + str(self.amount) + " damage. Mitigated by Block.")
 	super()
 
 ## When this status is applied, this determines the amount of the status applied, if it decays each turn, and the duration of it.

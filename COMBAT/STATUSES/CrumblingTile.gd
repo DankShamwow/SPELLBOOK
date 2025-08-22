@@ -9,8 +9,19 @@ var previous_debuff_index: int
 
 func _ready():
 	id = 4
+	status_name = "Crumbling"
+	status_description = "Crumbling Tiles are Destroyed when played. Destroyed tiles are not returned to your Tile Bag for the remainder of combat."
 	tile_status = true
 	print("STATUS ID: " + str(id))
+	super()
+	
+func _update_graphics():
+	status_name = "Crumbling"
+	status_description = "Crumbling Tiles are Destroyed when played. Destroyed tiles are not returned to your Tile Bag for the remainder of combat."
+	super()
+
+func _on_status_effect_mouse_entered():
+	status_description = "Crumbling Tiles are Destroyed when played. Destroyed tiles are not returned to your Tile Bag for the remainder of combat."
 	super()
 
 func on_application(status_amount: int, does_status_decay: bool, status_duration: int):

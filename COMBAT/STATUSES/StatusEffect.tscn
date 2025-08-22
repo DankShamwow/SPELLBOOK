@@ -11,19 +11,26 @@ offset_right = 24.0
 offset_bottom = 24.0
 script = ExtResource("1_mbwx6")
 
-[node name="Icon" type="Sprite2D" parent="."]
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+
+[node name="Icon" type="Sprite2D" parent="TextureButton"]
 unique_name_in_owner = true
 position = Vector2(12, 12)
 texture = ExtResource("2_bq3q3")
 hframes = 10
 vframes = 2
 
-[node name="NumberLabel" type="Label" parent="."]
+[node name="NumberLabel" type="Label" parent="TextureButton"]
 unique_name_in_owner = true
-layout_mode = 0
 offset_top = 20.0
 offset_right = 28.0
 offset_bottom = 34.0
 theme = ExtResource("3_8l33h")
 text = "1"
 horizontal_alignment = 2
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_status_effect_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_status_effect_mouse_exited"]

@@ -9,8 +9,19 @@ var previous_debuff_index: int
 
 func _ready():
 	id = 1
+	status_name = "Locked"
+	status_description = "Locked Tiles are unplayable."
 	tile_status = true
 	print("STATUS ID: " + str(id))
+	super()
+
+func _update_graphics():
+	status_name = "Locked"
+	status_description = "Locked Tiles are unplayable."
+	super()
+	
+func _on_status_effect_mouse_entered():
+	status_description = "Locked Tiles are unplayable."
 	super()
 
 func on_application(status_amount: int, does_status_decay: bool, status_duration: int):

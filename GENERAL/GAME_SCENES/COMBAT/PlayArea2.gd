@@ -329,16 +329,20 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 		character_path.take_damage(damage)
 	
 	if not status_package.is_empty():
-		var status_name = status_package[0]
-		var amount = status_package[1]
-		var decay_type = status_package[2]
-		var duration = status_package[3]
-		
-		if status_package[4] == "PLAYER":
-			character_path.add_status(status_name, amount, decay_type, duration)
-		
-		if status_package[4] == "SELF":
-			attacker.add_status(status_name, amount, decay_type, duration)
+		for i in status_package.size():
+			print(status_package)
+			var subpackage = status_package[i]
+			print(subpackage)
+			var status_name = subpackage[0]
+			var amount = subpackage[1]
+			var decay_type = subpackage[2]
+			var duration = subpackage[3]
+			
+			if subpackage[4] == "PLAYER":
+				character_path.add_status(status_name, amount, decay_type, duration)
+			
+			if subpackage[4] == "SELF":
+				attacker.add_status(status_name, amount, decay_type, duration)
 		
 	await get_tree().create_timer(1.25).timeout
 	
@@ -1063,14 +1067,21 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 			
 			if not which.enemy_status_package_list[i].is_empty():
 				var status_package = which.enemy_status_package_list[i]
-				var new_status = status_dictionary.get(status_package[0])
-				var status_icon = status_effect_scene.instantiate()
-				status_icon.set_script(new_status)
-				new_attack.add_child(status_icon)
-				status_icon.amount = status_package[1]
-				status_icon.does_decay = bool(status_package[2])
-				status_icon.duration = status_package[3]
-				status_icon._update_graphics()
+				print("STATUS PACKAGE: " + str(status_package))
+				for j in status_package.size():
+					var subpackage = status_package[j]
+					print("STATUS SUBPACKAGE: " + str(subpackage))
+					var new_status = status_dictionary.get(subpackage[0])
+					var status_icon = status_effect_scene.instantiate()
+					status_icon.set_script(new_status)
+					new_attack.add_child(status_icon)
+					status_icon.amount = subpackage[1]
+					print(status_icon.amount)
+					status_icon.does_decay = bool(subpackage[2])
+					status_icon.duration = subpackage[3]
+					status_icon.status_hovered.connect(%StatusEffectTooltip._on_status_hovered)
+					print("STATUS ID: " + str(status_icon.id))
+					status_icon._update_graphics()
 
 	current_target = which
 	print(current_target.name)

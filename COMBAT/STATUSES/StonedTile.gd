@@ -9,8 +9,19 @@ var previous_debuff_index: int
 
 func _ready():
 	id = 0
+	status_name = "Stoned"
+	status_description = "Stoned tiles have no point value when played."
 	tile_status = true
 	print("STATUS ID: " + str(id))
+	super()
+
+func _update_graphics():
+	status_name = "Stoned"
+	status_description = "Stoned tiles have no point value when played."
+	super()
+
+func _on_status_effect_mouse_entered():
+	status_description = "Stoned tiles have no point value when played."
 	super()
 
 func on_application(status_amount: int, does_status_decay: bool, status_duration: int):

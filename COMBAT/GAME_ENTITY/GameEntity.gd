@@ -148,6 +148,11 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 	effect_node.set_script(new_status)
 	%Statuses.add_child(effect_node)
 
+	var outside = %Statuses.get_parent().get_parent().get_parent()
+	var tooltip = outside.find_child("StatusEffectTooltip")
+	# First is GameEntity, Second is Combatants, Third should be PlayArea
+	effect_node.status_hovered.connect(tooltip._on_status_hovered)
+
 	if effect_node.tile_status == true:
 		var affected_tile_indices = effect_node.on_application(_amount, status_decay, _duration)
 		if affected_tile_indices.size() == 0:
@@ -204,6 +209,7 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 	else:
 		effect_node.on_application(_amount, status_decay, _duration)
 		print("Could not find status.")
+
 
 func query_status_value(status_id: int):
 	for i in %Statuses.get_child_count():

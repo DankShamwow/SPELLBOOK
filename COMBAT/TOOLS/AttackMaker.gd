@@ -139,10 +139,10 @@ func _on_export_button_pressed():
 		for i in status_packages.size():
 			var exported_status_package = status_packages[i]
 			if exported_status_package.size() > 0:
-				export.store_string("var EnemyStatusPackage" + str(i) + " = ")
+				export.store_string("var EnemyStatusPackage" + str(i) + " = [")
 				for j in exported_status_package.size():
-					export.store_string(str(exported_status_package[j]))
-				export.store_line("")
+					export.store_string(str(str(exported_status_package[j]) + ","))
+				export.store_line("]")
 				export.store_line("")
 			
 			else:

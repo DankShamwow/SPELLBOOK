@@ -3,8 +3,19 @@ class_name IrradiatedDebuff
 
 func _ready():
 	id = 8
+	status_name = "Irradiated"
+	status_description = str("At the start of your turn, lose" + str(self.amount) + " health. Does not decay.")
 	stack_type = StatusEffect.StackType.AMOUNT
 	print("STATUS ID: " + str(id))
+	super()
+
+func _update_graphics():
+	status_name = "Irradiated"
+	status_description = str("At the start of your turn, lose" + str(self.amount) + " health. Does not decay.")
+	super()
+	
+func _on_status_effect_mouse_entered():
+	status_description = str("At the start of your turn, lose" + str(self.amount) + " health. Does not decay.")
 	super()
 
 ## When this status is applied, this determines the amount of the status applied, if it decays each turn, and the duration of it.

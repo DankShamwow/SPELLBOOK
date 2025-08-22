@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://d12fqxkjylbeu"]
+[gd_scene load_steps=31 format=3 uid="uid://d12fqxkjylbeu"]
 
 [ext_resource type="Script" uid="uid://bkuymnlsmqvfo" path="res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.gd" id="1_d7kxf"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="2_dvygu"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dtrboqq78f2xn" path="res://SPRITES/Godot_v4.4.1-stable_win64_tUrMHFT3TY.png" id="2_idy2k"]
 [ext_resource type="PackedScene" uid="uid://bgn1buqfnev83" path="res://COMBAT/ENEMIES/TestEnemy.tscn" id="3_dvygu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="4_fhfjg"]
+[ext_resource type="PackedScene" uid="uid://opxx065lkaqc" path="res://GENERAL/OTHER/StatusEffectTooltip.tscn" id="5_crhsm"]
 [ext_resource type="Texture2D" uid="uid://bf4pb80s3hnmj" path="res://SPRITES/GUI/AttackButton.png" id="5_idy2k"]
 [ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="9_gbtod"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="9_lhr36"]
@@ -136,6 +137,14 @@ offset_top = 304.0
 offset_right = 192.0
 offset_bottom = 434.0
 grow_vertical = 0
+
+[node name="StatusEffectTooltip" parent="." instance=ExtResource("5_crhsm")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 48.0
+offset_top = 304.0
+offset_right = -432.0
+offset_bottom = -48.0
 
 [node name="TileRackSpawner4" type="Marker2D" parent="."]
 visible = false

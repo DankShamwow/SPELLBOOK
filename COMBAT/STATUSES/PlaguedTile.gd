@@ -9,8 +9,19 @@ var previous_debuff_index: int
 
 func _ready():
 	id = 3
+	status_name = "Plagued"
+	status_description = "Plagued Tiles spread their disease to adjacent tiles at the start of your turn, and are worth one less point."
 	tile_status = true
 	print("STATUS ID: " + str(id))
+	super()
+	
+func _update_graphics():
+	status_name = "Plagued"
+	status_description = "Plagued Tiles spread their disease to adjacent tiles at the start of your turn, and are worth one less point."
+	super()
+
+func _on_status_effect_mouse_entered():
+	status_description = "Plagued Tiles spread their disease to adjacent tiles at the start of your turn, and are worth one less point."
 	super()
 
 func on_application(status_amount: int, does_status_decay: bool, status_duration: int):

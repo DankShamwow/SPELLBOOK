@@ -3,9 +3,20 @@ class_name BleedDebuff
 
 func _ready():
 	id = 7
+	status_name = "Bleed"
+	status_description = str("At the start and end of turn, lose " + str(self.amount) + " health.")
 	tile_status = false
 	stack_type = StatusEffect.StackType.BOTH
 	print("STATUS ID: " + str(id))
+	super()
+
+func _update_graphics():
+	status_name = "Bleed"
+	status_description = str("At the start and end of turn, lose " + str(self.amount) + " health.")
+	super()
+
+func _on_status_effect_mouse_entered():
+	status_description = str("At the start and end of turn, lose " + str(self.amount) + " health.")
 	super()
 
 ## When this status is applied, this determines the amount of the status applied, if it decays each turn, and the duration of it.
