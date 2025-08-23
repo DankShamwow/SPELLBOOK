@@ -108,8 +108,12 @@ func move_to_position(time:= 0.25):
 	return true
 
 func play_tile_sound():
-	if not $TileSoundAttempt3.is_playing():
-		$TileSoundAttempt3.play()
+	if not $SoundParent/TileSoundAttempt3.is_playing():
+		$SoundParent/TileSoundAttempt3.play()
+		
+func play_tile_destruction_sound():
+	if not $SoundParent/DestructionSound.is_playing():
+		$SoundParent/DestructionSound.play()
 
 func fade():
 	var tween = get_tree().create_tween()
@@ -182,6 +186,13 @@ func is_dying():
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
 	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
 	
+func is_destroyed():
+	var tween = get_tree().create_tween()
+	var tween2 = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
+	play_tile_destruction_sound()
+	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
@@ -210,25 +221,41 @@ func score_tile():
 	var letter_score = 0
 	if self.tile.type == LetterTile.TileType.BASIC or self.tile.type == LetterTile.TileType.LOCKED:
 		letter_score += point_values[self.tile.played_letter]
-		await juice_score()
 
 	elif self.tile.type == LetterTile.TileType.STONED:
 		letter_score += 0
-		await juice_score()
 		
 	elif self.tile.type == LetterTile.TileType.BURNING:
 		letter_score += point_values[self.tile.played_letter]
-		await juice_score()
 		
 	elif self.tile.type == LetterTile.TileType.PLAGUED:
 		letter_score += point_values[self.tile.played_letter] - 1
 		if letter_score == 0:
 			letter_score += 1
-		await juice_score()
 
 	elif self.tile.type == LetterTile.TileType.CRUMBLING:
 		letter_score += point_values[self.tile.played_letter]
-		await juice_score()
+
+	if self.tile.notch1 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+		
+	if self.tile.notch2 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+		
+	if self.tile.notch3 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+
+	if self.tile.notch1 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+		
+	if self.tile.notch2 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+		
+	if self.tile.notch3 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+
+
+	await juice_score()
 
 	return letter_score
 

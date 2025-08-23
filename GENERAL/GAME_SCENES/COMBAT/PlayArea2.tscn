@@ -1,9 +1,10 @@
-[gd_scene load_steps=31 format=3 uid="uid://d12fqxkjylbeu"]
+[gd_scene load_steps=32 format=3 uid="uid://d12fqxkjylbeu"]
 
 [ext_resource type="Script" uid="uid://bkuymnlsmqvfo" path="res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.gd" id="1_d7kxf"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="2_dvygu"]
 [ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="2_fhfjg"]
 [ext_resource type="Texture2D" uid="uid://dtrboqq78f2xn" path="res://SPRITES/Godot_v4.4.1-stable_win64_tUrMHFT3TY.png" id="2_idy2k"]
+[ext_resource type="AudioStream" uid="uid://bn3y6mvieieat" path="res://AUDIO/NOTCH/WEIGHTED/weighted_notch_attempt_3.ogg" id="2_psil3"]
 [ext_resource type="PackedScene" uid="uid://bgn1buqfnev83" path="res://COMBAT/ENEMIES/TestEnemy.tscn" id="3_dvygu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="4_fhfjg"]
 [ext_resource type="PackedScene" uid="uid://opxx065lkaqc" path="res://GENERAL/OTHER/StatusEffectTooltip.tscn" id="5_crhsm"]
@@ -102,6 +103,11 @@ tiles_in_word = NodePath("TilesInWord")
 tiles_to_kill = NodePath("TilesToKill")
 combatants = NodePath("Combatants")
 attack_list = NodePath("EnemyAttackListGUI/ScrollContainer/EnemyAttackList")
+
+[node name="SoundParent" type="Node" parent="."]
+
+[node name="WeightedNotchSound" type="AudioStreamPlayer" parent="SoundParent"]
+stream = ExtResource("2_psil3")
 
 [node name="PlayerAreaGUI" type="NinePatchRect" parent="."]
 texture_filter = 1

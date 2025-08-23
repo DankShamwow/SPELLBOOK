@@ -13,7 +13,10 @@ var current_combat_deck = GeneralManager.current_combat_deck
 ## available_tiles is the list of LetterTiles remaining in the deck.
 var available_tiles = GeneralManager.available_tiles
 
-## tiles_in_play is the list of LetterTiles currently in the grid or being used to play a word.
+## priority_draw_list is the list of LetterTiles that should be drawn first.
+var priority_draw_list = GeneralManager.priority_draw_list
+
+## tiles_in_play is the list of LetterTiles currently in the rack or being used to play a word.
 var tiles_in_play = GeneralManager.tiles_in_play
 
 ## buffered_tiles is the list of LetterTiles that was just played, and will be returned to the
@@ -136,6 +139,11 @@ func _ready():
 	for i in current_deck.size():
 		current_combat_deck.append(current_deck[i])
 		available_tiles.append(current_deck[i])
+		
+		if current_deck[i].notch1 == LetterTile.NotchTypes.EAGER \
+		or current_deck[i].notch2 == LetterTile.NotchTypes.EAGER \
+		or current_deck[i].notch3 == LetterTile.NotchTypes.EAGER:
+			priority_draw_list.append(current_deck[i])
 	
 	# Give the player character the first turn, then pull him into the scene.
 	who_has_initiative = character_path
@@ -217,7 +225,14 @@ func on_combat_start():
 		current_relics[i].on_combat_start()
 		current_relics[i].on_turn_start()
 
-	## TODO: replace this with a generalized _populate_rack() function.
+	for i in current_combat_deck.size():
+		if current_combat_deck[i].notch1 == LetterTile.NotchTypes.REJUVENATING:
+			current_combat_deck[i].heal1 = false
+		if current_combat_deck[i].notch2 == LetterTile.NotchTypes.REJUVENATING:
+			current_combat_deck[i].heal2 = false
+		if current_combat_deck[i].notch3 == LetterTile.NotchTypes.REJUVENATING:
+			current_combat_deck[i].heal3 = false
+
 	_populate_rack()
 
 func _populate_rack():
@@ -234,10 +249,17 @@ func _spawn_new_player_tile(grid_index: int):
 		return
 	## added_tile is a GridTile with the data from a LetterTile
 	var added_tile = grid_tile_scene.instantiate()
+	var called_tile = LetterTile
 	
-	## called_tile is a LetterTile
-	var called_tile = available_tiles.pop_at(tile_rng.randi() % available_tiles.size())
+	if not priority_draw_list.is_empty():
+		called_tile = priority_draw_list.pop_back()
+		available_tiles.pop_at(called_tile.tile_index)
 	
+	else:
+		## called_tile is a LetterTile
+		called_tile = available_tiles.pop_at(tile_rng.randi() % available_tiles.size())
+	
+	called_tile.current_age = 0
 	# Add the LetterTile to the GridTile so it has data
 	added_tile.tile = called_tile
 	
@@ -548,7 +570,7 @@ func _score_word():
 				%TileScoreLabel.text = str(tile_score)
 				# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 				
-				await get_tree().create_timer(0.0025).timeout
+				await get_tree().create_timer(0.025).timeout
 				
 				# TODO: Put Notch-based effects here? Or maybe they belong inside the tile scoring. I don't know.
 				
@@ -740,7 +762,7 @@ func _score_word():
 			tile_to_process.reparent(tiles_to_kill)
 			#current_deck.remove_at(tile_to_process.tile.tile_index) # TODO: Figure out how to do this correctly.
 			tiles_in_play.remove_at(i)
-			tile_to_process.is_dying() # TODO: Replace with unique effect.
+			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		# Deletion of temps.
 		elif tile_to_process.tile.is_temporary:
@@ -750,7 +772,7 @@ func _score_word():
 			tile_to_process.tile.vaporized = true
 			tile_to_process.reparent(tiles_to_kill)
 			tiles_in_play.remove_at(i)
-			tile_to_process.is_dying() # TODO: Replace with unique effect.
+			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		# Crumbling.
 		elif tile_to_process.tile.type == LetterTile.TileType.CRUMBLING:
@@ -759,7 +781,7 @@ func _score_word():
 			tile_to_process.tile.no_buffer = true
 			tile_to_process.reparent(tiles_to_kill)
 			tiles_in_play.remove_at(i)
-			tile_to_process.is_dying() # TODO: Replace with unique effect.
+			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		else:
 			tile_to_process.reparent(tiles_to_kill)
@@ -784,10 +806,11 @@ func _cleanup(total_score):
 			and last_letter.tile.vaporized == false:
 				available_tiles.append(last_letter.tile)
 				last_letter.z_index = 120
+				play_weighted_notch_sound()
 				last_letter.is_dying()
-				last_letter.tile.target = Vector2(1184.0, 64.0)
+				last_letter.tile.target = Vector2(592.0, 32.0)
 				last_letter.move_to_position(0.35)
-				await get_tree().create_timer(0.04).timeout
+				await get_tree().create_timer(0.075).timeout
 		
 		elif last_letter.tile.no_buffer == false and last_letter.tile.vaporized == false:
 			buffered_tiles.append(last_letter.tile)
@@ -795,7 +818,7 @@ func _cleanup(total_score):
 			last_letter.is_dying()
 			last_letter.tile.target = Vector2(592.0, 32.0)
 			last_letter.move_to_position(0.35)
-			await get_tree().create_timer(0.04).timeout
+			await get_tree().create_timer(0.075).timeout
 		
 		else:
 			pass
@@ -820,7 +843,6 @@ func _move_tiles_into_place():
 		tiles_in_play.append(racked_tiles.get_child(i).tile)
 		racked_tiles.get_child(i).tile.echoed_this_word = false
 		
-	
 	remaining_tiles.sort()
 	remaining_tiles.reverse()
 	print(remaining_tiles)
@@ -1021,10 +1043,11 @@ func _pass_turn():
 		who_has_initiative = combatants.get_child(0)
 	
 	who_has_initiative.on_turn_start()
-	
 	if who_has_initiative is Character:
 		for i in current_relics.size():
 			current_relics[i].on_turn_start()
+		for i in tiles_in_play.size():
+			tiles_in_play[i].current_age += 1
 	
 	_check_turn_status()
 
@@ -1168,6 +1191,11 @@ func on_combat_end():
 	# TODO: Replace these values with values from the Encounter System that will be implemented later.
 	%CombatRewards._bringup_combat_rewards(50, 5, 0) 
 	
+
+### Audio Shaboingery
+func play_weighted_notch_sound():
+	if not $SoundParent/WeightedNotchSound.is_playing():
+		$SoundParent/WeightedNotchSound.play()
 
 ### Buttons and stuff below here!
 #func _on_test_button_pressed():

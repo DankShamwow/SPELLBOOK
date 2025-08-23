@@ -25,6 +25,7 @@ vframes = 2
 
 [node name="NumberLabel" type="Label" parent="TextureButton"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_top = 20.0
 offset_right = 28.0
 offset_bottom = 34.0

@@ -185,7 +185,7 @@ pivot_offset = Vector2(-2, 2)
 [node name="LeftWing" type="Sprite2D" parent="NotchSprite/LeftWingControl"]
 unique_name_in_owner = true
 texture = ExtResource("2_7pub2")
-hframes = 10
+hframes = 14
 vframes = 4
 
 [node name="RightWingControl" type="Control" parent="NotchSprite"]
@@ -197,23 +197,23 @@ pivot_offset = Vector2(2, 2)
 [node name="RightWing" type="Sprite2D" parent="NotchSprite/RightWingControl"]
 unique_name_in_owner = true
 texture = ExtResource("2_7pub2")
-hframes = 10
+hframes = 14
 vframes = 4
-frame = 10
+frame = 14
 
 [node name="Nub" type="Sprite2D" parent="NotchSprite"]
 unique_name_in_owner = true
 texture = ExtResource("2_7pub2")
-hframes = 10
+hframes = 14
 vframes = 4
-frame = 20
+frame = 28
 
 [node name="Marker" type="Sprite2D" parent="NotchSprite"]
 unique_name_in_owner = true
 texture = ExtResource("2_7pub2")
-hframes = 10
+hframes = 14
 vframes = 4
-frame = 30
+frame = 42
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

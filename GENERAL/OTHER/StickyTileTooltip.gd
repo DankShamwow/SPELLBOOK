@@ -57,6 +57,24 @@ func _show_tooltip(which: GridTile) -> void:
 		if current_score == 0:
 			current_score += 1
 	
+	if which.tile.notch1 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+		
+	if which.tile.notch2 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+		
+	if which.tile.notch3 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+	
+	if which.tile.notch1 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
+	
+	if which.tile.notch2 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
+	
+	if which.tile.notch3 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
+	
 	tile_score_text.text = "(Score: " + str(current_score) + ")"
 	
 	if not (which.tile.bonus_letter1 == "" or which.tile.bonus_letter2 == "" or which.tile.bonus_letter3 == ""):
@@ -103,7 +121,23 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 	
 	tile_letters_text.text = current_letters_text
 	
-
+	if which.tile.notch1 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+		
+	if which.tile.notch2 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+		
+	if which.tile.notch3 == LetterTile.NotchTypes.PATIENT:
+		current_score += which.tile.current_age * 3
+	
+	if which.tile.notch1 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
+	
+	if which.tile.notch2 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
+	
+	if which.tile.notch3 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
+		current_score += 10
 
 	notch_1_text.text = str("Notch 1: " + str(which.tile.NotchTypes.keys()[which.tile.notch1]).to_pascal_case())
 	notch_2_text.text = str("Notch 2: " + str(which.tile.NotchTypes.keys()[which.tile.notch2]).to_pascal_case())

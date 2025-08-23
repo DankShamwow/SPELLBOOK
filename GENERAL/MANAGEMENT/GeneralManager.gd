@@ -22,6 +22,9 @@ var current_combat_deck	= []
 ## available_tiles is the list of LetterTiles remaining in the deck.
 var available_tiles		= []
 
+## priority_draw_list is the list of LetterTiles that should be drawn first.
+var priority_draw_list 	= []
+
 ## tiles_in_play is the list of LetterTiles currently in the grid or being used to play a word.
 var tiles_in_play		= []
 

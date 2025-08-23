@@ -4,7 +4,7 @@ extends Resource
 
 enum TileType {BASIC, STONED, LOCKED, BURNING, PLAGUED, CRUMBLING}
 enum TileLetter {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}
-enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
+enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED, EAGER, PATIENT, QUICK, OVERLOADED}
 
 @export var type: TileType
 @export var true_letter: TileLetter
@@ -41,6 +41,9 @@ var heal3 := false
 # These flags determine combat states.
 var no_buffer := false
 var vaporized := false
+
+# This determines how many turns this tile has been in your Rack for.
+var current_age := 0
 
 ### Other Data
 var times_played := 0

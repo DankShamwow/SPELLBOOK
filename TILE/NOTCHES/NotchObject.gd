@@ -1,19 +1,23 @@
 extends Control
 class_name NotchObject
 
-enum NotchTypes {REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED}
+enum NotchTypes {REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED, EAGER, PATIENT, QUICK, OVERLOADED}
 
 var NotchDescriptions = {
-"REPEATING": 	"This tile scores an additional time when played, repeating any extra effects.",
+"REPEATING": 	"This Tile triggers an additional time.",
 "ECHOING":		"This Tile returns to the rack once when played.",
 "VAPORIZING":	"This Tile is permanently removed from your Bag when played.",
 "WEIGHTED":		"This Tile skips the Tile Buffer after being played.",
 "INERT":		"This Tile becomes immune to negative Statuses.",
 "GILDED":		"+5 gold at the end of combat if this Tile is Racked.",
-"PHANTOM":		"Creates two Temporary copies of this Tile when played.",
+"PHANTOM":		"Creates two Temporary copies of this Tile when scored.",
 "FLAMING":		"When targeting an enemy, this Tile inflicts 3 Burn.",
-"REJUVENATING":	"Once per combat, heal for 3 when playing this Tile.",
-"REINFORCED":	"When this Tile is played, you gain 5 block."
+"REJUVENATING":	"Once per combat, heal for 3 when scoring this Tile.",
+"REINFORCED":	"When this Tile is scored, you gain 5 block.",
+"EAGER":		"This tile is drawn at the beginning of combat.",
+"PATIENT":		"This Tile gains +3 points per turn while held in your Rack. Resets when drawn.",
+"QUICK":		"This Tile gains +10 points when scored the turn it is drawn.",
+"OVERLOADING":	"When this Tile is scored, lose 1 Energy and double your current Word Score.",
 						}
 
 @export var notch_type: NotchTypes

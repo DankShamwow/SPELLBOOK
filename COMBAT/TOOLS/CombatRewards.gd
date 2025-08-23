@@ -194,7 +194,8 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 func set_notch_reward_rng(notch_count: int):
 	
 	for i in notch_count:
-		notches.append(reward_rng.randi() % 10)
+		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
+		notches.append(reward_rng.randi() % 13)
 		
 	# Twice the number of notches - 1 is the option number, lower limit of 3, upper limit of 7.
 	var draw_limit = ((notch_count * 2) - 1)
@@ -215,7 +216,8 @@ func set_notch_reward_rng(notch_count: int):
 	for i in 5:
 		var type = 0
 		var letter = randi() % 26
-		var notch1 = randi_range(1, 10)
+		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
+		var notch1 = randi_range(1, 14)
 		var notch2 = 0
 		var notch3 = 0
 		

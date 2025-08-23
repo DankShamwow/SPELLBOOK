@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=10 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://cch6efpdfewhy" path="res://TILE/GRID_TILE/GridTile.gd" id="1_h3das"]
 [ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
 [ext_resource type="Texture2D" uid="uid://cbhs7wbjvvuwh" path="res://SPRITES/TILES/TileSpriteMask.png" id="3_l10u7"]
+[ext_resource type="AudioStream" uid="uid://b4yfx6n23x4rl" path="res://AUDIO/TILE/destruction_vaporization_attempt_1.ogg" id="4_dlbwe"]
 [ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_l10u7"]
 
 [sub_resource type="Animation" id="Animation_l10u7"]
@@ -92,8 +93,14 @@ libraries = {
 &"": SubResource("AnimationLibrary_bq3va")
 }
 
-[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
+[node name="SoundParent" type="Node" parent="."]
+
+[node name="DestructionSound" type="AudioStreamPlayer" parent="SoundParent"]
+stream = ExtResource("4_dlbwe")
+
+[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="SoundParent"]
 stream = ExtResource("4_l10u7")
+volume_db = -8.0
 
 [node name="Area2D" type="Area2D" parent="."]
 unique_name_in_owner = true
