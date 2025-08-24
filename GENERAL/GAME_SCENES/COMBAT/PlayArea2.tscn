@@ -306,6 +306,9 @@ position = Vector2(72, 104)
 [node name="TileRack15" type="Marker2D" parent="TileRackTexture"]
 position = Vector2(104, 104)
 
+[node name="GhostParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+
 [node name="RackedTiles" type="Node2D" parent="."]
 
 [node name="TilesInWord" type="Node2D" parent="."]

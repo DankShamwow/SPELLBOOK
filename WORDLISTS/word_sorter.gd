@@ -131,7 +131,7 @@ func submit_word():
 		specificity.store_line(random_key)
 		specificity.seek_end()
 		
-		%SpeficityButton.set_pressed(false)
+		%SpecificityButton.set_pressed(false)
 		
 	if %DeathButton.button_pressed:
 		print("Writing...")

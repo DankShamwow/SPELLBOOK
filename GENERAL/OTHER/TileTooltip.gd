@@ -45,39 +45,9 @@ func _show_tooltip(which: GridTile) -> void:
 	
 	tile_type_text.text = str(which.tile.TileType.keys()[which.tile.type]).to_pascal_case()
 	
-	if which.tile.type == LetterTile.TileType.BASIC or which.tile.type == LetterTile.TileType.LOCKED \
-	or which.tile.type == LetterTile.TileType.BURNING or which.tile.type == LetterTile.TileType.CRUMBLING:
-		current_score = point_values[which.tile.visual_letter]
+	tile_score_text.text = "(Score: " + str(which.score_tile_quiet()) + ")"
 	
-	elif which.tile.type == LetterTile.TileType.STONED:
-		current_score = 0
-		
-	elif which.tile.type == LetterTile.TileType.PLAGUED:
-		current_score = point_values[which.tile.visual_letter] - 1
-		if current_score == 0:
-			current_score += 1
-	
-	if which.tile.notch1 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-		
-	if which.tile.notch2 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-		
-	if which.tile.notch3 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-	
-	if which.tile.notch1 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	if which.tile.notch2 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	if which.tile.notch3 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	tile_score_text.text = "(Score: " + str(current_score) + ")"
-	
-	if not (which.tile.bonus_letter1 == "" or which.tile.bonus_letter2 == "" or which.tile.bonus_letter3 == ""):
+	if not which.tile.bonus_letter1 == "" or not which.tile.bonus_letter2 == "" or not which.tile.bonus_letter3 == "":
 		current_letters_text = str("Plus: ")
 		if not which.tile.bonus_letter1 == "":
 			current_letters_text = current_letters_text + '"' + str(which.tile.bonus_letter1) + '", '
@@ -109,47 +79,20 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 	
 	tile_tooltip_header.text = "Letter Tile"
 	
+	var current_letters_text = " "
+	
 	tile_type_text.text = str("Type: " + str(which.tile.TileType.keys()[which.tile.type]).to_pascal_case())
 	
-	if which.tile.type == LetterTile.TileType.BASIC or which.tile.type == LetterTile.TileType.LOCKED \
-	or which.tile.type == LetterTile.TileType.BURNING or which.tile.type == LetterTile.TileType.CRUMBLING:
-		current_score = point_values[which.tile.visual_letter]
-	
-	elif which.tile.type == LetterTile.TileType.STONED:
-		current_score = 0
-		
-	elif which.tile.type == LetterTile.TileType.PLAGUED:
-		current_score = point_values[which.tile.visual_letter] - 1
-		if current_score == 0:
-			current_score += 1
-	
-	if which.tile.notch1 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-		
-	if which.tile.notch2 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-		
-	if which.tile.notch3 == LetterTile.NotchTypes.PATIENT:
-		current_score += which.tile.current_age * 3
-	
-	if which.tile.notch1 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	if which.tile.notch2 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	if which.tile.notch3 == LetterTile.NotchTypes.QUICK and which.tile.current_age == 0:
-		current_score += 10
-	
-	tile_score_text.text = "(Score: " + str(current_score) + ")"
+	tile_score_text.text = "(Score: " + str(which.score_tile_quiet()) + ")"
 
-	var current_letters_text = str('Letter: "' + str(which.tile.TileLetter.keys()[which.tile.visual_letter]).to_pascal_case()) + '"'
-	if not which.tile.bonus_letter1 == "":
-		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter1) + '"'
-	if not which.tile.bonus_letter2 == "":
-		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter2) + '"'
-	if not which.tile.bonus_letter3 == "":
-		current_letters_text = current_letters_text + ", " + '"' + str(which.tile.bonus_letter3) + '"'
+	if not which.tile.bonus_letter1 == "" or not which.tile.bonus_letter2 == "" or not which.tile.bonus_letter3 == "":
+		current_letters_text = str("Plus: ")
+		if not which.tile.bonus_letter1 == "":
+			current_letters_text = current_letters_text + '"' + str(which.tile.bonus_letter1) + '", '
+		if not which.tile.bonus_letter2 == "":
+			current_letters_text = current_letters_text + '"' + str(which.tile.bonus_letter2) + '", '
+		if not which.tile.bonus_letter3 == "":
+			current_letters_text = current_letters_text + '"' + str(which.tile.bonus_letter3) + '"'
 	
 	tile_letters_text.text = current_letters_text
 

@@ -1,7 +1,7 @@
 extends Control
 class_name NotchObject
 
-enum NotchTypes {REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED, EAGER, PATIENT, QUICK, OVERLOADED}
+@onready var notch: Notch
 
 var NotchDescriptions = {
 "REPEATING": 	"This Tile triggers an additional time.",
@@ -17,10 +17,13 @@ var NotchDescriptions = {
 "EAGER":		"This tile is drawn at the beginning of combat.",
 "PATIENT":		"This Tile gains +3 points per turn while held in your Rack. Resets when drawn.",
 "QUICK":		"This Tile gains +10 points when scored the turn it is drawn.",
-"OVERLOADING":	"When this Tile is scored, lose 1 Energy and double your current Word Score.",
+"OVERLOADED":	"When this Tile is scored, lose 1 Energy and double your current Word Score.",
+"BALANCED":		"This Tile gains +3 points for each pair of Tiles that come before and after it in the played word.",
+"LOCAL":		"This Tile gains +1 point for each Tile that comes after it in the played word.",
+"DISTANT":		"This Tile gains +1 point for each Tile that comes before it in the played word.",
+"PRICKLY":		"When targeting an enemy, this Tile inflicts Bleed equal to its Letter Score.",
+"POTENT":		"This tile gains +3 points."
 						}
-
-@export var notch_type: NotchTypes
 
 const UPPER_CORNER = Vector2(208, 88)
 const LOWER_CORNER = Vector2(400, 120)
@@ -48,17 +51,14 @@ signal has_paired()
 signal notch_hovered(which: NotchObject, is_hovering: bool)
 signal update_tooltip(which: GridTile)
 
-func new_notch(_type) -> NotchObject:
-	notch_type = _type
-	return self
-
 func _ready():
-	print(notch_type)
-	%LeftWing.set_frame_coords(Vector2i(notch_type, 0))
-	%RightWing.set_frame_coords(Vector2i(notch_type, 1))
-	%Nub.set_frame_coords(Vector2i(notch_type, 2))
-	%Marker.set_frame_coords(Vector2i(notch_type, 3))
+	print(notch.type)
+	%LeftWing.set_frame_coords(Vector2i(notch.type, 0))
+	%RightWing.set_frame_coords(Vector2i(notch.type, 1))
+	%Nub.set_frame_coords(Vector2i(notch.type, 2))
+	%Marker.set_frame_coords(Vector2i(notch.type, 3))
 	add_to_group("Notches to Add")
+	NotchDescriptions["LEXICAL"] = str('This Tile gains an extra Letter. This Notch grants the letter "' + str(notch.letter.to_upper()) + '"')
 
 func _on_texture_button_down():
 	if tween:
@@ -74,6 +74,7 @@ func _on_texture_button_down():
 		folded = true
 		has_affected_notch1 = false
 		paired_tile.tile.notch1 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter1 = ""
 		paired_tile.update_notch_graphics(1, true)
 		
 		paired_tile = null
@@ -83,6 +84,7 @@ func _on_texture_button_down():
 		folded = true
 		has_affected_notch2 = false
 		paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter2 = ""
 		paired_tile.update_notch_graphics(2, true)
 		
 		paired_tile = null
@@ -92,6 +94,7 @@ func _on_texture_button_down():
 		folded = true
 		has_affected_notch3 = false
 		paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter3 = ""
 		paired_tile.update_notch_graphics(3, true)
 		
 		paired_tile = null
@@ -137,7 +140,9 @@ func _resnap_to_paired_tile():
 				tween.tween_property(self, "rotation_degrees", 180.0, 0.15)
 				tween2.tween_property(self, "position", paired_tile_pose, 0.15)
 				paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
-				paired_tile.tile.notch1 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
+				paired_tile.tile.bonus_letter2 = ""
+				paired_tile.tile.notch1 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
+				paired_tile.tile.bonus_letter1 = notch.letter
 				paired_tile.update_notch_graphics(2, true)
 				paired_tile.update_notch_graphics(1, true)
 				print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
@@ -156,7 +161,9 @@ func _resnap_to_paired_tile():
 				tween.tween_property(self, "rotation_degrees", -90.0, 0.15)
 				tween2.tween_property(self, "position", paired_tile_pose + Vector2(-16, -16), 0.15)
 				paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
-				paired_tile.tile.notch2 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
+				paired_tile.tile.bonus_letter3 = ""
+				paired_tile.tile.notch2 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
+				paired_tile.tile.bonus_letter2 = notch.letter
 				paired_tile.update_notch_graphics(3, true)
 				paired_tile.update_notch_graphics(2, true)
 				print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
@@ -169,6 +176,7 @@ func _resnap_to_paired_tile():
 	else:
 		return
 
+@warning_ignore("shadowed_variable")
 func _snap_to_paired_tile(paired_tile: GridTile):
 	var paired_tile_pose = paired_tile.position 
 	if paired_tile.tile.notch1 == LetterTile.NotchTypes.EMPTY:
@@ -178,7 +186,11 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", 180.0, 0.15)
 		tween2.tween_property(self, "position", paired_tile_pose, 0.15)
-		paired_tile.tile.notch1 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
+		paired_tile.tile.notch1 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
+		print(Notch.NotchTypes.keys()[notch.type])
+		print(LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]])
+		print(notch.type)
+		paired_tile.tile.bonus_letter1 = notch.letter
 		paired_tile.update_notch_graphics(1, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
 		
@@ -195,7 +207,8 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", -90.0, 0.15)
 		tween2.tween_property(self, "position", paired_tile_pose + Vector2(-16, -16), 0.15)
-		paired_tile.tile.notch2 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
+		paired_tile.tile.notch2 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
+		paired_tile.tile.bonus_letter2 = notch.letter
 		paired_tile.update_notch_graphics(2, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
 		
@@ -214,7 +227,8 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		tween2.set_trans(Tween.TRANS_SPRING)
 		tween.tween_property(self, "rotation_degrees", 90.0, 0.15)
 		tween2.tween_property(self, "position", paired_tile_pose + Vector2(16, -16), 0.15)
-		paired_tile.tile.notch3 = LetterTile.NotchTypes[self.NotchTypes.keys()[self.notch_type]]
+		paired_tile.tile.notch3 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
+		paired_tile.tile.bonus_letter3 = notch.letter
 		paired_tile.update_notch_graphics(3, true)
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch3]).to_pascal_case())
 		has_affected_notch3 = true
@@ -226,6 +240,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 	else:
 		return
 
+@warning_ignore("unused_parameter")
 func _process(delta):
 	if dragging:
 		global_position = get_global_mouse_position() - offset
@@ -251,6 +266,7 @@ func _force_home():
 		folded = true
 		has_affected_notch1 = false
 		paired_tile.tile.notch1 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter1 = ""
 		paired_tile.update_notch_graphics(1, true)
 		
 		paired_tile = null
@@ -260,6 +276,7 @@ func _force_home():
 		folded = true
 		has_affected_notch2 = false
 		paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter2 = ""
 		paired_tile.update_notch_graphics(2, true)
 		
 		paired_tile = null
@@ -269,6 +286,7 @@ func _force_home():
 		folded = true
 		has_affected_notch3 = false
 		paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
+		paired_tile.tile.bonus_letter3 = ""
 		paired_tile.update_notch_graphics(3, true)
 		
 		paired_tile = null

@@ -23,13 +23,13 @@ func _show_tooltip(which: NotchObject) -> void:
 	if tween:
 		tween.kill()
 
-	notch_type_icon.texture.region = Rect2(20*which.notch_type, 0, 20, 20)
+	notch_type_icon.texture.region = Rect2(20*which.notch.type, 0, 20, 20)
 	
 	notch_tooltip_header.text = "Notch"
 	
-	notch_type_text.text = str(which.NotchTypes.keys()[which.notch_type]).to_pascal_case()
+	notch_type_text.text = str(which.notch.NotchTypes.keys()[which.notch.type]).to_pascal_case()
 	
-	notch_type_description.text = which.NotchDescriptions.get(which.NotchTypes.keys()[which.notch_type])
+	notch_type_description.text = which.NotchDescriptions.get(which.notch.NotchTypes.keys()[which.notch.type])
 	
 	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(show)

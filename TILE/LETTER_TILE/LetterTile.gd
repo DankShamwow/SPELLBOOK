@@ -4,7 +4,7 @@ extends Resource
 
 enum TileType {BASIC, STONED, LOCKED, BURNING, PLAGUED, CRUMBLING}
 enum TileLetter {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}
-enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED, EAGER, PATIENT, QUICK, OVERLOADED}
+enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED, PHANTOM, FLAMING, REJUVENATING, REINFORCED, EAGER, PATIENT, QUICK, OVERLOADED, BALANCED, LOCAL, DISTANT, PRICKLY, POTENT, LEXICAL}
 
 @export var type: TileType
 @export var true_letter: TileLetter
@@ -22,6 +22,7 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED,
 @export var target: Vector2
 @export var is_friendly := true
 @export var is_temporary := false
+@export var is_ghost := false
 
 ### Notch-specific Flagging
 # echoNUM determines if a tile has Echoed this draw. True means that it has not.
@@ -43,15 +44,17 @@ var no_buffer := false
 var vaporized := false
 
 # This determines how many turns this tile has been in your Rack for.
-var current_age := 0
+var current_age 	:= 0
 
 ### Other Data
-var times_played := 0
+var times_played 	:= 0
+var word_index		:= 0
+var word_length		:= 0
 
 ### Functions
 ## new_tile creates a tile based on the information given, for the purpose
 ## of creating the player's initial deck.
-func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterTile:
+func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index, _is_ghost = false) -> LetterTile:
 	type = _type
 	true_letter = _letter
 	played_letter = _letter
@@ -60,6 +63,7 @@ func new_tile(_type, _letter, _notch1, _notch2, _notch3, _tile_index) -> LetterT
 	notch2 = _notch2
 	notch3 = _notch3
 	tile_index = _tile_index
+	is_ghost = _is_ghost
 	return self
 
 ## generate_tile creates a tile to be added to the deck.

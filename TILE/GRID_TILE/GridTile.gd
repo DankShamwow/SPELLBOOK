@@ -17,12 +17,22 @@ enum GridTileAction {
 
 var bag_open = false
 
-var hovering = false;
+var hovering = false
+
+## Feature for the tile grid
+var grid_ghost := false
+var ghost_pair = null
+
+## Lexical Notch Shenanigans
+var paired_tile_1 = null
+var paired_tile_2 = null
+var paired_tile_3 = null
 
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
 
 func _ready():
+	
 	##This is the one we use outside of testing, at least when not testing the tile directly.
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
 	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
@@ -31,6 +41,10 @@ func _ready():
 	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
 	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
 
+	if self.tile.is_ghost:
+		var tween = get_tree().create_tween()
+		tween.tween_property($Tile_Button/Tile_Sprite, "modulate:a", 0.75, 0.01)
+	
 	## For testing purposes only
 	#var hasOverlay = randi_range(0, 5)
 	#$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(hasOverlay, 0))
@@ -44,6 +58,7 @@ func update_tile_graphics():
 	print("Updating graphics...")
 	
 	var tween = get_tree().create_tween()
+	
 	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
 	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	
@@ -191,7 +206,7 @@ func is_destroyed():
 	var tween2 = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
 	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
-	play_tile_destruction_sound()
+	#play_tile_destruction_sound()
 	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
@@ -236,24 +251,70 @@ func score_tile():
 	elif self.tile.type == LetterTile.TileType.CRUMBLING:
 		letter_score += point_values[self.tile.played_letter]
 
+	if self.tile.notch1 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if self.tile.notch2 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if self.tile.notch3 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+
 	if self.tile.notch1 == LetterTile.NotchTypes.PATIENT:
 		letter_score += self.tile.current_age * 3
-		
 	if self.tile.notch2 == LetterTile.NotchTypes.PATIENT:
 		letter_score += self.tile.current_age * 3
-		
 	if self.tile.notch3 == LetterTile.NotchTypes.PATIENT:
 		letter_score += self.tile.current_age * 3
 
 	if self.tile.notch1 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
 		letter_score += 10
-		
 	if self.tile.notch2 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
 		letter_score += 10
-		
 	if self.tile.notch3 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
 		letter_score += 10
 
+	if self.tile.notch1 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+	if self.tile.notch2 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+	if self.tile.notch3 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+		
+	if self.tile.notch1 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+	if self.tile.notch2 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+	if self.tile.notch3 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+
+	if self.tile.notch1 == LetterTile.NotchTypes.BALANCED:
+		if self.tile.word_index == self.tile.word_length:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+			
+	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
+		if self.tile.word_index == self.tile.word_length:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+
+	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
+		if self.tile.word_index == self.tile.word_length:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
 
 	await juice_score()
 
@@ -261,19 +322,81 @@ func score_tile():
 
 func score_tile_quiet():
 	var letter_score = 0
-	if self.tile.type == 0 or self.tile.type == 2:
+	if self.tile.type == LetterTile.TileType.BASIC or self.tile.type == LetterTile.TileType.LOCKED:
 		letter_score += point_values[self.tile.played_letter]
 
-	elif self.tile.type == 1:
+	elif self.tile.type == LetterTile.TileType.STONED:
 		letter_score += 0
 		
-	elif self.tile.type == 3:
+	elif self.tile.type == LetterTile.TileType.BURNING:
 		letter_score += point_values[self.tile.played_letter]
 		
-	elif self.tile.type == 4:
+	elif self.tile.type == LetterTile.TileType.PLAGUED:
 		letter_score += point_values[self.tile.played_letter] - 1
 		if letter_score == 0:
 			letter_score += 1
+
+	elif self.tile.type == LetterTile.TileType.CRUMBLING:
+		letter_score += point_values[self.tile.played_letter]
+
+	if self.tile.notch1 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if self.tile.notch2 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if self.tile.notch3 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+
+	if self.tile.notch1 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+	if self.tile.notch2 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+	if self.tile.notch3 == LetterTile.NotchTypes.PATIENT:
+		letter_score += self.tile.current_age * 3
+
+	if self.tile.notch1 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+	if self.tile.notch2 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+	if self.tile.notch3 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
+		letter_score += 10
+
+	if self.tile.notch1 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+	if self.tile.notch2 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+	if self.tile.notch3 == LetterTile.NotchTypes.DISTANT:
+		letter_score += self.tile.word_index
+		
+	if self.tile.notch1 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+	if self.tile.notch2 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+	if self.tile.notch3 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (self.tile.word_length - self.tile.word_index)
+
+	if self.tile.notch1 == LetterTile.NotchTypes.BALANCED:
+		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+			
+	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
+		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+
+	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
+		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * self.tile.word_index
+		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
 
 	return letter_score
 

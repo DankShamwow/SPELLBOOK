@@ -43,7 +43,7 @@ signal notch_tooltip_hide_requested()
 	#tween.tween_property(self, "visible", true, 0.001)
 	#tween.tween_property(self, "modulate:a", 1, 0.15)
 	#
-	#query_combat_rewards(50, 5, 0)
+	#query_combat_rewards(50, 15, 0)
 
 func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int):
 	
@@ -146,7 +146,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 		first_click = true
 		for i in notches.size():
 			var new_notch = NOTCH_OBJECT_SCENE.instantiate()
-			new_notch.notch_type = notches[i]
+			new_notch.notch = notches[i]
 			%NotchesParent.add_child(new_notch)
 			new_notch.update_tooltip.connect(%StickyTileTooltip._show_tooltip)
 			new_notch.notch_hovered.connect(self._is_notch_hovered)
@@ -192,10 +192,17 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 
 # WARNING: ONLY CALL THIS ONCE PER COMBAT REWARD. DO NOT CALL THIS MULTIPLE TIMES OTHERWISE IT WILL REPLACE THE LOOT.
 func set_notch_reward_rng(notch_count: int):
-	
+	var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 	for i in notch_count:
 		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
-		notches.append(reward_rng.randi() % 13)
+		var notch_type_roll = 19
+		var notch_letter_roll = ""
+		if notch_type_roll == 19:
+			notch_letter_roll = reward_rng.randi() % 25
+			notch_letter_roll = letters[notch_letter_roll]
+			
+		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
+		notches.append(new_notch)
 		
 	# Twice the number of notches - 1 is the option number, lower limit of 3, upper limit of 7.
 	var draw_limit = ((notch_count * 2) - 1)
@@ -215,9 +222,9 @@ func set_notch_reward_rng(notch_count: int):
 
 	for i in 5:
 		var type = 0
-		var letter = randi() % 26
-		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
-		var notch1 = randi_range(1, 14)
+		var letter = reward_rng.randi() % 25
+		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO, AND YOU DON'T WANT THESE HAVING BONUS LETTERS.
+		var notch1 = reward_rng.randi_range(1, 18)
 		var notch2 = 0
 		var notch3 = 0
 		
@@ -299,11 +306,11 @@ func _on_confirm_button_pressed() -> void:
 				var active_notch = has_paired_tile[i]
 				
 				if active_notch.has_affected_notch1 == true:
-					tile_to_modify.notch1 = LetterTile.NotchTypes[active_notch.NotchTypes.keys()[active_notch.notch_type]]
+					tile_to_modify.notch1 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[active_notch.notch.type]]
 				elif active_notch.has_affected_notch2 == true:
-					tile_to_modify.notch2 = LetterTile.NotchTypes[active_notch.NotchTypes.keys()[active_notch.notch_type]]
+					tile_to_modify.notch2 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[active_notch.notch.type]]
 				elif active_notch.has_affected_notch3 == true:
-					tile_to_modify.notch3 = LetterTile.NotchTypes[active_notch.NotchTypes.keys()[active_notch.notch_type]]
+					tile_to_modify.notch3 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[active_notch.notch.type]]
 				
 				var finished = await has_paired_tile[i].play_pairing_anim()
 				

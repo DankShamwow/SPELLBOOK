@@ -161,10 +161,10 @@ offset_bottom = 200.0
 
 [node name="NotchTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("8_ouwry")]
 unique_name_in_owner = true
-offset_left = 28.0
-offset_top = 80.0
-offset_right = 188.0
-offset_bottom = 200.0
+offset_left = 24.0
+offset_top = 72.0
+offset_right = 184.0
+offset_bottom = 192.0
 
 [node name="SeparatorBox2" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
