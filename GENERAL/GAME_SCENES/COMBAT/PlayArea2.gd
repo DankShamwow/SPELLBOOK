@@ -120,6 +120,11 @@ var relic_scene = preload("res://RELIC/Relic.tscn")
 ## attack_list is the VBoxContainer that contains all of an enemy's attacks. It loads the attacks of the current target.
 @export var attack_list: VBoxContainer
 
+## sine_timer is the timer for the sine wave pattern of tiles in your played word.
+var sine_timer = 0
+
+
+
 signal update_bag_tiles()
 signal update_buffered_tiles()
 signal disable_tile_bag(state)
@@ -170,6 +175,16 @@ func _ready():
 	on_combat_start()
 	_check_turn_status()
 	tile_tooltip_hide_requested.emit()
+
+func _process(delta: float) -> void:
+	var sine_tiles = get_tree().get_nodes_in_group("Tiles In Word")
+	if sine_tiles.size() > 0:
+		sine_timer += delta
+		var phase = sine_timer * PI
+		#print(0.1 * sin(phase))
+		for i in sine_tiles.size():
+			sine_tiles[i].position.x = sine_tiles[i].position.x + (0.1 * cos(phase + (0.33 * i)))
+			sine_tiles[i].position.y = sine_tiles[i].position.y + (0.1 * sin(phase + (0.33 * i)))
 
 func _input(event):
 	if event is InputEventKey:
@@ -302,10 +317,11 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	print(target)
 	
 	var enemy_letters = []
-	var tile_score 		= 0
-	var mult_score 		= 0
-	var points_score 	= 0
-	var total_score 	= 0
+	var tile_score 			= 0
+	var mult_score 			= 0
+	var points_score 		= 0
+	var total_score 		= 0
+	var tile_score_count	= 0
 	
 	for i in attack_to_perform.size():
 		if attack_letter_tiles[i].type == LetterTile.TileType.LOCKED:
@@ -327,6 +343,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 			added_tile.tile.target = Vector2(tiles_in_word.get_child(0).tile.target.x + (38.0 * float(i)), 120.0)
 		
 		await added_tile.move_to_position()
+		added_tile.add_to_group("Tiles In Word")
 		
 		added_tile.play_tile_sound()
 		_tiles_in_word_update()
@@ -335,7 +352,8 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	await get_tree().create_timer(0.4).timeout
 	
 	for i in tiles_in_word.get_child_count():
-		tile_score = enemy_letters[i].score_tile()
+		tile_score = enemy_letters[i].score_tile(tile_score_count)
+		tile_score_count += 1
 		points_score += tile_score
 		mult_score = mult_values[i]
 		total_score = points_score * mult_score
@@ -391,15 +409,6 @@ func _tiles_in_word_update():
 		tiles_in_word.get_child(i).tile.word_index = i
 		tiles_in_word.get_child(i).tile.word_length = tiles_in_word.get_child_count()
 		
-		## Add any of the extra letters a tile may have to the word.
-		#if not tiles_in_word.get_child(i).tile.bonus_letter1 == "":
-			#letters_from_tiles.append(str(tiles_in_word.get_child(i).tile.bonus_letter1))
-			#print(letters.find(tiles_in_word.get_child(i).tile.bonus_letter1))
-		#if not tiles_in_word.get_child(i).tile.bonus_letter2 == "":
-			#letters_from_tiles.append(str(tiles_in_word.get_child(i).tile.bonus_letter2))
-		#if not tiles_in_word.get_child(i).tile.bonus_letter3 == "":
-			#letters_from_tiles.append(str(tiles_in_word.get_child(i).tile.bonus_letter3))
-		
 		if tiles_in_word.get_child_count() <= 6:
 			
 			scaling_factor = 1
@@ -407,7 +416,7 @@ func _tiles_in_word_update():
 			tiles_in_word.get_child(i).tile.target = Vector2(tiles_in_word.get_child(0).tile.target.x + (38.0 * float(i)), 120.0)
 			tiles_in_word.get_child(i).scale_to_word_size(scaling_factor)
 			tiles_in_word.get_child(i).move_to_position(0.35)
-			
+
 		if tiles_in_word.get_child_count() > 6:
 			
 			tiles_in_word.get_child(0).tile.target = Vector2(302.0 - (19.0 * float(tiles_in_word.get_child_count()-1))*scaling_factor, 120.0)
@@ -441,10 +450,11 @@ func _tiles_in_word_force_clear():
 	return true
 
 func _send_back_to_grid(grid_tile: GridTile):
+	grid_tile.remove_from_group("Tiles In Word")
 	grid_tile.tile.target = Vector2((((grid_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(grid_tile.tile.grid_index / 4) * 32.0) + 296.0))
 	grid_tile.tile.word_index = 0
 	grid_tile.tile.word_length = 0
-	await grid_tile.move_to_position(0.35)
+	grid_tile.move_to_position(0.35)
 	grid_tile.scale_back_to_grid()
 	
 	if not grid_tile.ghost_pair == null: 
@@ -452,17 +462,39 @@ func _send_back_to_grid(grid_tile: GridTile):
 	
 	if grid_tile.paired_tile_1 is GridTile:
 		if grid_tile.paired_tile_1.tile.is_ghost:
-			grid_tile.paired_tile_1.queue_free()
+			grid_tile.paired_tile_1.tile.target = Vector2((((grid_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(grid_tile.tile.grid_index / 4) * 32.0) + 296.0))
+			grid_tile.paired_tile_1.move_to_position(0.35)
+			grid_tile.paired_tile_1.scale_back_to_grid()
+			grid_tile.paired_tile_1.reparent(tiles_to_kill)
+			grid_tile.paired_tile_1.tile_clicked.disconnect(self._on_tile_clicked)
+			grid_tile.paired_tile_1.tile_hovered.disconnect(self._is_tile_hovered)
+			grid_tile.paired_tile_1.is_vanishing()
+			grid_tile.paired_tile_1 = null
 			
 	if grid_tile.paired_tile_2 is GridTile:
 		if grid_tile.paired_tile_2.tile.is_ghost:
-			grid_tile.paired_tile_2.queue_free()
+			grid_tile.paired_tile_2.tile.target = Vector2((((grid_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(grid_tile.tile.grid_index / 4) * 32.0) + 296.0))
+			grid_tile.paired_tile_2.move_to_position(0.35)
+			grid_tile.paired_tile_2.scale_back_to_grid()
+			grid_tile.paired_tile_2.reparent(tiles_to_kill)
+			grid_tile.paired_tile_2.tile_clicked.disconnect(self._on_tile_clicked)
+			grid_tile.paired_tile_2.tile_hovered.disconnect(self._is_tile_hovered)
+			grid_tile.paired_tile_2.is_vanishing()
+			grid_tile.paired_tile_2 = null
 			
 	if grid_tile.paired_tile_3 is GridTile:
 		if grid_tile.paired_tile_3.tile.is_ghost:
-			grid_tile.paired_tile_3.queue_free()
+			grid_tile.paired_tile_3.tile.target = Vector2((((grid_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(grid_tile.tile.grid_index / 4) * 32.0) + 296.0))
+			grid_tile.paired_tile_3.move_to_position(0.35)
+			grid_tile.paired_tile_3.scale_back_to_grid()
+			grid_tile.paired_tile_3.reparent(tiles_to_kill)
+			grid_tile.paired_tile_3.tile_clicked.disconnect(self._on_tile_clicked)
+			grid_tile.paired_tile_3.tile_hovered.disconnect(self._is_tile_hovered)
+			grid_tile.paired_tile_3.is_vanishing()
+			grid_tile.paired_tile_3 = null
 
 	_normalize_grid_tile_size()
+	_cleanup_killed_tiles()
 	return true
 
 func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
@@ -489,11 +521,12 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					# Create new LetterTile
 					var lex_letter_1 = letters.find(str(which.tile.bonus_letter1))
 					print(lex_letter_1)
-					var lex_tile_1 = LetterTile.new().new_tile(LetterTile.TileType.BASIC, lex_letter_1, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
+					var lex_tile_1 = LetterTile.new().new_tile(which.tile.type, lex_letter_1, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
 					# Create new GridTile
 					var ghost_tile_1 = grid_tile_scene.instantiate()
 					# Bind new LetterTile to new GridTile
 					ghost_tile_1.tile = lex_tile_1
+					ghost_tile_1.tile.grid_index = which.tile.grid_index
 					# Pair it with the GridTile that spawned it
 					which.paired_tile_1 = ghost_tile_1
 					ghost_tile_1.paired_tile_1 = which
@@ -501,8 +534,9 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					ghost_tile_1.z_index = (which.z_index - 1)
 					
 					%GhostParent.add_child(ghost_tile_1)
-					ghost_tile_1.reparent(tiles_in_word, true)
 					ghost_tile_1.position = which.position
+					ghost_tile_1.reparent(tiles_in_word, true)
+					ghost_tile_1.add_to_group("Tiles In Word")
 					ghost_tile_1.tile_clicked.connect(self._on_tile_clicked)
 					ghost_tile_1.tile_hovered.connect(self._is_tile_hovered)
 					
@@ -510,11 +544,12 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					# Create new LetterTile
 					var lex_letter_2 = letters.find(str(which.tile.bonus_letter2))
 					print(lex_letter_2)
-					var lex_tile_2 = LetterTile.new().new_tile(LetterTile.TileType.BASIC, lex_letter_2, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
+					var lex_tile_2 = LetterTile.new().new_tile(which.tile.type, lex_letter_2, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
 					# Create new GridTile
 					var ghost_tile_2 = grid_tile_scene.instantiate()
 					# Bind new LetterTile to new GridTile
 					ghost_tile_2.tile = lex_tile_2
+					ghost_tile_2.tile.grid_index = which.tile.grid_index
 					# Pair it with the GridTile that spawned it
 					which.paired_tile_2 = ghost_tile_2
 					ghost_tile_2.paired_tile_2 = which
@@ -522,8 +557,9 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					ghost_tile_2.z_index = (which.z_index - 2)
 					
 					%GhostParent.add_child(ghost_tile_2)
-					ghost_tile_2.reparent(tiles_in_word, true)
 					ghost_tile_2.position = which.position
+					ghost_tile_2.reparent(tiles_in_word, true)
+					ghost_tile_2.add_to_group("Tiles In Word")
 					ghost_tile_2.tile_clicked.connect(self._on_tile_clicked)
 					ghost_tile_2.tile_hovered.connect(self._is_tile_hovered)
 					
@@ -531,11 +567,12 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					# Create new LetterTile
 					var lex_letter_3 = letters.find(str(which.tile.bonus_letter3))
 					print(lex_letter_3)
-					var lex_tile_3 = LetterTile.new().new_tile(LetterTile.TileType.BASIC, lex_letter_3, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
+					var lex_tile_3 = LetterTile.new().new_tile(which.tile.type, lex_letter_3, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, -1, true)
 					# Create new GridTile
 					var ghost_tile_3 = grid_tile_scene.instantiate()
 					# Bind new LetterTile to new GridTile
 					ghost_tile_3.tile = lex_tile_3
+					ghost_tile_3.tile.grid_index = which.tile.grid_index
 					# Pair it with the GridTile that spawned it
 					which.paired_tile_3 = ghost_tile_3
 					ghost_tile_3.paired_tile_3 = which
@@ -544,23 +581,27 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					
 					%GhostParent.add_child(ghost_tile_3)
 					ghost_tile_3.reparent(tiles_in_word, true)
+					ghost_tile_3.add_to_group("Tiles In Word")
 					ghost_tile_3.position = which.position
 					ghost_tile_3.tile_clicked.connect(self._on_tile_clicked)
 					ghost_tile_3.tile_hovered.connect(self._is_tile_hovered)
-					
+				
+				which.add_to_group("Tiles In Word")
 				_tiles_in_word_update()
 			
 			elif which.get_parent() == tiles_in_word:
 				if which.tile.notch1 == LetterTile.NotchTypes.LEXICAL and which.paired_tile_1 is GridTile:
 					# If this tile is not a ghost, but the paired tile is, kill the paired tile and send this one back to the rack.
 					if which.paired_tile_1.tile.is_ghost:
-						which.paired_tile_1.queue_free()
+						#_send_back_to_grid(which.paired_tile_1)
+						pass
+						#which.paired_tile_1.queue_free()
 					# If this tile is a ghost and is paired to a non-ghost, kill this tile and send the other back to the rack.
 					# WARNING: Wait. This shouldn't even be possible!!!!!
 					elif which.tile.is_ghost:
 						which.paired_tile_1.reparent(racked_tiles, true)
 						_send_back_to_grid(which.paired_tile_1)
-						which.queue_free()
+						#which.queue_free()
 					# Fallback procedure? Fuck.
 					else:
 						which.reparent(racked_tiles, true)
@@ -568,22 +609,26 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 						
 				if which.tile.notch2 == LetterTile.NotchTypes.LEXICAL and which.paired_tile_2 is GridTile:
 					if which.paired_tile_2.tile.is_ghost:
-						which.paired_tile_2.queue_free()
+						#_send_back_to_grid(which.paired_tile_2)
+						pass
+						#which.paired_tile_2.queue_free()
 					elif which.tile.is_ghost:
 						which.paired_tile_2.reparent(racked_tiles, true)
 						_send_back_to_grid(which.paired_tile_2)
-						which.queue_free()
+						#which.queue_free()
 					else:
 						which.reparent(racked_tiles, true)
 						_send_back_to_grid(which)
 						
 				if which.tile.notch3 == LetterTile.NotchTypes.LEXICAL and which.paired_tile_3 is GridTile:
 					if which.paired_tile_3.tile.is_ghost:
-						which.paired_tile_3.queue_free()
+						#_send_back_to_grid(which.paired_tile_3)
+						pass
+						#which.paired_tile_3.queue_free()
 					elif which.tile.is_ghost:
 						which.paired_tile_3.reparent(racked_tiles, true)
 						_send_back_to_grid(which.paired_tile_3)
-						which.queue_free()
+						#which.queue_free()
 					else:
 						which.reparent(racked_tiles, true)
 						_send_back_to_grid(which)
@@ -683,6 +728,7 @@ func _score_word():
 	var total_score = 0
 	var word_retriggers = 0
 	var tile_retriggers = 0
+	var tile_score_count = 0
 	
 	# If there are any effects that would retrigger the scoring of the word, they'll be processed here.
 	# If there's any special effects, they should also be processed here.
@@ -715,7 +761,8 @@ func _score_word():
 			for k in tile_retriggers + 1:
 				
 				# Score the actual letter and get the score, plus increment the scored letter count.
-				tile_score +=  await scored_tile.score_tile()
+				tile_score +=  await scored_tile.score_tile(tile_score_count)
+				tile_score_count += 1
 				scored_tile_count += 1
 				
 				%TileScoreLabel.text = str(tile_score)
@@ -846,7 +893,8 @@ func _score_word():
 						current_target.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
 					if scored_tile.tile.notch3 == LetterTile.NotchTypes.PRICKLY:
 						current_target.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
-			
+				
+				await get_tree().create_timer(0.12).timeout
 			
 			points_score += tile_score
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
@@ -962,6 +1010,7 @@ func _cleanup(total_score):
 	# Make the bag look pretty just before the tiles go into it.
 	GameEventHandler.disable_tile_bag.emit(true)
 	for i in tiles_to_kill.get_child_count():
+		tiles_to_kill.remove_from_group("Tiles In Word")
 		var last_letter = tiles_to_kill.get_child(i)
 		
 		if last_letter.ghost_pair is GridTile:
@@ -1082,7 +1131,6 @@ func _spawn_replacement_tiles(remaining_tiles):
 	GameEventHandler.update_bag_tiles.emit()
 	scoring_check = false
 	_check_turn_status()
-	_check_for_dead_enemies()
 
 func _rename_tiles():
 	for i in racked_tiles.get_child_count():
@@ -1153,7 +1201,7 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array):
 		
 	return total_score
 
-func _check_turn_status():	
+func _check_turn_status():
 	
 	if character_path.is_target == false and %TestEnemy.is_target == false:
 		%PlayButton.texture_normal.region 	= Rect2(0.0, 80.0, 128.0, 40.0)
@@ -1185,7 +1233,7 @@ func _check_turn_status():
 		if character_path.has_initiative:
 			%ShuffleButton.set_disabled(false)
 
-		_tiles_in_word_update()
+	_check_for_dead_enemies()
 
 func _pass_turn():
 	_check_turn_status()
@@ -1360,8 +1408,9 @@ func on_combat_end():
 	GeneralManager.remove_tiles_from_deck()
 	
 	character_path.reparent(GeneralManager.replace_character_path)
+	
 	# TODO: Replace these values with values from the Encounter System that will be implemented later.
-	%CombatRewards._bringup_combat_rewards(50, 10, 0) 
+	%CombatRewards._bringup_combat_rewards(50, 5, 0) 
 	
 
 ### Audio Shaboingery
@@ -1421,6 +1470,9 @@ func _shuffle_player_tiles():
 	for i in tiles_in_word.get_child_count():
 		var tile_to_push = tiles_in_word.get_child(-1)
 	
+		if tile_to_push.ghost_pair is GridTile:
+			tile_to_push.ghost_pair.is_being_bagged()
+	
 		tile_to_push.reparent(tiles_to_kill)
 	
 		## tile_to_push_array is a list of tiles to push
@@ -1467,6 +1519,9 @@ func _shuffle_player_tiles():
 func _flush_player_tiles():
 	for i in tiles_in_word.get_child_count():
 		var tile_to_push = tiles_in_word.get_child(-1)
+		
+		if tile_to_push.ghost_pair is GridTile:
+			tile_to_push.ghost_pair.is_being_bagged()
 	
 		tile_to_push.reparent(tiles_to_kill)
 	

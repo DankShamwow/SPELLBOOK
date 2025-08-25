@@ -178,6 +178,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			new_tile.tile.target = Vector2(64+(80*i), (232 + (((i+1) % 2) * 48)))
 			new_tile.spawned_from_bag()
 			new_tile.move_to_position(0.5)
+			new_tile.play_tile_sound()
 			await get_tree().create_timer(0.1).timeout
 
 		for i in tiles.size():
@@ -195,7 +196,8 @@ func set_notch_reward_rng(notch_count: int):
 	var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 	for i in notch_count:
 		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
-		var notch_type_roll = 19
+		var notch_type_roll = reward_rng.randi() % 20
+		#var notch_type_roll = 19
 		var notch_letter_roll = ""
 		if notch_type_roll == 19:
 			notch_letter_roll = reward_rng.randi() % 25
@@ -223,7 +225,7 @@ func set_notch_reward_rng(notch_count: int):
 	for i in 5:
 		var type = 0
 		var letter = reward_rng.randi() % 25
-		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO, AND YOU DON'T WANT THESE HAVING BONUS LETTERS.
+		# REMEMBER NITWIT, YOU GOTTA SUBTRACT TWO BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO, AND YOU DON'T WANT THESE HAVING BONUS LETTERS.
 		var notch1 = reward_rng.randi_range(1, 18)
 		var notch2 = 0
 		var notch3 = 0

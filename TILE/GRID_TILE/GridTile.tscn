@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=11 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://cch6efpdfewhy" path="res://TILE/GRID_TILE/GridTile.gd" id="1_h3das"]
 [ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
 [ext_resource type="Texture2D" uid="uid://cbhs7wbjvvuwh" path="res://SPRITES/TILES/TileSpriteMask.png" id="3_l10u7"]
 [ext_resource type="AudioStream" uid="uid://b4yfx6n23x4rl" path="res://AUDIO/TILE/destruction_vaporization_attempt_1.ogg" id="4_dlbwe"]
-[ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_l10u7"]
+[ext_resource type="AudioStream" uid="uid://cgm5mblgsqast" path="res://AUDIO/MISC/SCORING/scoring_sound_attempt_1.ogg" id="5_u3g1w"]
+[ext_resource type="AudioStream" uid="uid://bnhp4hq5jtxrp" path="res://AUDIO/TILE/tile_sound_attempt3.ogg" id="6_u3g1w"]
 
 [sub_resource type="Animation" id="Animation_l10u7"]
 resource_name = "ChangeToNewType"
@@ -97,9 +98,14 @@ libraries = {
 
 [node name="DestructionSound" type="AudioStreamPlayer" parent="SoundParent"]
 stream = ExtResource("4_dlbwe")
+volume_db = -8.0
+
+[node name="ScoringSoundAttempt1" type="AudioStreamPlayer" parent="SoundParent"]
+stream = ExtResource("5_u3g1w")
+volume_db = -8.0
 
 [node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="SoundParent"]
-stream = ExtResource("4_l10u7")
+stream = ExtResource("6_u3g1w")
 volume_db = -8.0
 
 [node name="Area2D" type="Area2D" parent="."]

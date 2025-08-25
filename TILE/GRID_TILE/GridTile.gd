@@ -9,6 +9,8 @@ var buffered_tiles = GeneralManager.buffered_tiles
 var available_tiles = GeneralManager.available_tiles
 var point_values  	= GeneralManager.point_values
 
+var various_rng = RandomnessManager.various_rng
+
 var original_z = self.z_index
 
 enum GridTileAction {
@@ -124,8 +126,13 @@ func move_to_position(time:= 0.25):
 
 func play_tile_sound():
 	if not $SoundParent/TileSoundAttempt3.is_playing():
+		$SoundParent/TileSoundAttempt3.pitch_scale = various_rng.randf_range(0.965, 1.035)
 		$SoundParent/TileSoundAttempt3.play()
-		
+
+func play_scoring_sound(count):
+	$SoundParent/ScoringSoundAttempt1.pitch_scale = 1 + (0.025 * count)
+	$SoundParent/ScoringSoundAttempt1.play()
+
 func play_tile_destruction_sound():
 	if not $SoundParent/DestructionSound.is_playing():
 		$SoundParent/DestructionSound.play()
@@ -171,16 +178,27 @@ func _on_tile_button_gui_input(event: InputEvent):
 
 func _on_tile_button_mouse_entered():
 	print("I've been entered!")
-	original_z = self.z_index
-	self.scale = self.scale * 1.1
-	self.z_index = 128
-	tile_hovered.emit(self, true)
+	if self.grid_ghost == true:
+		original_z = self.ghost_pair.z_index
+		self.ghost_pair.scale = self.ghost_pair.scale * 1.1
+		self.ghost_pair.z_index = 128
+		tile_hovered.emit(self.ghost_pair, true)
+	else:
+		original_z = self.z_index
+		self.scale = self.scale * 1.1
+		self.z_index = 128
+		tile_hovered.emit(self, true)
 
 func _on_tile_button_mouse_exited():
 	print("I've been exited!")
-	self.scale = self.scale / 1.1
-	self.z_index = original_z
-	tile_hovered.emit(self, false)
+	if self.grid_ghost == true:
+		self.ghost_pair.scale = self.ghost_pair.scale / 1.1
+		self.ghost_pair.z_index = original_z
+		tile_hovered.emit(self.ghost_pair, false)
+	else:
+		self.scale = self.scale / 1.1
+		self.z_index = original_z
+		tile_hovered.emit(self, false)
 
 func spawned_in():
 	var tween = get_tree().create_tween()
@@ -206,7 +224,7 @@ func is_destroyed():
 	var tween2 = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
 	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
-	#play_tile_destruction_sound()
+	play_tile_destruction_sound()
 	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
@@ -216,6 +234,12 @@ func is_being_bagged():
 	
 	await get_tree().create_timer(0.25).timeout
 	self.queue_free()
+	
+func is_vanishing():
+	var tween = get_tree().create_tween()
+	var tween2 = get_tree().create_tween()
+	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 0), 0.15)
+	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.15)
 	
 func scale_to_word_size(scaling_factor):
 	var tween = get_tree().create_tween()
@@ -232,7 +256,7 @@ func is_being_added_to_deck():
 	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.5)
 
 ## Function that handles the scoring of a tile.
-func score_tile():
+func score_tile(count):
 	var letter_score = 0
 	if self.tile.type == LetterTile.TileType.BASIC or self.tile.type == LetterTile.TileType.LOCKED:
 		letter_score += point_values[self.tile.played_letter]
@@ -287,35 +311,45 @@ func score_tile():
 		letter_score += (self.tile.word_length - self.tile.word_index)
 
 	if self.tile.notch1 == LetterTile.NotchTypes.BALANCED:
-		if self.tile.word_index == self.tile.word_length:
+		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
-		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 			
 	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
-		if self.tile.word_index == self.tile.word_length:
+		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
-		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 
 	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
-		if self.tile.word_index == self.tile.word_length:
+		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
-		elif floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 
+	play_scoring_sound(count)
 	await juice_score()
 
 	return letter_score
@@ -368,35 +402,50 @@ func score_tile_quiet():
 		letter_score += self.tile.word_index
 		
 	if self.tile.notch1 == LetterTile.NotchTypes.LOCAL:
-		letter_score += (self.tile.word_length - self.tile.word_index)
+		letter_score += (self.tile.word_length - self.tile.word_index - 1)
 	if self.tile.notch2 == LetterTile.NotchTypes.LOCAL:
-		letter_score += (self.tile.word_length - self.tile.word_index)
+		letter_score += (self.tile.word_length - self.tile.word_index - 1)
 	if self.tile.notch3 == LetterTile.NotchTypes.LOCAL:
-		letter_score += (self.tile.word_length - self.tile.word_index)
+		letter_score += (self.tile.word_length - self.tile.word_index - 1)
 
 	if self.tile.notch1 == LetterTile.NotchTypes.BALANCED:
-		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		if self.tile.word_length == self.tile.word_index:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 			
 	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
-		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		if self.tile.word_length == self.tile.word_index:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 
 	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
-		if floor(self.tile.word_length / 2) - self.tile.word_index == 0:
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index < (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * self.tile.word_index
-		elif self.tile.word_index > (self.tile.word_length - self.tile.word_index):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index)
+		if self.tile.word_length == self.tile.word_index:
+			letter_score += 0
+		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
+			if self.tile.word_length % 2 == 1:
+				letter_score += 3 * self.tile.word_index
+			else:
+				letter_score += (3 * (self.tile.word_index - 1))
+		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_index)
+		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
+			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
 
 	return letter_score
 
@@ -406,8 +455,9 @@ func juice_score():
 	var tween2 = get_tree().create_tween()
 	tween.tween_property(self, "scale", self.scale * 1.35, 0.1)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property(self, "scale", current_size, 0.01)
+	tween.tween_property(self, "scale", self.scale / 1.35, 0.01)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
+	tween.tween_property(self, "scale", current_size, 0.001)
 	return true
 	
 func toggle_monitorable(state: bool) -> void:
