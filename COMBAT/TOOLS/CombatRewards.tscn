@@ -28,6 +28,7 @@ reward_gold_button_icon = SubResource("AtlasTexture_ouwry")
 reward_notch_button_icon = ExtResource("3_sp64j")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 5
 
 [node name="IndecisivePlayer" type="RichTextLabel" parent="CanvasLayer"]
 unique_name_in_owner = true
@@ -58,10 +59,8 @@ texture = ExtResource("2_4m7xu")
 [node name="ColorRect" type="ColorRect" parent="."]
 modulate = Color(0, 0, 0, 0.65)
 z_as_relative = false
-layout_mode = 0
-offset_top = -8.0
 offset_right = 640.0
-offset_bottom = 472.0
+offset_bottom = 480.0
 
 [node name="RewardsButtonList" type="Node2D" parent="."]
 unique_name_in_owner = true

@@ -53,6 +53,18 @@ tracks/3/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TextureButton:size")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(32, 32)]
+}
 
 [sub_resource type="Animation" id="Animation_el1gj"]
 resource_name = "fold"
@@ -80,6 +92,18 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [1.5708, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TextureButton:size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(32, 48), Vector2(32, 32)]
 }
 
 [sub_resource type="Animation" id="Animation_lyh3g"]
@@ -148,6 +172,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [0.0, 1.5708]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TextureButton:size")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(32, 32), Vector2(32, 48)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tieq6"]
 _data = {
@@ -168,9 +204,10 @@ pivot_offset = Vector2(16, 32)
 script = ExtResource("1_6qluw")
 
 [node name="TextureButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
 layout_mode = 0
 offset_right = 32.0
-offset_bottom = 32.0
+offset_bottom = 48.0
 toggle_mode = true
 
 [node name="NotchSprite" type="Node2D" parent="."]
@@ -225,10 +262,11 @@ libraries = {
 unique_name_in_owner = true
 collision_layer = 2
 collision_mask = 2
+input_pickable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
 position = Vector2(16, 16)
-polygon = PackedVector2Array(0, -16, 8, 0, 0, 16, -8, 0)
+polygon = PackedVector2Array(0, -16, 16, 0, 0, 16, -16, 0)
 
 [connection signal="button_down" from="TextureButton" to="." method="_on_texture_button_down"]
 [connection signal="button_up" from="TextureButton" to="." method="_on_texture_button_up"]

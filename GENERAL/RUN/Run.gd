@@ -16,7 +16,6 @@ var current_deck = GeneralManager.current_deck
 signal add_relic(relic_id: int)
 
 @onready var current_view: Node = $CurrentView
-@onready var map: Map = $Map
 @onready var map_button: Button = %MAP
 @onready var combat_button: Button = %COMBAT
 @onready var reliquary_button: Button = %RELIQUARY
@@ -27,7 +26,6 @@ signal add_relic(relic_id: int)
 var character = null
 
 func _ready() -> void:
-	GameEventHandler.combat_exited.connect(_show_map)
 	var replace_character_path = %Character
 	GeneralManager.replace_character_path = replace_character_path
 	if not character:
@@ -39,7 +37,7 @@ func _ready() -> void:
 func _start_new_run() -> void:
 	_setup_event_connections()
 	GeneralManager.prepare_word_dict()
-	
+	%NewMapHandler.generate_map()
 	var character_instance = character.instantiate()
 	%Character.add_child(character_instance)
 	character_instance.scale = Vector2(1.5, 1.5)
@@ -50,7 +48,7 @@ func _start_new_run() -> void:
 	for i in starting_bag.size():
 		current_deck.append(starting_bag[i])
 	
-	map.on_run_start()
+	%NewMapHandler._on_run_start()
 
 func _change_view(scene: PackedScene) -> Node:
 	if current_view.get_child_count() > 0:
@@ -59,7 +57,6 @@ func _change_view(scene: PackedScene) -> Node:
 	get_tree().paused = false
 	var new_view := scene.instantiate()
 	current_view.add_child(new_view)
-	map.hide_map()
 	
 	return new_view
 	
@@ -67,8 +64,7 @@ func _show_map() -> void:
 	if current_view.get_child_count() > 0:
 		current_view.get_child(0).queue_free()
 		
-	map.on_return_from_scene()
-	map.unlock_next_rooms()
+	%NewMapHandler._unlock_next_map_rooms()
 
 func _on_relic_button_pressed():
 	%RELIC.set_disabled(true)
@@ -95,8 +91,6 @@ func _setup_event_connections() -> void:
 	map_button.pressed.connect(_show_map)
 	
 func _on_map_exited(room: Room) -> void:
-	map.close_map_on_scene_change()
-
 	match room.type:
 		Room.RoomType.MONSTER:
 			_change_view(COMBAT_SCENE)

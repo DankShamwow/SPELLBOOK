@@ -55,6 +55,7 @@ offset_top = 48.0
 offset_right = 1408.0
 offset_bottom = 480.0
 mouse_filter = 2
+color = Color(1, 1, 1, 0)
 script = ExtResource("3_4qpg6")
 
 [node name="MapBackground" type="ColorRect" parent="CanvasLayer"]
@@ -65,11 +66,12 @@ offset_top = 64.0
 offset_right = 1408.0
 offset_bottom = 464.0
 mouse_filter = 2
-color = Color(0.768627, 0.607843, 0.294118, 1)
+color = Color(0.769, 0.608, 0.294, 0)
 script = ExtResource("4_4y51t")
 
 [node name="Visuals" type="Node2D" parent="CanvasLayer"]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 y_sort_enabled = true
 script = ExtResource("5_4y51t")
 

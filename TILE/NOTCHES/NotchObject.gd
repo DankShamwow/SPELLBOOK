@@ -76,7 +76,7 @@ func _on_texture_button_down():
 		paired_tile.tile.notch1 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter1 = ""
 		paired_tile.update_notch_graphics(1, true)
-		
+		paired_tile.toggle_monitorable()
 		paired_tile = null
 		
 	elif has_affected_notch2 == true:
@@ -86,7 +86,7 @@ func _on_texture_button_down():
 		paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter2 = ""
 		paired_tile.update_notch_graphics(2, true)
-		
+		paired_tile.toggle_monitorable()
 		paired_tile = null
 		
 	elif has_affected_notch3 == true:
@@ -96,27 +96,41 @@ func _on_texture_button_down():
 		paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter3 = ""
 		paired_tile.update_notch_graphics(3, true)
-		
+		paired_tile.toggle_monitorable()
 		paired_tile = null
 		
-	else:
-		get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
+	#else:
+		#get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
 
 func _on_texture_button_up():
 	dragging = false
 	if %Area2D.has_overlapping_areas():
 		var overlaps = %Area2D.get_overlapping_areas()
 		for i in overlaps.size():
-			print(overlaps[i].get_parent())
-			if overlaps[i].get_parent() is GridTile:
+			print(overlaps[i].get_parent().get_parent())
+			print(overlaps)
+			if overlaps[i].get_parent().get_parent() is GridTile:
 				print("Pairing found!")
-				paired_tile = overlaps[i].get_parent()
-				_snap_to_paired_tile(paired_tile)
-				update_tooltip.emit(paired_tile)
-				has_paired.emit()
-				break
+				if overlaps[i].get_parent().get_parent().tile.notch1 == LetterTile.NotchTypes.EMPTY:
+					paired_tile = overlaps[i].get_parent().get_parent()
+					_snap_to_paired_tile(paired_tile, overlaps[i])
+					update_tooltip.emit(paired_tile)
+					has_paired.emit()
+					break
+				elif overlaps[i].get_parent().get_parent().tile.notch2 == LetterTile.NotchTypes.EMPTY:
+					paired_tile = overlaps[i].get_parent().get_parent()
+					_snap_to_paired_tile(paired_tile, overlaps[i])
+					update_tooltip.emit(paired_tile)
+					has_paired.emit()
+					break
+				elif overlaps[i].get_parent().get_parent().tile.notch3 == LetterTile.NotchTypes.EMPTY:
+					paired_tile = overlaps[i].get_parent().get_parent()
+					_snap_to_paired_tile(paired_tile, overlaps[i])
+					update_tooltip.emit(paired_tile)
+					has_paired.emit()
+					break
 	
-	get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
+	#get_tree().call_group("Notches to Add", "_resnap_to_paired_tile")
 	if has_affected_notch1 == false and has_affected_notch2 == false and has_affected_notch3 == false:
 		var spin_when_dropped = randf_range(-22.5, 22.5)
 		tween = get_tree().create_tween()
@@ -177,9 +191,9 @@ func _resnap_to_paired_tile():
 		return
 
 @warning_ignore("shadowed_variable")
-func _snap_to_paired_tile(paired_tile: GridTile):
+func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 	var paired_tile_pose = paired_tile.position 
-	if paired_tile.tile.notch1 == LetterTile.NotchTypes.EMPTY:
+	if overlaps.name == "Notch1Area" and paired_tile.tile.notch1 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
 		tween2 = get_tree().create_tween()
 		tween.set_trans(Tween.TRANS_SPRING)
@@ -192,6 +206,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		print(notch.type)
 		paired_tile.tile.bonus_letter1 = notch.letter
 		paired_tile.update_notch_graphics(1, true)
+		paired_tile.toggle_monitorable()
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
 		
 		has_affected_notch1 = true
@@ -200,7 +215,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 			folded = false
 			notch_hovered.emit(self, true)
 	
-	elif paired_tile.tile.notch2 == LetterTile.NotchTypes.EMPTY:
+	elif overlaps.name == "Notch2Area" and paired_tile.tile.notch2 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
 		tween2 = get_tree().create_tween()
 		tween.set_trans(Tween.TRANS_SPRING)
@@ -210,6 +225,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		paired_tile.tile.notch2 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
 		paired_tile.tile.bonus_letter2 = notch.letter
 		paired_tile.update_notch_graphics(2, true)
+		paired_tile.toggle_monitorable()
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
 		
 		has_affected_notch2 = true
@@ -218,7 +234,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 			folded = false
 			notch_hovered.emit(self, true)
 		
-	elif paired_tile.tile.notch3 == LetterTile.NotchTypes.EMPTY:
+	elif overlaps.name == "Notch3Area" and paired_tile.tile.notch3 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
 		tween2 = get_tree().create_tween()
 		tween.set_ease(Tween.EASE_IN_OUT)
@@ -230,6 +246,7 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 		paired_tile.tile.notch3 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
 		paired_tile.tile.bonus_letter3 = notch.letter
 		paired_tile.update_notch_graphics(3, true)
+		paired_tile.toggle_monitorable()
 		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch3]).to_pascal_case())
 		has_affected_notch3 = true
 		if folded:
@@ -244,6 +261,12 @@ func _snap_to_paired_tile(paired_tile: GridTile):
 func _process(delta):
 	if dragging:
 		global_position = get_global_mouse_position() - offset
+		
+	if folded:
+		%TextureButton.set_size(Vector2(32.0, 32.0))
+	
+	if not folded:
+		%TextureButton.set_size(Vector2(32.0, 48.0))
 
 func _on_texture_button_mouse_entered():
 	has_mouse = true

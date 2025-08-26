@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx5nftaudi8yv"]
+
+[ext_resource type="Script" uid="uid://c2alatskctl2e" path="res://GENERAL/GAME_SCENES/MAP/NewMapHandler.gd" id="1_d83cj"]
+
+[node name="NewMapHandler" type="Node2D"]
+script = ExtResource("1_d83cj")
+
+[node name="MapParent" type="Node2D" parent="."]
+unique_name_in_owner = true

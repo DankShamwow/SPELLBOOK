@@ -33,96 +33,95 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 	print(GeneralManager.is_map_open)
 	print(GeneralManager.is_combat_active)
 	print(current_combat_deck.size())
-	if GeneralManager.is_map_open == false:
-		if GeneralManager.is_combat_active == true:
-			GeneralManager.is_bag_open = true
-			tile_bag_toggle.emit(toggled_on)
-			if toggled_on == true:
-				no_click_area.set_layer(3)
-				for i in current_combat_deck.size():
-					print("Adding tile: " + str(i) + ".")
-					
-					## bag_tile is a GridTile with the data of a LetterTile from your deck.
-					var bag_tile = grid_tile_scene.instantiate()
-
-					bag_tile.tile = current_combat_deck[i]
-					
-					bag_grid.add_child(bag_tile)
-					bag_list.append(bag_tile)
-					#bag_tile.position = Vector2(8, 24)
-					#var target = Vector2((-544 + ((bag_tile.tile.tile_index % 10) * 28)), (48+(ceil(bag_tile.tile.tile_index/10)*44)))
-					
-					bag_tile.spawned_from_bag()
-					
-					if tiles_in_play.has(bag_tile.tile):
-						bag_tile.fade()
-
-					if buffered_tiles.has(bag_tile.tile):
-						bag_tile.mark_buffer()
-
-					if destroyed_tiles.has(bag_tile.tile):
-						bag_tile.mark_destroyed()
-						
-					if vaporized_tiles.has(bag_tile.tile):
-						bag_tile.mark_vaporized()
-
-					if available_tiles.has(bag_tile.tile):
-						bag_tile.unfade()
-						
-			if toggled_on == false:
-				for i in bag_grid.get_child_count():
-					var tile_to_bag = bag_list.pop_back()
-					tile_to_bag.is_being_bagged()
-				%TileBagButton.set_disabled(true)
-				await get_tree().create_timer(0.5).timeout
-				no_click_area.set_layer(-128)
-				GeneralManager.is_bag_open = false
-				%TileBagButton.set_disabled(false)
-		
-		if GeneralManager.is_combat_active == false:
-			GeneralManager.is_bag_open = true
-			tile_bag_toggle.emit(toggled_on)
-			if toggled_on == true:
-				no_click_area.set_layer(3)
-				for i in current_deck.size():
-					
-					## bag_tile is a GridTile with the data of a LetterTile from your deck.
-					var bag_tile = grid_tile_scene.instantiate()
-
-					bag_tile.tile = current_deck[i]
-					
-					bag_grid.add_child(bag_tile)
-					bag_list.append(bag_tile)
-					#bag_tile.position = Vector2(8, 24)
-					#var target = Vector2((-544 + ((bag_tile.tile.tile_index % 10) * 28)), (48+(ceil(bag_tile.tile.tile_index/10)*44)))
-					
-					bag_tile.spawned_from_bag()
-					
-					if tiles_in_play.has(bag_tile.tile):
-						bag_tile.fade()
-
-					if buffered_tiles.has(bag_tile.tile):
-						bag_tile.mark_buffer()
-
-					if destroyed_tiles.has(bag_tile.tile):
-						bag_tile.mark_destroyed()
-						
-					if vaporized_tiles.has(bag_tile.tile):
-						bag_tile.mark_vaporized()
-
-					if available_tiles.has(bag_tile.tile):
-						bag_tile.unfade()
-						
-			if toggled_on == false:
+	if GeneralManager.is_combat_active == true:
+		GeneralManager.is_bag_open = true
+		tile_bag_toggle.emit(toggled_on)
+		if toggled_on == true:
+			no_click_area.set_layer(9)
+			for i in current_combat_deck.size():
+				print("Adding tile: " + str(i) + ".")
 				
-				for i in bag_grid.get_child_count():
-					var tile_to_bag = bag_list.pop_back()
-					tile_to_bag.is_being_bagged()
-				%TileBagButton.set_disabled(true)
-				await get_tree().create_timer(0.5).timeout
-				no_click_area.set_layer(-128)
-				GeneralManager.is_bag_open = false
-				%TileBagButton.set_disabled(false)
+				## bag_tile is a GridTile with the data of a LetterTile from your deck.
+				var bag_tile = grid_tile_scene.instantiate()
+
+				bag_tile.tile = current_combat_deck[i]
+				
+				bag_grid.add_child(bag_tile)
+				bag_list.append(bag_tile)
+				#bag_tile.position = Vector2(8, 24)
+				#var target = Vector2((-544 + ((bag_tile.tile.tile_index % 10) * 28)), (48+(ceil(bag_tile.tile.tile_index/10)*44)))
+				
+				bag_tile.spawned_from_bag()
+				
+				if tiles_in_play.has(bag_tile.tile):
+					bag_tile.fade()
+
+				if buffered_tiles.has(bag_tile.tile):
+					bag_tile.mark_buffer()
+
+				if destroyed_tiles.has(bag_tile.tile):
+					bag_tile.mark_destroyed()
+					
+				if vaporized_tiles.has(bag_tile.tile):
+					bag_tile.mark_vaporized()
+
+				if available_tiles.has(bag_tile.tile):
+					bag_tile.unfade()
+					
+		if toggled_on == false:
+			for i in bag_grid.get_child_count():
+				var tile_to_bag = bag_list.pop_back()
+				tile_to_bag.is_being_bagged()
+			%TileBagButton.set_disabled(true)
+			await get_tree().create_timer(0.5).timeout
+			no_click_area.set_layer(-128)
+			GeneralManager.is_bag_open = false
+			%TileBagButton.set_disabled(false)
+		
+	if GeneralManager.is_combat_active == false:
+		GeneralManager.is_bag_open = true
+		tile_bag_toggle.emit(toggled_on)
+		if toggled_on == true:
+			no_click_area.set_layer(9)
+			for i in current_deck.size():
+				
+				## bag_tile is a GridTile with the data of a LetterTile from your deck.
+				var bag_tile = grid_tile_scene.instantiate()
+
+				bag_tile.tile = current_deck[i]
+				
+				bag_grid.add_child(bag_tile)
+				bag_list.append(bag_tile)
+				#bag_tile.position = Vector2(8, 24)
+				#var target = Vector2((-544 + ((bag_tile.tile.tile_index % 10) * 28)), (48+(ceil(bag_tile.tile.tile_index/10)*44)))
+				
+				bag_tile.spawned_from_bag()
+				
+				if tiles_in_play.has(bag_tile.tile):
+					bag_tile.fade()
+
+				if buffered_tiles.has(bag_tile.tile):
+					bag_tile.mark_buffer()
+
+				if destroyed_tiles.has(bag_tile.tile):
+					bag_tile.mark_destroyed()
+					
+				if vaporized_tiles.has(bag_tile.tile):
+					bag_tile.mark_vaporized()
+
+				if available_tiles.has(bag_tile.tile):
+					bag_tile.unfade()
+					
+		if toggled_on == false:
+			
+			for i in bag_grid.get_child_count():
+				var tile_to_bag = bag_list.pop_back()
+				tile_to_bag.is_being_bagged()
+			%TileBagButton.set_disabled(true)
+			await get_tree().create_timer(0.5).timeout
+			no_click_area.set_layer(-128)
+			GeneralManager.is_bag_open = false
+			%TileBagButton.set_disabled(false)
 
 
 func _on_update_bag_tiles() -> void:

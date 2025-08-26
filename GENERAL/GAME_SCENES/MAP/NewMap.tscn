@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://dqv38vcf3t0yh"]
+
+[ext_resource type="Script" uid="uid://dgb24ogaq61lm" path="res://GENERAL/GAME_SCENES/MAP/NewMap.gd" id="1_3vodl"]
+[ext_resource type="Script" uid="uid://dcvwlac78aotm" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea1.gd" id="2_wgs8h"]
+[ext_resource type="Script" uid="uid://cooqxj3seamkg" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea2.gd" id="3_30tmb"]
+[ext_resource type="Script" uid="uid://bbb1cx365gdcv" path="res://GENERAL/GAME_SCENES/MAP/MapMaskArea3.gd" id="4_rhd0v"]
+
+[node name="NewMap" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_3vodl")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 8
+follow_viewport_enabled = true
+
+[node name="FadeIn" type="ColorRect" parent="CanvasLayer"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 0)
+z_index = -3
+offset_left = -320.0
+offset_top = 48.0
+offset_right = 1408.0
+offset_bottom = 480.0
+script = ExtResource("2_wgs8h")
+
+[node name="MapBackground" type="ColorRect" parent="CanvasLayer"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+z_index = -3
+offset_left = -320.0
+offset_top = 64.0
+offset_right = 1408.0
+offset_bottom = 464.0
+color = Color(0.768627, 0.607843, 0.294118, 1)
+script = ExtResource("3_30tmb")
+
+[node name="Visuals" type="Node2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+y_sort_enabled = true
+script = ExtResource("4_rhd0v")
+
+[node name="Lines" type="Node2D" parent="CanvasLayer/Visuals"]
+unique_name_in_owner = true
+
+[node name="Rooms" type="Node2D" parent="CanvasLayer/Visuals"]
+unique_name_in_owner = true
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer"]
+unique_name_in_owner = true
+position = Vector2(320, 240)
+editor_draw_limits = true
+editor_draw_drag_margin = true

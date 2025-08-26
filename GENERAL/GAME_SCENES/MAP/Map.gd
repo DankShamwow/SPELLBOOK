@@ -38,24 +38,23 @@ func close_map_on_scene_change():
 	%MapButton.set_pressed(false)
 
 func _on_map_button_toggled(toggled_on):
-	if GeneralManager.is_bag_open == false:
-		if GeneralManager.is_map_open == false:
-			print("Map opening!")
-			map_toggle.emit(toggled_on)
-			show_map()
-			GeneralManager.is_map_open = true
-			%MapButton.set_disabled(true)
-			await get_tree().create_timer(0.5).timeout
-			%MapButton.set_disabled(false)
+	if GeneralManager.is_map_open == false:
+		print("Map opening!")
+		map_toggle.emit(toggled_on)
+		show_map()
+		GeneralManager.is_map_open = true
+		%MapButton.set_disabled(true)
+		await get_tree().create_timer(0.5).timeout
+		%MapButton.set_disabled(false)
 			
-		elif GeneralManager.is_map_open == true:
-			print("Map closing!")
-			map_toggle.emit(toggled_on)
-			%MapButton.set_disabled(true)
-			await get_tree().create_timer(0.5).timeout
-			hide_map()
-			GeneralManager.is_map_open = false
-			%MapButton.set_disabled(false)
+	elif GeneralManager.is_map_open == true:
+		print("Map closing!")
+		map_toggle.emit(toggled_on)
+		%MapButton.set_disabled(true)
+		await get_tree().create_timer(0.5).timeout
+		hide_map()
+		GeneralManager.is_map_open = false
+		%MapButton.set_disabled(false)
 
 func _input(event: InputEvent) -> void:
 	if bag_open == false and camera_2d.enabled == true:

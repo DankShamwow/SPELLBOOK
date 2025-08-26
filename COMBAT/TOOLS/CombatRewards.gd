@@ -173,7 +173,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			%PlayerTilesParent.add_child(new_tile)
 			new_tile.tile_clicked.connect(self._on_tile_clicked)
 			new_tile.tile_hovered.connect(self._is_tile_hovered)
-			new_tile.toggle_monitorable(true)
+			new_tile.toggle_monitorable()
 			new_tile.position = Vector2(592, 32)
 			new_tile.tile.target = Vector2(64+(80*i), (232 + (((i+1) % 2) * 48)))
 			new_tile.spawned_from_bag()

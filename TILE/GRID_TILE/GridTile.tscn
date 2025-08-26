@@ -108,14 +108,63 @@ volume_db = -8.0
 stream = ExtResource("6_u3g1w")
 volume_db = -8.0
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="PairingPoly" type="Control" parent="."]
+anchors_preset = 0
+mouse_filter = 1
+
+[node name="Notch1Area" type="Area2D" parent="PairingPoly"]
 unique_name_in_owner = true
 collision_layer = 2
 collision_mask = 2
+input_pickable = false
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch1Area"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(16, 16)
+polygon = PackedVector2Array(0, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+
+[node name="Notch2Area" type="Area2D" parent="PairingPoly"]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 2
+input_pickable = false
+monitoring = false
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch2Area"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(16, 16)
+rotation = 1.5708
+polygon = PackedVector2Array(9.53674e-07, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+
+[node name="Notch3Area" type="Area2D" parent="PairingPoly"]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 2
+input_pickable = false
+monitoring = false
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch3Area"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(16, 16)
+rotation = -1.5708
+polygon = PackedVector2Array(-1.90735e-06, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+
+[node name="SquarePoly" type="Area2D" parent="PairingPoly"]
+visible = false
+collision_layer = 2
+collision_mask = 2
+input_pickable = false
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PairingPoly/SquarePoly"]
 position = Vector2(16, 16)
 shape = SubResource("RectangleShape2D_sp46c")
 

@@ -96,6 +96,7 @@ func update_notch_graphics(notch: int, is_ghost = false):
 		else:
 			var tween2 = get_tree().create_tween()
 			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_1_Sprite, "modulate:a", 1.0, 0.1)
+	
 	if notch == 2:
 		$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
 		if is_ghost:
@@ -104,6 +105,7 @@ func update_notch_graphics(notch: int, is_ghost = false):
 		else:
 			var tween2 = get_tree().create_tween()
 			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_2_Sprite, "modulate:a", 1.0, 0.1)
+	
 	if notch == 3:
 		$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
 		if is_ghost:
@@ -112,7 +114,7 @@ func update_notch_graphics(notch: int, is_ghost = false):
 		else:
 			var tween2 = get_tree().create_tween()
 			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_3_Sprite, "modulate:a", 1.0, 0.1)
-	
+
 	else:
 		return
 
@@ -459,9 +461,21 @@ func juice_score():
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	tween.tween_property(self, "scale", current_size, 0.001)
 	return true
+
+func toggle_monitorable() -> void:
+
+	%Notch1Area.monitorable = false
+	%Notch2Area.monitorable = false
+	%Notch3Area.monitorable = false
+
+	if self.tile.notch1 == LetterTile.NotchTypes.EMPTY:
+		%Notch1Area.monitorable = true
 	
-func toggle_monitorable(state: bool) -> void:
-	%Area2D.monitorable = state
+	if self.tile.notch2 == LetterTile.NotchTypes.EMPTY:
+		%Notch2Area.monitorable = true
+
+	if self.tile.notch3 == LetterTile.NotchTypes.EMPTY:
+		%Notch3Area.monitorable = true
 
 #set_tooltip_text("Letter Tile!\n 
 				  #Type: self.type\n 

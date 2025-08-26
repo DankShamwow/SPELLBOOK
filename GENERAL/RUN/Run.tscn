@@ -1,16 +1,37 @@
-[gd_scene load_steps=7 format=3 uid="uid://gx3didg4ceg8"]
+[gd_scene load_steps=12 format=3 uid="uid://gx3didg4ceg8"]
 
 [ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
-[ext_resource type="PackedScene" uid="uid://b13djgqsb1eev" path="res://GENERAL/GAME_SCENES/MAP/Map.tscn" id="1_abike"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
 [ext_resource type="PackedScene" uid="uid://cpbsotfmvd85a" path="res://RELIC/RelicContainer.tscn" id="2_l3v56"]
 [ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_s26kh"]
+[ext_resource type="Texture2D" uid="uid://bmvy0sic8twxp" path="res://SPRITES/GUI/MapIcon.png" id="6_qmdm6"]
+[ext_resource type="PackedScene" uid="uid://cx5nftaudi8yv" path="res://GENERAL/GAME_SCENES/MAP/NewMapHandler.tscn" id="6_s26kh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpx1f"]
+atlas = ExtResource("6_qmdm6")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kanhh"]
+atlas = ExtResource("6_qmdm6")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oh08a"]
+atlas = ExtResource("6_qmdm6")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25s7n"]
+atlas = ExtResource("6_qmdm6")
+region = Rect2(64, 0, 32, 32)
 
 [node name="Run" type="Node"]
 script = ExtResource("1_0uibq")
 
 [node name="PermanentUI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="NewMapHandler" parent="PermanentUI" instance=ExtResource("6_s26kh")]
+unique_name_in_owner = true
 
 [node name="DebugButtons" type="VBoxContainer" parent="PermanentUI"]
 visible = false
@@ -79,6 +100,18 @@ offset_bottom = 96.0
 
 [node name="TileBag" parent="PermanentUI" instance=ExtResource("2_n48is")]
 
+[node name="NewMapButton" type="TextureButton" parent="PermanentUI"]
+unique_name_in_owner = true
+offset_left = 552.0
+offset_top = 8.0
+offset_right = 584.0
+offset_bottom = 40.0
+toggle_mode = true
+texture_normal = SubResource("AtlasTexture_qpx1f")
+texture_pressed = SubResource("AtlasTexture_kanhh")
+texture_hover = SubResource("AtlasTexture_oh08a")
+texture_disabled = SubResource("AtlasTexture_25s7n")
+
 [node name="ColorRect" type="ColorRect" parent="PermanentUI"]
 offset_left = 16.0
 offset_top = 8.0
@@ -112,15 +145,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CharacterLayer" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="Character" type="Node2D" parent="CharacterLayer"]
 unique_name_in_owner = true
 
 [node name="CurrentView" type="CanvasLayer" parent="."]
-
-[node name="Map" parent="." instance=ExtResource("1_abike")]
+layer = 3
 
 [connection signal="add_relic" from="." to="PermanentUI/RelicContainerGradient" method="add_relic"]
 [connection signal="pressed" from="PermanentUI/DebugButtons/RELIC" to="." method="_on_relic_button_pressed"]
-[connection signal="tile_bag_toggle" from="PermanentUI/TileBag" to="Map" method="_on_tile_bag_toggle"]
-[connection signal="map_toggle" from="Map" to="PermanentUI/TileBag" method="_on_map_toggle"]
+[connection signal="toggled" from="PermanentUI/NewMapButton" to="PermanentUI/NewMapHandler" method="_on_new_map_button_toggled"]
