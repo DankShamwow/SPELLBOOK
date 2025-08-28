@@ -66,6 +66,10 @@ var mult_values		:= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 
 ## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
 var word_list := {}
 
+## tile_scaling_factor is the scaling factor for tiles based on the length of a word. 
+var tile_scaling_factor: float = 1.0
+
+
 var text_file_path = "res://WORDLISTS/words_alpha.txt"
 
 ## Not to be confused with remove_tile_from_deck(); this function clears out all of the 

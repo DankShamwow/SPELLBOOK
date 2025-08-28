@@ -36,6 +36,9 @@ func _ready():
 	super()
 
 func perform_enemy_attack(attack_number):
+	if self.health <= 0:
+		return
+	
 	remove_energy(1)
 	var attack_letter_tiles = []
 	var attack_to_perform = enemy_attack_list[attack_number]

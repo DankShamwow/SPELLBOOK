@@ -59,6 +59,7 @@ texture = ExtResource("2_4m7xu")
 [node name="ColorRect" type="ColorRect" parent="."]
 modulate = Color(0, 0, 0, 0.65)
 z_as_relative = false
+layout_mode = 0
 offset_right = 640.0
 offset_bottom = 480.0
 

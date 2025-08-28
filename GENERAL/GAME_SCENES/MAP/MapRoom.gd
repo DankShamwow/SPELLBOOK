@@ -23,7 +23,7 @@ func set_room(room_type: Room):
 	
 	if room.selected:
 		var tween = %Map_Circle.create_tween()
-		tween.tween_property(%Map_Circle, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.01)
+		tween.tween_property(%Map_Circle, "modulate", 1.0, 0.01)
 	
 	if room.type == Room.RoomType.BOSS:
 		%Map_Icon.set_frame_coords(Vector2i(2, 0))
@@ -39,7 +39,7 @@ func set_available(new_value: bool) -> void:
 
 func show_selected() -> void:
 	var tween = %Map_Circle.create_tween()
-	tween.tween_property(%Map_Circle, "modulate:a", Color(1.0, 1.0, 1.0, 1.0), 0.1)
+	tween.tween_property(%Map_Circle, "modulate:a", 1, 0.1)
 
 func disable_buttons() -> void:
 	%MapButton.set_disabled(true)

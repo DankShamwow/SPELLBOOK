@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=14 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://cch6efpdfewhy" path="res://TILE/GRID_TILE/GridTile.gd" id="1_h3das"]
 [ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
@@ -6,6 +6,23 @@
 [ext_resource type="AudioStream" uid="uid://b4yfx6n23x4rl" path="res://AUDIO/TILE/destruction_vaporization_attempt_1.ogg" id="4_dlbwe"]
 [ext_resource type="AudioStream" uid="uid://cgm5mblgsqast" path="res://AUDIO/MISC/SCORING/scoring_sound_attempt_1.ogg" id="5_u3g1w"]
 [ext_resource type="AudioStream" uid="uid://bnhp4hq5jtxrp" path="res://AUDIO/TILE/tile_sound_attempt3.ogg" id="6_u3g1w"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_u3g1w"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_u3g1w"]
+offsets = PackedFloat32Array(0.580153, 0.664122, 0.916031)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fjty2"]
+gradient = SubResource("Gradient_u3g1w")
+width = 48
+height = 48
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.03125, 0.03125)
+metadata/_snap_enabled = true
+metadata/_snap_count = 32
 
 [sub_resource type="Animation" id="Animation_l10u7"]
 resource_name = "ChangeToNewType"
@@ -54,6 +71,16 @@ offset_bottom = 32.0
 
 [node name="Tile_Sprite" type="Node2D" parent="Tile_Button"]
 position = Vector2(16, 16)
+
+[node name="Word_Glow" type="TextureRect" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_u3g1w")
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = SubResource("GradientTexture2D_fjty2")
 
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_adt6t")
@@ -121,6 +148,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch1Area"]
+visible = false
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)
@@ -135,6 +163,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch2Area"]
+visible = false
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)
@@ -150,6 +179,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch3Area"]
+visible = false
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)

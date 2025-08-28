@@ -4,12 +4,12 @@ class_name GridTile
 @onready var tile: LetterTile
 @onready var sprite = $Tile_Button/Tile_Sprite
 
-var tiles_in_play = GeneralManager.tiles_in_play
-var buffered_tiles = GeneralManager.buffered_tiles
-var available_tiles = GeneralManager.available_tiles
-var point_values  	= GeneralManager.point_values
+var tiles_in_play 			= GeneralManager.tiles_in_play
+var buffered_tiles 			= GeneralManager.buffered_tiles
+var available_tiles 		= GeneralManager.available_tiles
+var point_values  			= GeneralManager.point_values
 
-var various_rng = RandomnessManager.various_rng
+var various_rng 			= RandomnessManager.various_rng
 
 var original_z = self.z_index
 
@@ -32,6 +32,8 @@ var paired_tile_3 = null
 
 signal tile_hovered(which: GridTile, is_hovering: bool)
 signal tile_clicked(which: GridTile, action: GridTileAction)
+
+var glow_tween: Tween
 
 func _ready():
 	
@@ -138,6 +140,18 @@ func play_scoring_sound(count):
 func play_tile_destruction_sound():
 	if not $SoundParent/DestructionSound.is_playing():
 		$SoundParent/DestructionSound.play()
+
+func toggle_word_glow(state: bool = false):
+	if glow_tween:
+			glow_tween.kill()
+	
+	if state:
+		glow_tween = get_tree().create_tween()
+		glow_tween.tween_property(%Word_Glow, "modulate:a", 1.0, 0.1)
+
+	else:
+		glow_tween = get_tree().create_tween()
+		glow_tween.tween_property(%Word_Glow, "modulate:a", 0.0, 0.5)
 
 func fade():
 	var tween = get_tree().create_tween()
@@ -249,7 +263,7 @@ func scale_to_word_size(scaling_factor):
 	
 func scale_back_to_grid():
 	var tween = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(1, 1), 0.01)
+	tween.tween_property(sprite, "scale", Vector2(1, 1), 0.1)
 
 func is_being_added_to_deck():
 	var tween = get_tree().create_tween()

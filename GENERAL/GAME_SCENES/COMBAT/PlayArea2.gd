@@ -123,8 +123,6 @@ var relic_scene = preload("res://RELIC/Relic.tscn")
 ## sine_timer is the timer for the sine wave pattern of tiles in your played word.
 var sine_timer = 0
 
-
-
 signal update_bag_tiles()
 signal update_buffered_tiles()
 signal disable_tile_bag(state)
@@ -450,6 +448,7 @@ func _tiles_in_word_force_clear():
 	return true
 
 func _send_back_to_grid(grid_tile: GridTile):
+	grid_tile.toggle_word_glow()
 	grid_tile.remove_from_group("Tiles In Word")
 	grid_tile.tile.target = Vector2((((grid_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(grid_tile.tile.grid_index / 4) * 32.0) + 296.0))
 	grid_tile.tile.word_index = 0
@@ -514,7 +513,7 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					%GhostParent.add_child(rack_ghost)
 					rack_ghost.tile_hovered.connect(self._is_tile_hovered)
 					rack_ghost.tile_clicked.connect(self._on_tile_clicked)
-					rack_ghost.position = which.position
+					rack_ghost.position = Vector2((((which.tile.grid_index % 4) * 32.0) + 256.0),((floor(which.tile.grid_index / 4) * 32.0) + 296.0))
 				which.reparent(tiles_in_word, true)
 				
 				if which.tile.notch1 == LetterTile.NotchTypes.LEXICAL:
@@ -531,7 +530,7 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					which.paired_tile_1 = ghost_tile_1
 					ghost_tile_1.paired_tile_1 = which
 					# Pose it to the position of the original grid tile
-					ghost_tile_1.z_index = (which.z_index - 1)
+					ghost_tile_1.z_index = which.z_index
 					
 					%GhostParent.add_child(ghost_tile_1)
 					ghost_tile_1.position = which.position
@@ -554,7 +553,7 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					which.paired_tile_2 = ghost_tile_2
 					ghost_tile_2.paired_tile_2 = which
 					# Pose it to the position of the original grid tile
-					ghost_tile_2.z_index = (which.z_index - 2)
+					ghost_tile_2.z_index = which.z_index
 					
 					%GhostParent.add_child(ghost_tile_2)
 					ghost_tile_2.position = which.position
@@ -577,7 +576,7 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 					which.paired_tile_3 = ghost_tile_3
 					ghost_tile_3.paired_tile_3 = which
 					# Pose it to the position of the original grid tile
-					ghost_tile_3.z_index = (which.z_index - 3)
+					ghost_tile_3.z_index = which.z_index
 					
 					%GhostParent.add_child(ghost_tile_3)
 					ghost_tile_3.reparent(tiles_in_word, true)
@@ -673,19 +672,24 @@ func _word_from_tiles(letters_from_tiles):
 	word = "".join(letters_from_tiles)
 	print(word)
 	if word.length() >= 3 and current_target is GameEntity:
-		
 		var is_word = word_list.get(word)
 		if is_word:
 			get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
 			get_node("PlayButton").set_disabled(false)
+			get_tree().call_group("Tiles In Word", "toggle_word_glow", true)
+			print("Tweening!")
 			
 		elif not is_word:
 			get_node("WordLabel").text = ""
 			get_node("PlayButton").set_disabled(true)
+			get_tree().call_group("Tiles In Word", "toggle_word_glow")
+			print("Untweening! 1")
 			
 	else:
 		get_node("WordLabel").text = ""
 		get_node("PlayButton").set_disabled(true)
+		get_tree().call_group("Tiles In Word", "toggle_word_glow")
+		print("Untweening! 2")
 			
 		#if modified_wordlist.has(word):
 			#
@@ -730,6 +734,8 @@ func _score_word():
 	var tile_retriggers = 0
 	var tile_score_count = 0
 	
+	character_path.remove_energy(1)
+	
 	# If there are any effects that would retrigger the scoring of the word, they'll be processed here.
 	# If there's any special effects, they should also be processed here.
 	for i in current_relics.size():
@@ -740,6 +746,12 @@ func _score_word():
 		for j in tiles_in_word.get_child_count():
 			
 			var scored_tile = tiles_in_word.get_child(j)
+			
+			if scored_tile.ghost_pair is GridTile:
+				scored_tile.ghost_pair.is_being_bagged()
+				scored_tile.ghost_pair = null
+				
+			scored_tile.toggle_word_glow()
 			
 			for k in current_relics.size():
 				
@@ -872,6 +884,20 @@ func _score_word():
 					character_path.gain_health(3)
 					scored_tile.tile.heal3 = true
 				
+				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 1")
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 2")
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 3")
+				
 				# If a tile has Flaming, apply Burn to the enemy.
 				if current_target is Enemy:
 					var burn_bonus = 0
@@ -978,7 +1004,7 @@ func _score_word():
 			tile_to_process.tile.vaporized = true
 			tile_to_process.reparent(tiles_to_kill)
 			#current_deck.remove_at(tile_to_process.tile.tile_index) # TODO: Figure out how to do this correctly.
-			tiles_in_play.remove_at(i)
+			tiles_in_play.erase(tile_to_process.tile)
 			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		# Deletion of temps.
@@ -988,7 +1014,7 @@ func _score_word():
 			tile_to_process.tile.no_buffer = true
 			tile_to_process.tile.vaporized = true
 			tile_to_process.reparent(tiles_to_kill)
-			tiles_in_play.remove_at(i)
+			tiles_in_play.erase(tile_to_process.tile)
 			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		# Crumbling.
@@ -997,24 +1023,26 @@ func _score_word():
 			destroyed_tiles.append(tile_to_process.tile)
 			tile_to_process.tile.no_buffer = true
 			tile_to_process.reparent(tiles_to_kill)
-			tiles_in_play.remove_at(i)
+			tiles_in_play.erase(tile_to_process.tile)
 			tile_to_process.is_destroyed() # TODO: Replace with unique effect.
 		
 		else:
 			tile_to_process.reparent(tiles_to_kill)
-			tiles_in_play.remove_at(i)
-	
+			tiles_in_play.erase(tile_to_process.tile)
+
+		
 	_cleanup(total_score)
 
 func _cleanup(total_score):
 	# Make the bag look pretty just before the tiles go into it.
 	GameEventHandler.disable_tile_bag.emit(true)
 	for i in tiles_to_kill.get_child_count():
-		tiles_to_kill.remove_from_group("Tiles In Word")
 		var last_letter = tiles_to_kill.get_child(i)
-		
-		if last_letter.ghost_pair is GridTile:
-			last_letter.ghost_pair.is_being_bagged()
+		last_letter.remove_from_group("Tiles In Word")
+
+		if last_letter == null:
+			print("UH OH! FUCKY WUCKY!")
+			continue
 		
 		# This is bad implementation, and might be the source of a bug.
 		if last_letter.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
@@ -1027,10 +1055,10 @@ func _cleanup(total_score):
 			and last_letter.tile.vaporized == false:
 				available_tiles.append(last_letter.tile)
 				last_letter.z_index = 120
-				play_weighted_notch_sound()
 				last_letter.is_dying()
 				last_letter.tile.target = Vector2(592.0, 32.0)
 				last_letter.move_to_position(0.35)
+				play_weighted_notch_sound()
 				await get_tree().create_timer(0.075).timeout
 		
 		elif last_letter.tile.no_buffer == false and last_letter.tile.vaporized == false:
@@ -1051,7 +1079,6 @@ func _cleanup(total_score):
 	_word_from_tiles(letters_from_tiles)
 	_apply_score_to_target(total_score)
 	_move_tiles_into_place()
-	character_path.remove_energy(1)
 	print(character_path.current_energy)
 	GameEventHandler.disable_tile_bag.emit(false)
 
@@ -1329,6 +1356,7 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 	current_target = which
 	print(current_target.name)
 	_check_turn_status()
+	_tiles_in_word_update()
 	
 func _update_tile_graphics(affected_tile_indices):
 	print("Updating Tile Graphics!")

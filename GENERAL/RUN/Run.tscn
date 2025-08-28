@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://gx3didg4ceg8"]
+[gd_scene load_steps=13 format=3 uid="uid://gx3didg4ceg8"]
 
 [ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_s26kh"]
 [ext_resource type="Texture2D" uid="uid://bmvy0sic8twxp" path="res://SPRITES/GUI/MapIcon.png" id="6_qmdm6"]
 [ext_resource type="PackedScene" uid="uid://cx5nftaudi8yv" path="res://GENERAL/GAME_SCENES/MAP/NewMapHandler.tscn" id="6_s26kh"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="8_qmdm6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qpx1f"]
 atlas = ExtResource("6_qmdm6")
@@ -82,9 +83,15 @@ text = "RELIC
 
 [node name="TopBarGUI" type="NinePatchRect" parent="PermanentUI"]
 texture_filter = 1
-offset_left = -8.0
-offset_right = 648.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -328.0
+offset_right = 328.0
 offset_bottom = 48.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
 texture = ExtResource("5_s26kh")
 region_rect = Rect2(0, 0, 48, 48)
 patch_margin_left = 8
@@ -95,16 +102,29 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [node name="RelicContainerGradient" parent="PermanentUI" instance=ExtResource("2_l3v56")]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -304.0
 offset_top = 48.0
+offset_right = 304.0
 offset_bottom = 96.0
 
 [node name="TileBag" parent="PermanentUI" instance=ExtResource("2_n48is")]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = -320.0
 
 [node name="NewMapButton" type="TextureButton" parent="PermanentUI"]
 unique_name_in_owner = true
-offset_left = 552.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 232.0
 offset_top = 8.0
-offset_right = 584.0
+offset_right = 264.0
 offset_bottom = 40.0
 toggle_mode = true
 texture_normal = SubResource("AtlasTexture_qpx1f")
@@ -113,9 +133,12 @@ texture_hover = SubResource("AtlasTexture_oh08a")
 texture_disabled = SubResource("AtlasTexture_25s7n")
 
 [node name="ColorRect" type="ColorRect" parent="PermanentUI"]
-offset_left = 16.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -304.0
 offset_top = 8.0
-offset_right = 96.0
+offset_right = -224.0
 offset_bottom = 40.0
 
 [node name="Label" type="Label" parent="PermanentUI/ColorRect"]
@@ -129,9 +152,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ColorRect2" type="ColorRect" parent="PermanentUI"]
-offset_left = 112.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -208.0
 offset_top = 8.0
-offset_right = 192.0
+offset_right = -128.0
 offset_bottom = 40.0
 
 [node name="Label" type="Label" parent="PermanentUI/ColorRect2"]
@@ -152,6 +178,13 @@ unique_name_in_owner = true
 
 [node name="CurrentView" type="CanvasLayer" parent="."]
 layer = 3
+
+[node name="BackgroundVisuals" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Sprite2D" type="Sprite2D" parent="BackgroundVisuals"]
+position = Vector2(320, 168)
+texture = ExtResource("8_qmdm6")
 
 [connection signal="add_relic" from="." to="PermanentUI/RelicContainerGradient" method="add_relic"]
 [connection signal="pressed" from="PermanentUI/DebugButtons/RELIC" to="." method="_on_relic_button_pressed"]

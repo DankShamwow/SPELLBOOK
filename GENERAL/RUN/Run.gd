@@ -74,7 +74,6 @@ func _on_relic_button_pressed():
 
 	%RELIC.set_disabled(false)
 
-
 func _setup_event_connections() -> void:
 	GameEventHandler.combat_exited.connect(_show_map)
 	GameEventHandler.shop_exited.connect(_show_map)

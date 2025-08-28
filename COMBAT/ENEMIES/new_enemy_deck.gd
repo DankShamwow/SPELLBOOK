@@ -31,7 +31,7 @@ var EnemyStatusPackage0 = [["WARPED_DEBUFF", 3, 1, 3, "PLAYER"],]
 
 var EnemyStatusPackage1 = []
 
-var EnemyStatusPackage2 = [["BLEED_DEBUFF", 3, 1, 3, "PLAYER"],]
+var EnemyStatusPackage2 = []
 
 var EnemyAttackList = [
 EnemyAttack0,
