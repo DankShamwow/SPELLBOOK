@@ -395,6 +395,7 @@ offset_left = -320.0
 offset_right = 320.0
 offset_bottom = 480.0
 grow_horizontal = 2
+mouse_filter = 2
 
 [node name="NewTilesParent" type="Control" parent="NotchAndTileRewardParent"]
 unique_name_in_owner = true
@@ -406,6 +407,7 @@ offset_left = -320.0
 offset_right = 320.0
 offset_bottom = 480.0
 grow_horizontal = 2
+mouse_filter = 2
 
 [node name="PlayerTilesParent" type="Control" parent="NotchAndTileRewardParent"]
 unique_name_in_owner = true
@@ -417,6 +419,7 @@ offset_left = -320.0
 offset_right = 320.0
 offset_bottom = 480.0
 grow_horizontal = 2
+mouse_filter = 2
 
 [node name="MarkerParent" type="Node2D" parent="."]
 visible = false

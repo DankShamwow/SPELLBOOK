@@ -1,19 +1,19 @@
 [gd_scene load_steps=7 format=3 uid="uid://bnm2m6n8wfcxt"]
 
 [ext_resource type="Script" uid="uid://d2kvmu7hm4nfl" path="res://COMBAT/GAME_ENTITY/GameEntity.gd" id="1_bvxem"]
-[ext_resource type="Texture2D" uid="uid://dukr586bs7ao4" path="res://SPRITES/ASEPRITE FILES/HealthBar.png" id="2_017la"]
+[ext_resource type="Texture2D" uid="uid://crpy0ehpcx83j" path="res://SPRITES/COMBAT/HealthBar.png" id="2_mrxmt"]
 [ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="3_k6pca"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3gx1m"]
-atlas = ExtResource("2_017la")
+atlas = ExtResource("2_mrxmt")
 region = Rect2(0, 10, 10, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m3v7e"]
-atlas = ExtResource("2_017la")
+atlas = ExtResource("2_mrxmt")
 region = Rect2(0, 0, 10, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iddio"]
-atlas = ExtResource("2_017la")
+atlas = ExtResource("2_mrxmt")
 region = Rect2(0, 20, 10, 10)
 
 [node name="GameEntity" type="Control"]

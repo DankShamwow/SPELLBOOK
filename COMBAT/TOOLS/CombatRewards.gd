@@ -356,7 +356,8 @@ func _on_confirm_button_pressed() -> void:
 			await get_tree().create_timer(2.71).timeout
 			%IndecisivePlayer.text = ""
 			%IndecisivePlayer.size = Vector2(0, 40)
-				
+		
+		%ConfirmButton.set_disabled(false)
 		_cleanup()
 
 func _cleanup():

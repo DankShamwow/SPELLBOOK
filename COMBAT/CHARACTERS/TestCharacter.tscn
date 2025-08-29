@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dpo3o3ojc8wyt" path="res://COMBAT/CHARACTERS/TestCharacter.gd" id="1_hgn4l"]
 [ext_resource type="Texture2D" uid="uid://c22g72fcw7tru" path="res://SPRITES/COMBAT/SCRIPTWRITER.png" id="2_r3mwi"]
+[ext_resource type="Texture2D" uid="uid://crpy0ehpcx83j" path="res://SPRITES/COMBAT/HealthBar.png" id="3_hgn4l"]
 [ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="3_qrq8c"]
-[ext_resource type="Texture2D" uid="uid://dukr586bs7ao4" path="res://SPRITES/ASEPRITE FILES/HealthBar.png" id="3_xjnqd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qrq8c"]
 atlas = ExtResource("2_r3mwi")
@@ -14,15 +14,15 @@ atlas = ExtResource("2_r3mwi")
 region = Rect2(0, 96, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qupmd"]
-atlas = ExtResource("3_xjnqd")
+atlas = ExtResource("3_hgn4l")
 region = Rect2(0, 10, 10, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0sybw"]
-atlas = ExtResource("3_xjnqd")
+atlas = ExtResource("3_hgn4l")
 region = Rect2(0, 0, 10, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mrmiy"]
-atlas = ExtResource("3_xjnqd")
+atlas = ExtResource("3_hgn4l")
 region = Rect2(0, 20, 10, 10)
 
 [node name="TestCharacter" type="Control"]
