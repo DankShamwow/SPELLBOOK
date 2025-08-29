@@ -84,12 +84,15 @@ func on_combat_start():
 func on_combat_end():
 	return 0
 
-## Function that handles what should happen when a specific word, word stem, or kind of word is played and has a multiplier effect.
-func word_score_multiplier_effect(_word):
+func word_length_bonus_effect(_word):
 	return 0
 
+## Function that handles what should happen when a specific word, word stem, or kind of word is played and has a multiplier effect.
+func word_score_multiplier_effect(_word):
+	return 1
+
 ## Function that handles what should happen when a specific word, word stem, or kind of word is played and has a bonus scoring effect for each letter in the word.
-func word_letter_bonus_score_effect(_word):
+func word_tile_bonus_score_effect(_word):
 	return 0
 
 ## Function that handles what should happen when a specific letter, kind of letter, etc is played.

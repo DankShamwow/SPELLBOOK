@@ -21,10 +21,6 @@ func set_room(room_type: Room):
 	if not room.type == Room.RoomType.BOSS:
 		%Map_Icon.set_frame_coords(Vector2i(room.type, 0))
 	
-	if room.selected:
-		var tween = %Map_Circle.create_tween()
-		tween.tween_property(%Map_Circle, "modulate", 1.0, 0.01)
-	
 	if room.type == Room.RoomType.BOSS:
 		%Map_Icon.set_frame_coords(Vector2i(2, 0))
 		%Map_Icon.scale = Vector2(2.0, 2.0)

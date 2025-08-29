@@ -320,7 +320,20 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	var points_score 		= 0
 	var total_score 		= 0
 	var tile_score_count	= 0
-	
+	var word_length 		= 0
+	var context_power 		= 0
+	var bonus_word_length	= 0
+
+	if target == "SELF" or target == "OTHER":
+		# Query Dexterity
+		context_power += attacker.query_status_value(13)
+		# Query Intelligence
+		bonus_word_length += attacker.query_status_value(14)
+
+	if target == "PLAYER":
+		# Query Strength
+		context_power += attacker.query_status_value(12)
+
 	for i in attack_to_perform.size():
 		if attack_letter_tiles[i].type == LetterTile.TileType.LOCKED:
 			continue
@@ -351,9 +364,22 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	
 	for i in tiles_in_word.get_child_count():
 		tile_score = enemy_letters[i].score_tile(tile_score_count)
+		tile_score += context_power
 		tile_score_count += 1
+		word_length += 1
 		points_score += tile_score
-		mult_score = mult_values[i]
+		
+		if word_length < 6:
+				mult_score = mult_values[word_length]
+		else:
+			mult_score = mult_score + (word_length - 5)
+		
+		await get_tree().create_timer(0.075).timeout
+		
+	if bonus_word_length > 0:
+		for i in bonus_word_length:
+			mult_score = mult_score + (word_length + bonus_word_length - 5)
+		
 		total_score = points_score * mult_score
 		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 		await get_tree().create_timer(0.075).timeout
@@ -723,29 +749,48 @@ func _on_play_button_pressed():
 		_pass_turn()
 
 func _score_word():
+	var word_target = current_target
+	
 	scoring_check = true
 	get_node("PlayButton").set_disabled(true)
-	played_words_count += 1
-	var points_score = 0
-	var mult_score = 0
-	var tile_score = 0
-	var total_score = 0
-	var word_retriggers = 0
-	var tile_retriggers = 0
-	var tile_score_count = 0
+	played_words_count 			+= 1
+	
+	var points_score 			= 0
+	var mult_score 				= 0
+	var tile_score 				= 0
+	var total_score 			= 0
+	var word_retriggers 		= 0
+	var tile_retriggers 		= 0
+	var tile_score_count 		= 0
+	var word_length 			= 0
+	var context_power 			= 0
+	var bonus_word_length 		= 0
 	
 	character_path.remove_energy(1)
 	
 	# If there are any effects that would retrigger the scoring of the word, they'll be processed here.
-	# If there's any special effects, they should also be processed here.
+	# If there's any effects with context-based power, they should also go here.
+	# i.e. checking a word type belongs in this category
 	for i in current_relics.size():
 		word_retriggers += current_relics[i].word_retrigger_effect(word)
+		context_power += current_relics[i].word_tile_bonus_score_effect(word)
+	
+	if word_target is Enemy:
+		# Query Player Strength
+		context_power += character_path.query_status_value(12)
+	
+	if word_target is Character:
+		# Query Player Dexterity
+		context_power += character_path.query_status_value(13)
+		
+	bonus_word_length += character_path.query_status_value(14)
 	
 	for i in word_retriggers + 1:
 		
 		for j in tiles_in_word.get_child_count():
 			
 			var scored_tile = tiles_in_word.get_child(j)
+			word_length += 1
 			
 			if scored_tile.ghost_pair is GridTile:
 				scored_tile.ghost_pair.is_being_bagged()
@@ -774,6 +819,7 @@ func _score_word():
 				
 				# Score the actual letter and get the score, plus increment the scored letter count.
 				tile_score +=  await scored_tile.score_tile(tile_score_count)
+				tile_score += context_power
 				tile_score_count += 1
 				scored_tile_count += 1
 				
@@ -781,8 +827,6 @@ func _score_word():
 				# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 				
 				await get_tree().create_timer(0.025).timeout
-				
-				# TODO: Put Notch-based effects here? Or maybe they belong inside the tile scoring. I don't know.
 				
 				# Pull any bonus point effects from relics.
 				for l in current_relics.size():
@@ -794,11 +838,6 @@ func _score_word():
 					
 					# Letter based effects
 					tile_score += current_relics[l].letter_score_effect(scored_tile.tile.played_letter, word)
-					%TileScoreLabel.text = str(tile_score)
-					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
-					
-					# Word based effects that trigger on each letter of a word
-					tile_score += current_relics[l].word_letter_bonus_score_effect(word)
 					%TileScoreLabel.text = str(tile_score)
 					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
@@ -889,14 +928,17 @@ func _score_word():
 					character_path.remove_energy(1)
 					points_score = points_score * 2
 					print("OVERLOADING... 1")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
 					points_score = points_score * 2
 					print("OVERLOADING... 2")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
 					points_score = points_score * 2
 					print("OVERLOADING... 3")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				
 				# If a tile has Flaming, apply Burn to the enemy.
 				if current_target is Enemy:
@@ -928,31 +970,44 @@ func _score_word():
 			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
 			tile_score = 0
 			tile_retriggers = 0
-			await get_tree().create_timer(0.005).timeout
+			await get_tree().create_timer(0.05).timeout
 			
-			# We don't want the mult score to go back down when we potentially rescore a word.
-			var previous_mult_score = mult_score
-			mult_score = mult_values[j]
-			if previous_mult_score > mult_score:
-				mult_score = previous_mult_score
-			
-			# If something is going to modify the mult score, it goes here.
-			for k in current_relics.size():
-				# TODO: Add modifiers to the mult score.
-				pass
-			
+			if word_length < 6:
+				mult_score = mult_values[word_length]
+			else:
+				mult_score = mult_score + (word_length - 5)
+				
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			await get_tree().create_timer(0.075).timeout
+			await get_tree().create_timer(0.05).timeout
 			
 			total_score = points_score * mult_score
-			
-			# If something is going to modify the total word score, it goes here.
-			for k in current_relics.size():
-				# TODO: Add modifiers to the total score.
-				pass
-			
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			await get_tree().create_timer(0.075).timeout
+			
+			await get_tree().create_timer(0.05).timeout
+			
+	# If something is going to modify the mult score, it goes here.
+	for i in current_relics.size():
+		bonus_word_length = current_relics[i].word_length_bonus_effect(word)
+		
+	if bonus_word_length >= 0:
+		for i in bonus_word_length:
+			word_length += 1
+			if word_length < 6:
+				mult_score = mult_values[word_length]
+			else:
+				mult_score = mult_score + (word_length - 5)
+	
+	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+	await get_tree().create_timer(0.075).timeout
+	
+	total_score = points_score * mult_score
+	
+	# If something is going to modify the total word score, it goes here.
+	for i in current_relics.size():
+		total_score = total_score * current_relics[i].word_score_multiplier_effect(word)
+	
+	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+	await get_tree().create_timer(0.075).timeout
 			
 	#$Subaluwa.play()
 

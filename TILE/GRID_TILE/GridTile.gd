@@ -481,6 +481,9 @@ func toggle_monitorable() -> void:
 	%Notch1Area.monitorable = false
 	%Notch2Area.monitorable = false
 	%Notch3Area.monitorable = false
+	%Notch1AreaPoly.disabled = false
+	%Notch2AreaPoly.disabled = false
+	%Notch3AreaPoly.disabled = false
 
 	if self.tile.notch1 == LetterTile.NotchTypes.EMPTY:
 		%Notch1Area.monitorable = true

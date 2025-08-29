@@ -5,7 +5,6 @@ var tiles_in_play 	= GeneralManager.tiles_in_play
 var debuff_rng		= RandomnessManager.debuff_rng
 var affected_tile_list = []
 var affected_tile_indices = []
-var previous_debuff_index: int
 
 func _ready():
 	id = 10
@@ -124,3 +123,9 @@ func on_duration_expiry():
 		affected_tile_list[i].visual_letter = affected_tile_list[i].true_letter
 		affected_tile_list[i].played_letter = affected_tile_list[i].true_letter
 	return affected_tile_indices
+
+func on_combat_end():
+	on_duration_expiry()
+
+func on_force_clear():
+	on_duration_expiry()

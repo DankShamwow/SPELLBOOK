@@ -37,7 +37,7 @@ func _on_map_bringup(map_data: Array[Array], camera_position: float = 0.0):
 				new_map_room.selected.connect(self._on_map_room_selected)
 				_connect_lines(room)
 				
-				if room.selected and room.column < self.get_parent().get_parent().sections_crossed:
+				if room.selected and room.column <= self.get_parent().get_parent().sections_crossed:
 					new_map_room.show_selected()
 			
 		

@@ -75,11 +75,13 @@ position = Vector2(16, 16)
 [node name="Word_Glow" type="TextureRect" parent="Tile_Button/Tile_Sprite"]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
+show_behind_parent = true
 material = SubResource("CanvasItemMaterial_u3g1w")
 offset_left = -24.0
 offset_top = -24.0
 offset_right = 24.0
 offset_bottom = 24.0
+mouse_filter = 2
 texture = SubResource("GradientTexture2D_fjty2")
 
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
@@ -137,7 +139,7 @@ volume_db = -8.0
 
 [node name="PairingPoly" type="Control" parent="."]
 anchors_preset = 0
-mouse_filter = 1
+mouse_filter = 2
 
 [node name="Notch1Area" type="Area2D" parent="PairingPoly"]
 unique_name_in_owner = true
@@ -147,12 +149,13 @@ input_pickable = false
 monitoring = false
 monitorable = false
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch1Area"]
-visible = false
+[node name="Notch1AreaPoly" type="CollisionPolygon2D" parent="PairingPoly/Notch1Area"]
+unique_name_in_owner = true
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)
 polygon = PackedVector2Array(0, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+disabled = true
 
 [node name="Notch2Area" type="Area2D" parent="PairingPoly"]
 unique_name_in_owner = true
@@ -162,13 +165,14 @@ input_pickable = false
 monitoring = false
 monitorable = false
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch2Area"]
-visible = false
+[node name="Notch2AreaPoly" type="CollisionPolygon2D" parent="PairingPoly/Notch2Area"]
+unique_name_in_owner = true
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)
 rotation = 1.5708
 polygon = PackedVector2Array(9.53674e-07, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+disabled = true
 
 [node name="Notch3Area" type="Area2D" parent="PairingPoly"]
 unique_name_in_owner = true
@@ -178,13 +182,14 @@ input_pickable = false
 monitoring = false
 monitorable = false
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PairingPoly/Notch3Area"]
-visible = false
+[node name="Notch3AreaPoly" type="CollisionPolygon2D" parent="PairingPoly/Notch3Area"]
+unique_name_in_owner = true
 light_mask = 2
 visibility_layer = 2
 position = Vector2(16, 16)
 rotation = -1.5708
 polygon = PackedVector2Array(-1.90735e-06, 16, 16, 16, 16, 32, -16, 32, -16, 16)
+disabled = true
 
 [node name="SquarePoly" type="Area2D" parent="PairingPoly"]
 visible = false

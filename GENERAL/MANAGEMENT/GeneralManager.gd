@@ -61,7 +61,8 @@ var who_has_initiative: GameEntity
 var point_values  	:= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
 ## mult_values determines the multiplier on the score based on the length of a word.
-var mult_values		:= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 13, 18, 24, 30, 35, 40, 50, 60, 80, 100]
+var mult_values		:= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 14, 19, 25, 32, 39, 47, 55, 65, 80, 100]
+
 
 ## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
 var word_list := {}
