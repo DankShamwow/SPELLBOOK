@@ -369,10 +369,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 		word_length += 1
 		points_score += tile_score
 		
-		if word_length < 6:
-				mult_score = mult_values[word_length]
-		else:
-			mult_score = mult_score + (word_length - 5)
+		mult_score = floor(word_length / 2)
 		
 		total_score = points_score * mult_score
 		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
@@ -381,8 +378,11 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 		
 	if bonus_word_length > 0:
 		for i in bonus_word_length:
-			mult_score = mult_score + (word_length + bonus_word_length - 5)
-		
+			mult_score = floor(word_length / 2)
+			
+			total_score = points_score * mult_score
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+
 		total_score = points_score * mult_score
 		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 		await get_tree().create_timer(0.075).timeout
@@ -450,6 +450,8 @@ func _tiles_in_word_update():
 			tiles_in_word.get_child(i).tile.target = Vector2(tiles_in_word.get_child(0).tile.target.x + (38.0 * float(i))*scaling_factor, 120.0)
 			tiles_in_word.get_child(i).scale_to_word_size(scaling_factor)
 			tiles_in_word.get_child(i).move_to_position(0.35)
+	
+	_calc_raw_word_score()
 	
 	print(letters_from_tiles)
 	_normalize_grid_tile_size()
@@ -926,23 +928,6 @@ func _score_word():
 					character_path.gain_health(3)
 					scored_tile.tile.heal3 = true
 				
-				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
-				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-					character_path.remove_energy(1)
-					points_score = points_score * 2
-					print("OVERLOADING... 1")
-					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-					character_path.remove_energy(1)
-					points_score = points_score * 2
-					print("OVERLOADING... 2")
-					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-					character_path.remove_energy(1)
-					points_score = points_score * 2
-					print("OVERLOADING... 3")
-					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-				
 				# If a tile has Flaming, apply Burn to the enemy.
 				if current_target is Enemy:
 					var burn_bonus = 0
@@ -970,15 +955,29 @@ func _score_word():
 			points_score += tile_score
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 			
+						# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
+			if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+				character_path.remove_energy(1)
+				points_score = points_score * 2
+				print("OVERLOADING... 1")
+				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+				character_path.remove_energy(1)
+				points_score = points_score * 2
+				print("OVERLOADING... 2")
+				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+				character_path.remove_energy(1)
+				points_score = points_score * 2
+				print("OVERLOADING... 3")
+				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			
 			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
 			tile_score = 0
 			tile_retriggers = 0
 			await get_tree().create_timer(0.05).timeout
 			
-			if word_length < 6:
-				mult_score = mult_values[word_length]
-			else:
-				mult_score = mult_score + (word_length - 5)
+			mult_score = floor(word_length / 2)
 				
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 			await get_tree().create_timer(0.05).timeout
@@ -995,11 +994,11 @@ func _score_word():
 	if bonus_word_length >= 0:
 		for i in bonus_word_length:
 			word_length += 1
-			if word_length < 6:
-				mult_score = mult_values[word_length]
-			else:
-				mult_score = mult_score + (word_length - 5)
+			mult_score = floor(word_length / 2)
 	
+			total_score = points_score * mult_score
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+			
 	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 	await get_tree().create_timer(0.075).timeout
 	
@@ -1229,13 +1228,19 @@ func _rename_tiles():
 			racked_tiles.get_child(i).set_name(str("GridTile"+str(racked_tiles.get_child(i).tile.grid_index)))
 
 func _calc_raw_word_score():
-	var letter_score = 0
+	var tile_score
+	var points_score = 0
 	var mult_score = 0
 	var raw_word_score = 0
+	var word_length = 0
 	for i in tiles_in_word.get_child_count():
-		letter_score += tiles_in_word.get_child(i).score_tile_quiet()
-		mult_score = mult_values[i]
-		raw_word_score = letter_score * mult_score
+		tile_score = tiles_in_word.get_child(i).score_tile_quiet()
+		points_score += tile_score
+		word_length += 1
+		mult_score = floor(word_length / 2)
+		raw_word_score = points_score * mult_score
+		
+	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(raw_word_score)
 	return raw_word_score
 
 func _calc_enemy_word_score(enemy: Enemy, word: Array):
@@ -1244,7 +1249,7 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array):
 	var total_score = 0
 	var tile_retriggers = 0
 	for i in word.size():
-		
+		var word_length = word.size()
 		var previous_mult_score = mult_score
 		var scored_tile = enemy.current_enemy_deck[word[i]]
 		
@@ -1278,9 +1283,8 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array):
 			points_score += tile_score
 			tile_score = 0
 			tile_retriggers = 0
-			mult_score = mult_values[i]
-			if previous_mult_score > mult_score:
-				mult_score = previous_mult_score
+
+			mult_score = floor(word_length / 2)
 			
 			total_score = points_score * mult_score
 		

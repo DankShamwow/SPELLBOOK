@@ -33,7 +33,7 @@ layer = 20
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 texture_filter = 1
-anchors_preset = -1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -288.0
@@ -73,6 +73,7 @@ offset_bottom = 480.0
 unique_name_in_owner = true
 z_index = 50
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -320.0
@@ -81,6 +82,7 @@ offset_right = -320.0
 [node name="RewardsLabelBox" type="NinePatchRect" parent="RewardsButtonList"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 200.0
 offset_top = 96.0
 offset_right = 440.0
@@ -106,6 +108,7 @@ vertical_alignment = 1
 [node name="RewardsBox" type="NinePatchRect" parent="RewardsButtonList"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 192.0
 offset_top = 136.0
 offset_right = 448.0
@@ -129,6 +132,7 @@ offset_bottom = 288.0
 [node name="RewardsSkipButtonBox" type="NinePatchRect" parent="RewardsButtonList"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 504.0
 offset_top = 400.0
 offset_right = 616.0
@@ -194,6 +198,7 @@ grow_horizontal = 2
 [node name="SeparatorBox2" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 200.0
 offset_top = 96.0
 offset_right = 440.0
@@ -220,6 +225,7 @@ vertical_alignment = 1
 [node name="NotchBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 192.0
 offset_top = 136.0
 offset_right = 448.0
@@ -246,6 +252,7 @@ vertical_alignment = 1
 [node name="PlayerTileBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 24.0
 offset_top = 208.0
 offset_right = 616.0
@@ -272,6 +279,7 @@ vertical_alignment = 1
 [node name="SeparatorBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 200.0
 offset_top = 344.0
 offset_right = 440.0
@@ -298,6 +306,7 @@ vertical_alignment = 1
 [node name="NewTileBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 192.0
 offset_top = 384.0
 offset_right = 448.0
@@ -324,6 +333,7 @@ vertical_alignment = 1
 [node name="SkipButtonBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 504.0
 offset_top = 400.0
 offset_right = 616.0
@@ -356,6 +366,7 @@ vertical_alignment = 1
 [node name="ConfirmButtonBox" type="NinePatchRect" parent="NotchAndTileRewardParent"]
 texture_filter = 1
 clip_contents = true
+layout_mode = 0
 offset_left = 24.0
 offset_top = 400.0
 offset_right = 136.0
@@ -451,6 +462,7 @@ position = Vector2(208, 392)
 [node name="TilesToKill" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -320.0
