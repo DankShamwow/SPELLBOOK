@@ -165,7 +165,7 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 			return
 		else:
 			print("Uh Oh!")
-	
+				
 	if effect_node.tile_status == false and effect_node.stack_type == StatusEffect.StackType.BOTH:
 		for i in %Statuses.get_child_count() - 1:
 			print("Searching 1...")
@@ -176,7 +176,7 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 				%Statuses.get_child(i).update_label()
 				effect_node.queue_free()
 				return
-				
+	
 	if effect_node.tile_status == false and effect_node.stack_type == StatusEffect.StackType.AMOUNT:
 		for i in %Statuses.get_child_count() - 1:
 			print("Searching 2...")
@@ -215,6 +215,7 @@ func query_status_value(status_id: int):
 	for i in %Statuses.get_child_count():
 		if %Statuses.get_child(i).id == status_id:
 			return %Statuses.get_child(i).amount
+	return 0
 
 func remove_status_check():
 	for i in %Statuses.get_child_count():
