@@ -1,7 +1,7 @@
 extends Control
 class_name MapRoom
 
-signal selected(room: Room)
+signal selected(room: Room, map_room: MapRoom)
 
 var available := false : set = set_available
 var room: Room : set = set_room
@@ -45,6 +45,6 @@ func _on_map_button_pressed() -> void:
 		return
 	room.selected = true
 	%MapButton.set_disabled(true)
-	selected.emit(room)
+	selected.emit(room, self)
 	animation_player.play("select")
 	

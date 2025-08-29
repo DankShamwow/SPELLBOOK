@@ -18,10 +18,10 @@ func _input(event: InputEvent) -> void:
 	if GeneralManager.is_bag_open == false:
 		if event.is_action_pressed("scroll_up"):
 			print("scrolling up!")
-			camera_2d.position.x += SCROLL_SPEED
+			camera_2d.position.x -= SCROLL_SPEED
 		elif event.is_action_pressed("scroll_down"):
 			print("scrolling down!")
-			camera_2d.position.x -= SCROLL_SPEED
+			camera_2d.position.x += SCROLL_SPEED
 
 		camera_2d.position.x = clamp(camera_2d.position.x, 50, camera_edge_x)
 
@@ -80,15 +80,18 @@ func unlock_next_rooms() -> void:
 			map_room.available = true
 			map_room.add_to_group("Available Rooms")
 
-func _on_map_room_selected(room: Room) -> void:
-	for map_room: MapRoom in rooms.get_children():
-		if map_room.room.column == room.column and map_room.room.row == room.row:
-			get_tree().call_group("Available Rooms", "disable_button")
-			map_room.available = false
-			var map_x = map_room.room.column
-			var map_y = map_room.room.row
-			self.get_parent().get_parent().map_data[map_x][map_y].selected = true
-			
+func _on_map_room_selected(room: Room, map_room: MapRoom) -> void:
+	get_tree().call_group("Available Rooms", "disable_button")
+	map_room.available = false
+	map_room.room.selected = true
+	
+	var tween = get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(%Camera2D, "position:x", room.position.x + 50, 0.35)
+	await get_tree().create_timer(0.40).timeout
+	%Camera2D.position.x = room.position.x + 50
+	
 	self.get_parent().get_parent().last_room = room
 	self.get_parent().get_parent().sections_crossed += 1
 	self.get_parent().get_parent().set_unlock_section = false

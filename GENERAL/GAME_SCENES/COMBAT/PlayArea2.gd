@@ -181,8 +181,8 @@ func _process(delta: float) -> void:
 		var phase = sine_timer * PI
 		#print(0.1 * sin(phase))
 		for i in sine_tiles.size():
-			sine_tiles[i].position.x = sine_tiles[i].position.x + (0.1 * cos(phase + (0.33 * i)))
-			sine_tiles[i].position.y = sine_tiles[i].position.y + (0.1 * sin(phase + (0.33 * i)))
+			sine_tiles[i].position.x = float(sine_tiles[i].position.x + (0.1 * cos(phase + (0.33 * i))))
+			sine_tiles[i].position.y = float(sine_tiles[i].position.y + (0.1 * sin(phase + (0.33 * i))))
 
 func _input(event):
 	if event is InputEventKey:
@@ -1250,7 +1250,6 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array):
 	var tile_retriggers = 0
 	for i in word.size():
 		var word_length = word.size()
-		var previous_mult_score = mult_score
 		var scored_tile = enemy.current_enemy_deck[word[i]]
 		
 		# Query for Repeating notches
