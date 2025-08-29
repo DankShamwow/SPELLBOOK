@@ -25,7 +25,12 @@ region = Rect2(32, 0, 32, 32)
 atlas = ExtResource("6_qmdm6")
 region = Rect2(64, 0, 32, 32)
 
-[node name="Run" type="Node"]
+[node name="Run" type="Control"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
 script = ExtResource("1_0uibq")
 
 [node name="PermanentUI" type="CanvasLayer" parent="."]
@@ -112,8 +117,6 @@ offset_bottom = 96.0
 
 [node name="TileBag" parent="PermanentUI" instance=ExtResource("2_n48is")]
 anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
 offset_left = -320.0
 offset_right = -320.0
 
@@ -173,8 +176,16 @@ vertical_alignment = 1
 [node name="CharacterLayer" type="CanvasLayer" parent="."]
 layer = 2
 
-[node name="Character" type="Node2D" parent="CharacterLayer"]
+[node name="CharacterPosition" type="Control" parent="CharacterLayer"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Character" type="Node2D" parent="CharacterLayer/CharacterPosition"]
 unique_name_in_owner = true
+position = Vector2(-320, 0)
 
 [node name="CurrentView" type="CanvasLayer" parent="."]
 layer = 3
@@ -182,8 +193,16 @@ layer = 3
 [node name="BackgroundVisuals" type="CanvasLayer" parent="."]
 layer = -1
 
-[node name="Sprite2D" type="Sprite2D" parent="BackgroundVisuals"]
-position = Vector2(320, 168)
+[node name="BackgroundPosition" type="Control" parent="BackgroundVisuals"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Background" type="Sprite2D" parent="BackgroundVisuals/BackgroundPosition"]
+unique_name_in_owner = true
+position = Vector2(0, 168)
 texture = ExtResource("8_qmdm6")
 
 [connection signal="add_relic" from="." to="PermanentUI/RelicContainerGradient" method="add_relic"]

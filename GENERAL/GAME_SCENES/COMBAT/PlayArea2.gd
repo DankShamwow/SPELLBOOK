@@ -374,6 +374,8 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 		else:
 			mult_score = mult_score + (word_length - 5)
 		
+		total_score = points_score * mult_score
+		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 		await get_tree().create_timer(0.075).timeout
 		
 	if bonus_word_length > 0:

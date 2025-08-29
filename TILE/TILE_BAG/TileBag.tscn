@@ -38,7 +38,10 @@ fill_to = Vector2(0, 0)
 [node name="TileBag" type="Control" node_paths=PackedStringArray("no_click_area", "fade_in_mask", "bag_scroller", "bag_grid")]
 texture_filter = 1
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_ufeyo")
@@ -54,10 +57,14 @@ layer = 10
 unique_name_in_owner = true
 z_index = 10
 z_as_relative = false
-offset_left = 592.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 272.0
 offset_top = 8.0
-offset_right = 624.0
+offset_right = 304.0
 offset_bottom = 40.0
+grow_horizontal = 2
 toggle_mode = true
 texture_normal = SubResource("AtlasTexture_hy7m7")
 texture_pressed = SubResource("AtlasTexture_yg64d")
@@ -69,8 +76,13 @@ layer = -128
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 modulate = Color(0, 0, 0, 0)
-offset_right = 640.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
 offset_bottom = 480.0
+grow_horizontal = 2
 script = ExtResource("2_yg64d")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
@@ -79,10 +91,14 @@ z_as_relative = false
 texture_filter = 1
 material = SubResource("CanvasItemMaterial_hy7m7")
 clip_contents = true
-offset_left = 40.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -280.0
 offset_top = 48.0
-offset_right = 640.0
+offset_right = 320.0
 offset_bottom = 448.0
+grow_horizontal = 2
 texture = SubResource("GradientTexture2D_yg64d")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/TextureRect"]

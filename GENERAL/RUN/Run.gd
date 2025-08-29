@@ -1,4 +1,4 @@
-extends Node
+extends Control
 class_name Run
 
 const COMBAT_SCENE := preload("res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.tscn")

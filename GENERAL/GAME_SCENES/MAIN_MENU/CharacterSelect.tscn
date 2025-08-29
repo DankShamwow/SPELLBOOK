@@ -6,16 +6,22 @@
 
 [node name="CharacterSelector" type="Control"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 480.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_r65tm")
 
 [node name="Background" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 640.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
 offset_bottom = 360.0
 
 [node name="CharacterText" type="VBoxContainer" parent="."]
@@ -52,9 +58,11 @@ vertical_alignment = 1
 
 [node name="CharacterInformation" type="VBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 440.0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 120.0
 offset_top = 104.0
-offset_right = 624.0
+offset_right = 304.0
 offset_bottom = 287.0
 theme = ExtResource("2_n4bra")
 theme_override_constants/separation = 7
@@ -182,23 +190,26 @@ text = "SIMIAN TYPEWRITER
 [node name="CharacterPortrait" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.622
-anchor_bottom = 0.622
-offset_top = -95.92
-offset_right = 192.0
-offset_bottom = 136.08
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -277.36
+offset_right = -128.0
+offset_bottom = -45.36
 
 [node name="StartButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 1.0
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -200.0
+offset_left = 120.0
 offset_top = -64.0
-offset_right = -12.0
+offset_right = 308.0
 offset_bottom = -12.0
 theme = ExtResource("2_n4bra")
 theme_override_font_sizes/font_size = 26

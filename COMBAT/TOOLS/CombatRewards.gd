@@ -269,6 +269,7 @@ func _on_skip_button_pressed() -> void:
 			tile.move_to_position()
 
 func _on_confirm_button_pressed() -> void:
+	%ConfirmButton.set_disabled(true)
 	if %NotchAndTileRewardParent.visible == true:
 		var has_paired_tile = []
 		for notch in %NotchesParent.get_children():
