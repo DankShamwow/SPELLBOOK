@@ -162,7 +162,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 				previous_starting_pose = new_home_pose
 				
 			var starting_rot = various_rng.randi_range(-22.5, 22.5)
-			new_notch.global_position = new_home_pose
+			new_notch.position = new_home_pose
 			new_notch.home_pose = new_home_pose
 			new_notch.rotation_degrees = starting_rot
 			

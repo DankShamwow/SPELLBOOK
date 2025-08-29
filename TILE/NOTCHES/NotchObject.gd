@@ -324,7 +324,7 @@ func _send_back_home():
 	tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_SPRING)
-	tween.tween_property(self, "global_position", home_pose, 1)
+	tween.tween_property(self, "position", home_pose, 1)
 	send_back_home.emit(self)
 	
 func _query_paired_tile():
