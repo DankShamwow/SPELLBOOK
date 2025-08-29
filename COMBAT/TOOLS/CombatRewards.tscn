@@ -14,7 +14,6 @@ atlas = ExtResource("2_vlvc1")
 region = Rect2(0, 0, 32, 32)
 
 [node name="CombatRewards" type="Control" node_paths=PackedStringArray("fade_in_mask", "button_container")]
-visible = false
 layout_mode = 3
 anchors_preset = 5
 anchor_left = 0.5
@@ -71,6 +70,7 @@ offset_bottom = 480.0
 
 [node name="RewardsButtonList" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 z_index = 50
 layout_mode = 1
 anchors_preset = 5
@@ -165,7 +165,6 @@ vertical_alignment = 1
 
 [node name="NotchAndTileRewardParent" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -190,9 +189,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -296.0
-offset_top = 80.0
+offset_top = 56.0
 offset_right = -136.0
-offset_bottom = 200.0
+offset_bottom = 176.0
 grow_horizontal = 2
 
 [node name="SeparatorBox2" type="NinePatchRect" parent="NotchAndTileRewardParent"]
