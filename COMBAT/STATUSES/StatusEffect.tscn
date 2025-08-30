@@ -9,6 +9,8 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 24.0
 offset_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_mbwx6")
 
 [node name="TextureButton" type="TextureButton" parent="."]

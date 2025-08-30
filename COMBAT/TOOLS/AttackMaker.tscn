@@ -39,7 +39,7 @@ offset_left = 16.0
 offset_top = 24.0
 offset_right = 288.0
 offset_bottom = 88.0
-placeholder_text = "WORD, TARGET"
+placeholder_text = "WORD, TARGET, INTENT"
 keep_editing_on_text_submit = true
 
 [node name="DebuffText" type="LineEdit" parent="."]

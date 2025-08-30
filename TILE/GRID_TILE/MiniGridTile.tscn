@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://flte7kmhw232"]
+[gd_scene load_steps=7 format=3 uid="uid://flte7kmhw232"]
 
 [ext_resource type="Script" uid="uid://bm7cgb5kw4tdg" path="res://TILE/GRID_TILE/MiniGridTile.gd" id="1_633ix"]
 [ext_resource type="Texture2D" uid="uid://b545guknb6ilo" path="res://SPRITES/TILES/MiniLetterTiles.png" id="2_ea6j7"]
 [ext_resource type="Texture2D" uid="uid://boi2gknw4asto" path="res://SPRITES/TILES/MiniTileMask.png" id="3_633ix"]
-[ext_resource type="AudioStream" uid="uid://b8lmqbqus353p" path="res://AUDIO/tile_sound_attempt3.ogg" id="4_u2d7c"]
 
 [sub_resource type="Animation" id="Animation_l10u7"]
 resource_name = "ChangeToNewType"
@@ -93,7 +92,6 @@ libraries = {
 }
 
 [node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_u2d7c")
 
 [connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
 [connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]

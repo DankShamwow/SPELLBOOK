@@ -1,9 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwwxmq2de7mmd"]
+[gd_scene load_steps=10 format=3 uid="uid://bwwxmq2de7mmd"]
 
 [ext_resource type="Script" uid="uid://bxi6ey5icowen" path="res://COMBAT/ENEMIES/Enemy.gd" id="1_qydj8"]
 [ext_resource type="Texture2D" uid="uid://dukr586bs7ao4" path="res://SPRITES/ASEPRITE FILES/HealthBar.png" id="2_ccf1n"]
+[ext_resource type="Texture2D" uid="uid://dd6aq4nvmwgm0" path="res://SPRITES/COMBAT/TestingSham.png" id="2_o6qhi"]
 [ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="3_xdaea"]
 [ext_resource type="Script" uid="uid://i4qfrsc5gqhk" path="res://COMBAT/ENEMIES/test_enemy_attacks.gd" id="4_o6qhi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yvcis"]
+atlas = ExtResource("2_o6qhi")
+region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3gx1m"]
 atlas = ExtResource("2_ccf1n")
@@ -31,6 +36,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+texture_normal = SubResource("AtlasTexture_yvcis")
 
 [node name="Entity_Sprite_Parts" type="Node2D" parent="Entity_Button"]
 
@@ -44,12 +50,10 @@ modulate = Color(0, 0, 0, 1)
 
 [node name="EntityHealthBar" type="TextureProgressBar" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 0
-offset_left = 128.0
-offset_top = 114.0
-offset_right = 176.0
-offset_bottom = 122.0
+offset_top = 50.0
+offset_right = 48.0
+offset_bottom = 58.0
 nine_patch_stretch = true
 stretch_margin_left = 3
 stretch_margin_top = 3
@@ -123,3 +127,20 @@ vertical_alignment = 1
 [node name="EnemyAttackData" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("4_o6qhi")
+
+[node name="Statuses" type="GridContainer" parent="."]
+unique_name_in_owner = true
+offset_top = 60.0
+offset_right = 96.0
+offset_bottom = 100.0
+scale = Vector2(0.5, 0.5)
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 24
+columns = 4
+
+[node name="IntentBox" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 60.0
+alignment = 1

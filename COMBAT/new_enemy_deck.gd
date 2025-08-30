@@ -46,7 +46,7 @@ var EnemyAttackTargets = [
 ]
 
 var EnemyAttackIntents = [
-"ATTACK_DEBUFF",
+"ATTACK",
 "DEFEND",
 "ATTACK",
 ]

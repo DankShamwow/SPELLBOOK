@@ -11,11 +11,12 @@ var attack_count := 0
 
 var attack_tiles = []
 var attack_targets = []
+var attack_intents = []
 var attacks = []
 var status_packages = []
 
 func _on_attack_word_submitted(new_text: String):
-	var input_array = new_text.split(", ", true, 2)
+	var input_array = new_text.split(", ", true, 3)
 	var new_attack = []
 	for i in len(input_array[0]):
 		var letter = LetterTile.TileLetter[new_text[i].to_upper()]
@@ -25,17 +26,18 @@ func _on_attack_word_submitted(new_text: String):
 		attack_tile.scale = Vector2(0.5, 0.5)
 		attack_tile.position = Vector2(56.0 + (40 * i), (120 + (36 * attack_count)))
 		attack_tile.tile = new_LetterTile
-		attack_tile.toggle_monitorable(true)
+		attack_tile.toggle_monitorable()
 		new_attack.append(attack_tile)
 		%TilesParent.add_child(attack_tile)
 	
 	attack_count += 1
 	attack_targets.append(str(input_array[1]))
+	attack_intents.append(str(input_array[2]))
 	
 	print(new_attack)
 	
 	attacks.append(new_attack)
-		
+	
 	%LineEdit.clear()
 	
 func _on_attack_debuff_submitted(new_text: String):
@@ -161,6 +163,12 @@ func _on_export_button_pressed():
 	export.store_line("]")
 	export.store_line("")
 		
+	export.store_line("var EnemyAttackIntents = [")
+	for i in attacks.size():
+		export.store_line(str('"' + attack_intents[i] + '"' + ","))
+	export.store_line("]")
+	export.store_line("")
+	
 	export.store_line("var EnemyStatusPackageList = [")
 	for i in status_packages.size():
 		export.store_line(str("EnemyStatusPackage" + str(i) + ","))

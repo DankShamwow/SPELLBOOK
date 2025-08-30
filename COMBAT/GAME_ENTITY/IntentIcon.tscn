@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://be0kgqguy3xgv"]
+
+[ext_resource type="Script" uid="uid://clg02qotqiv7k" path="res://COMBAT/GAME_ENTITY/IntentIcon.gd" id="1_ylpqw"]
+[ext_resource type="Texture2D" uid="uid://dtdaj13ng2au7" path="res://SPRITES/GUI/IntentIcons.png" id="2_d8pmy"]
+
+[node name="IntentIcon" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ylpqw")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+
+[node name="Icon" type="Sprite2D" parent="TextureButton"]
+unique_name_in_owner = true
+position = Vector2(12, 12)
+texture = ExtResource("2_d8pmy")
+hframes = 9
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_intent_icon_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_intent_icon_mouse_exited"]

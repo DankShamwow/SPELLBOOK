@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dd6aq4nvmwgm0" path="res://SPRITES/COMBAT/TestingSham.png" id="2_7hqk6"]
 [ext_resource type="Texture2D" uid="uid://crpy0ehpcx83j" path="res://SPRITES/COMBAT/HealthBar.png" id="3_4ccxf"]
 [ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="4_twcpo"]
-[ext_resource type="Script" uid="uid://de2frwpswftbe" path="res://COMBAT/ENEMIES/new_enemy_deck.gd" id="5_4ccxf"]
+[ext_resource type="Script" uid="uid://i4qfrsc5gqhk" path="res://COMBAT/ENEMIES/test_enemy_attacks.gd" id="5_4ccxf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fpio6"]
 atlas = ExtResource("2_7hqk6")
@@ -151,3 +151,11 @@ scale = Vector2(0.5, 0.5)
 theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 24
 columns = 4
+
+[node name="IntentBox" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 60.0
+alignment = 1

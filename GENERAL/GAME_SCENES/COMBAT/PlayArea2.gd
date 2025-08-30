@@ -99,6 +99,7 @@ var end_of_combat = false
 @export var grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/GridTile.tscn")
 @export var mini_grid_tile_scene: PackedScene = preload("res://TILE/GRID_TILE/MiniGridTile.tscn")
 @export var status_effect_scene: PackedScene = preload("res://COMBAT/STATUSES/StatusEffect.tscn")
+@export var intent_icon_scene: PackedScene = preload("res://COMBAT/GAME_ENTITY/IntentIcon.tscn")
 var relic_scene = preload("res://RELIC/Relic.tscn")
 
 ## racked_tiles is the parent of all the tiles in the rack. We use the grid_index of a GridTile to recognize which child it is.
@@ -168,6 +169,8 @@ func _ready():
 	
 	character_path.update_tile_graphics.connect(self._update_tile_graphics)
 	%TestEnemy.update_tooltip_tile_graphics.connect(self._update_tooltip_tile_graphics)
+	
+	%TestEnemy.plan_next_turn()
 	#%TestEnemy.entity_has_died.connect(self._check_for_dead_enemies)
 	
 	on_combat_start()
@@ -1380,6 +1383,7 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 		for i in which.enemy_attack_list.size():
 			sticky_target = which
 			var new_attack = HBoxContainer.new()
+			new_attack.set_alignment(BoxContainer.ALIGNMENT_BEGIN)
 			attack_list.add_child(new_attack)
 			
 			for j in which.enemy_attack_list[i].size():
@@ -1395,6 +1399,11 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 			attack_score_value.set_autowrap_mode(0)
 			attack_score_value.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 			new_attack.add_child(attack_score_value)
+			
+			var attack_intent = intent_icon_scene.instantiate()
+			new_attack.add_child(attack_intent)
+			attack_intent.type = IntentIcon.IntentType[which.enemy_attack_intents[i]]
+			attack_intent.update_intent_info()
 			
 			if not which.enemy_status_package_list[i].is_empty():
 				var status_package = which.enemy_status_package_list[i]
@@ -1413,6 +1422,7 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 					status_icon.status_hovered.connect(%StatusEffectTooltip._on_status_hovered)
 					print("STATUS ID: " + str(status_icon.id))
 					status_icon._update_graphics()
+					
 
 	current_target = which
 	print(current_target.name)
