@@ -37,7 +37,7 @@ func show_selected() -> void:
 	var tween = %Map_Circle.create_tween()
 	tween.tween_property(%Map_Circle, "modulate:a", 1, 0.1)
 
-func disable_buttons() -> void:
+func disable_button() -> void:
 	%MapButton.set_disabled(true)
 
 func _on_map_button_pressed() -> void:

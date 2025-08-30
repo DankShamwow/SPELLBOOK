@@ -54516,7 +54516,6 @@ chiniks
 chinin
 chining
 chiniofon
-chink
 chinkapin
 chinkara
 chinked
@@ -54528,7 +54527,6 @@ chinkier
 chinkiest
 chinking
 chinkle
-chinks
 chinles
 chinless
 chinnam
@@ -164138,9 +164136,6 @@ kiyi
 kikar
 kikatsik
 kikawaeo
-kike
-kyke
-kikes
 kiki
 kikki
 kyklopes
