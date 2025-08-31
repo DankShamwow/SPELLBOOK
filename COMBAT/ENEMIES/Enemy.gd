@@ -11,12 +11,18 @@ class_name Enemy
 var enemy_deck: Array
 var enemy_attack_count: int
 
+## Master list of enemy words
 var enemy_attack_list := []
+## The target for each word
 var enemy_attack_targets := []
+## The intent type for each word
 var enemy_attack_intents := []
+## The status data for each word
 var enemy_status_package_list := []
+## Master list of enemy tiles
 var current_enemy_deck := []
-var next_turn_attacks := []
+## The schedule of words to be played by the enemy next turn. This is an array of integers.
+var next_turn_attacks: Array[int] = []
 
 const INTENT_ICON_SCENE: PackedScene = preload("res://COMBAT/GAME_ENTITY/IntentIcon.tscn")
 
@@ -40,6 +46,9 @@ func _ready():
 	print(enemy_attack_list)
 	super()
 
+## plan_next_turn is a function that schedules the attacks that an enemy will use on their next turn.
+## This function should be where the bulk of an enemy's logic is.
+## The default logic is to queue all of an enemy's attacks, and then play them in sequence.
 func plan_next_turn():
 	next_turn_attacks = []
 	
@@ -47,12 +56,21 @@ func plan_next_turn():
 		%IntentBox.get_child(i).queue_free()
 	
 	for i in enemy_attack_list.size():
-		next_turn_attacks.append(i)
-		
-		var attack_intent = INTENT_ICON_SCENE.instantiate()
-		%IntentBox.add_child(attack_intent)
-		attack_intent.type = IntentIcon.IntentType[enemy_attack_intents[i]]
-		attack_intent.update_intent_info()
+		schedule_attack(i)
+
+## schedule_attack is called to schedule an enemy attack based on its number in the enemy's attack list.
+## Scheduling attack means that it will be played next turn if the enemy has the energy to do so.
+func schedule_attack(attack_number: int):
+	# We're queueing the NUMBER of the attack with this, not the full array for the attack.
+	# The data is elsewhere, so we only want to append a number to this array.
+	next_turn_attacks.append(attack_number)
+	var attack_intent = INTENT_ICON_SCENE.instantiate()
+	%IntentBox.add_child(attack_intent)
+	attack_intent.type = IntentIcon.IntentType[enemy_attack_intents[attack_number]]
+	attack_intent.update_intent_info()
+	attack_intent.is_intent = true
+	attack_intent.related_enemy = self
+	attack_intent.related_attack.append(attack_number)
 
 func perform_enemy_attack(attack_number):
 	if self.health <= 0:
@@ -74,3 +92,4 @@ func perform_enemy_attack(attack_number):
 
 func on_turn_end():
 	plan_next_turn()
+	super()

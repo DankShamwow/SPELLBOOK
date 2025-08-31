@@ -39,6 +39,8 @@ EnemyAttack1,
 EnemyAttack2,
 ]
 
+var EnemyAttackNumbers = [0,1,2,]
+
 var EnemyAttackTargets = [
 "PLAYER",
 "SELF",
@@ -46,7 +48,7 @@ var EnemyAttackTargets = [
 ]
 
 var EnemyAttackIntents = [
-"ATTACK",
+"ATTACK_DEBUFF",
 "DEFEND",
 "ATTACK",
 ]

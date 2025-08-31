@@ -299,18 +299,18 @@ func score_tile(count):
 		letter_score += 3
 
 	if self.tile.notch1 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 	if self.tile.notch2 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 	if self.tile.notch3 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 
 	if self.tile.notch1 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 	if self.tile.notch2 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 	if self.tile.notch3 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 
 	if self.tile.notch1 == LetterTile.NotchTypes.DISTANT:
 		letter_score += self.tile.word_index
@@ -331,40 +331,40 @@ func score_tile(count):
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 			
 	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
 		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 
 	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
 		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
-
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
+	
 	play_scoring_sound(count)
 	await juice_score()
 
@@ -397,18 +397,18 @@ func score_tile_quiet():
 		letter_score += 3
 
 	if self.tile.notch1 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 	if self.tile.notch2 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 	if self.tile.notch3 == LetterTile.NotchTypes.PATIENT:
-		letter_score += self.tile.current_age * 3
+		letter_score += self.tile.current_age * 2
 
 	if self.tile.notch1 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 	if self.tile.notch2 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 	if self.tile.notch3 == LetterTile.NotchTypes.QUICK and self.tile.current_age == 0:
-		letter_score += 10
+		letter_score += 5
 
 	if self.tile.notch1 == LetterTile.NotchTypes.DISTANT:
 		letter_score += self.tile.word_index
@@ -429,39 +429,39 @@ func score_tile_quiet():
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 			
 	if self.tile.notch2 == LetterTile.NotchTypes.BALANCED:
 		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 
 	if self.tile.notch3 == LetterTile.NotchTypes.BALANCED:
 		if self.tile.word_length == self.tile.word_index:
 			letter_score += 0
 		elif floor(self.tile.word_length / 2.0) - self.tile.word_index == 0:
 			if self.tile.word_length % 2 == 1:
-				letter_score += 3 * self.tile.word_index
+				letter_score += 2 * self.tile.word_index
 			else:
-				letter_score += (3 * (self.tile.word_index - 1))
+				letter_score += (2 * (self.tile.word_index - 1))
 		elif self.tile.word_index < floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_index)
+			letter_score += 2 * (self.tile.word_index)
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
-			letter_score += 3 * (self.tile.word_length - self.tile.word_index - 1)
+			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 
 	return letter_score
 

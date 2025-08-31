@@ -44,6 +44,7 @@ func _start_new_run() -> void:
 	character_instance.position = Vector2(72, 192)
 	GeneralManager.character_path = character_instance
 	
+	StartingTiles.generate_starting_tiles()
 	
 	for i in starting_bag.size():
 		current_deck.append(starting_bag[i])

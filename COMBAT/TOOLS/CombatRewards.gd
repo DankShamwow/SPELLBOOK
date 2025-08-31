@@ -12,6 +12,11 @@ var starting_bag = StartingTiles.StartingTileArray
 var current_deck = GeneralManager.current_deck
 var available_tiles = GeneralManager.available_tiles
 
+var common_notch_ids = GeneralManager.common_notch_ids
+var uncommon_notch_ids = GeneralManager.uncommon_notch_ids
+var rare_notch_ids = GeneralManager.rare_notch_ids
+var rare_notch_ids_no_lexical = GeneralManager.rare_notch_ids_no_lexical
+
 var reward_gold_button
 var reward_notch_button
 var reward_relic_button
@@ -43,9 +48,9 @@ signal notch_tooltip_hide_requested()
 	#tween.tween_property(self, "visible", true, 0.001)
 	#tween.tween_property(self, "modulate:a", 1, 0.15)
 	#
-	#query_combat_rewards(50, 15, 0)
+	#query_combat_rewards(50, 5, 0, 3, 1, [19, 19, 19])
 
-func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int):
+func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = []):
 	
 	for i in current_deck.size():
 		available_tiles.append(current_deck[i])
@@ -55,7 +60,7 @@ func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_r
 	tween.tween_property(self, "visible", true, 0.001)
 	tween.tween_property(self, "modulate:a", 1, 0.15)
 	
-	query_combat_rewards(reward_gold, reward_notch_count, reward_relics)
+	query_combat_rewards(reward_gold, reward_notch_count, reward_relics, reward_notch_uncommons, reward_notch_rares, reward_notch_specified)
 
 func _is_tile_hovered(which: GridTile, is_hovering: bool):
 	if is_hovering == true:
@@ -74,7 +79,7 @@ func _is_notch_hovered(which: NotchObject, is_hovering: bool):
 		notch_tooltip_hide_requested.emit()
 
 
-func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int):
+func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = []):
 	if reward_gold > 0:
 		reward_gold_button = Button.new()
 		button_container.add_child(reward_gold_button)
@@ -96,11 +101,11 @@ func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_reli
 		reward_gold_button.set_button_icon(reward_gold_button_icon)
 		reward_gold_button.pressed.connect(self._on_reward_gold_button_pressed)
 		
-	if reward_notch_count > 0:
-		set_notch_reward_rng(reward_notch_count)
+	if (reward_notch_count + reward_notch_uncommons + reward_notch_rares + reward_notch_specified.size()) > 0:
+		set_notch_reward_rng(reward_notch_count, reward_notch_uncommons, reward_notch_rares, reward_notch_specified)
 		reward_notch_button = Button.new()
 		button_container.add_child(reward_notch_button)
-		var notch_button_text_string = "Choose " + str(reward_notch_count) + " notches"
+		var notch_button_text_string = "Choose " + str(reward_notch_count + reward_notch_uncommons + reward_notch_rares + reward_notch_specified.size()) + " notches"
 		reward_notch_button.text = notch_button_text_string
 		reward_notch_button.set_button_icon(reward_notch_button_icon)
 		reward_notch_button.pressed.connect(self._on_reward_notch_button_pressed)
@@ -192,11 +197,18 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			new_tile.spawned_from_bag()
 
 # WARNING: ONLY CALL THIS ONCE PER COMBAT REWARD. DO NOT CALL THIS MULTIPLE TIMES OTHERWISE IT WILL REPLACE THE LOOT.
-func set_notch_reward_rng(notch_count: int):
+func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count: int = 0, specified_rewards: Array = []):
 	var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+	var notch_sum = notch_count + uncommon_count + rare_count + specified_rewards.size()
 	for i in notch_count:
+		var notch_tables = [common_notch_ids, uncommon_notch_ids, rare_notch_ids]
+		var table_weights = PackedFloat32Array([65, 25, 10])
+		
+		# 50% for a common, 35% for an uncommon, 15% for a rare.
+		var notch_table_roll = notch_tables[reward_rng.rand_weighted(table_weights)]
+		print(notch_table_roll)
 		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
-		var notch_type_roll = reward_rng.randi() % 20
+		var notch_type_roll = notch_table_roll[reward_rng.randi() % notch_table_roll.size()]
 		#var notch_type_roll = 19
 		var notch_letter_roll = ""
 		if notch_type_roll == 19:
@@ -205,7 +217,41 @@ func set_notch_reward_rng(notch_count: int):
 			
 		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
 		notches.append(new_notch)
+	
+	for i in uncommon_count:
+		var notch_type_roll = uncommon_notch_ids[reward_rng.randi() % uncommon_notch_ids.size()]
+		var notch_letter_roll = ""
 		
+		# This should never be needed, but I'm putting it here just to be safe
+		#if notch_type_roll == 19:
+			#notch_letter_roll = reward_rng.randi() % 25
+			#notch_letter_roll = letters[notch_letter_roll]
+	
+		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
+		notches.append(new_notch)
+		
+	
+	for i in rare_count:
+		var notch_type_roll = rare_notch_ids[reward_rng.randi() % rare_notch_ids.size()]
+		var notch_letter_roll = ""
+		
+		if notch_type_roll == 19:
+			notch_letter_roll = reward_rng.randi() % 25
+			notch_letter_roll = letters[notch_letter_roll]
+		
+		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
+		notches.append(new_notch)
+	
+	for i in specified_rewards.size():
+		var notch_letter_roll = ""
+		
+		if specified_rewards[i] == 19:
+			notch_letter_roll = reward_rng.randi() % 25
+			notch_letter_roll = letters[notch_letter_roll]
+		
+		var new_notch = Notch.new().new_notch(specified_rewards[i], notch_letter_roll)
+		notches.append(new_notch)
+	
 	# Twice the number of notches - 1 is the option number, lower limit of 3, upper limit of 7.
 	var draw_limit = ((notch_count * 2) - 1)
 	
@@ -226,11 +272,16 @@ func set_notch_reward_rng(notch_count: int):
 		var type = 0
 		var letter = reward_rng.randi() % 25
 		# REMEMBER NITWIT, YOU GOTTA SUBTRACT TWO BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO, AND YOU DON'T WANT THESE HAVING BONUS LETTERS.
-		var notch1 = reward_rng.randi_range(1, 18)
-		var notch2 = 0
-		var notch3 = 0
+		var notch_tables = [common_notch_ids, uncommon_notch_ids, rare_notch_ids_no_lexical]
+		var table_weights = PackedFloat32Array([65, 25, 10])
 		
-		var new_tile = LetterTile.new().generate_tile(type, letter, notch1, notch2, notch3)
+		# 50% for a common, 35% for an uncommon, 15% for a rare.
+		var notch_table_roll = notch_tables[reward_rng.rand_weighted(table_weights)]
+		print(notch_table_roll)
+		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
+		var notch_type_roll = notch_table_roll[reward_rng.randi() % notch_table_roll.size()]
+		
+		var new_tile = LetterTile.new().generate_tile(type, letter, (notch_type_roll+1), 0, 0)
 		tiles.append(new_tile)
 
 func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):

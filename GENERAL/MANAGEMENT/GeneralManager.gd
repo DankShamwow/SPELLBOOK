@@ -60,18 +60,22 @@ var who_has_initiative: GameEntity
 ## point_values determines the number of points that a letter scores for.
 var point_values  	:= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
-## mult_values determines the multiplier on the score based on the length of a word.
-var mult_values		:= [1, 1, 2, 2, 3, 3, 4, 5, 7, 10, 14, 19, 25, 32, 39, 47, 55, 65, 80, 100]
-
-
 ## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
 var word_list := {}
 
 ## tile_scaling_factor is the scaling factor for tiles based on the length of a word. 
 var tile_scaling_factor: float = 1.0
 
-
 var text_file_path = "res://WORDLISTS/words_alpha.txt"
+
+var common_notch_ids = [3, 7, 9, 11, 14, 15, 16, 18]
+
+var uncommon_notch_ids = [0, 1, 2, 4, 5, 8, 12]
+
+var rare_notch_ids = [6, 10, 13, 17, 19]
+
+var rare_notch_ids_no_lexical = [6, 10, 13, 17]
+
 
 ## Not to be confused with remove_tile_from_deck(); this function clears out all of the 
 ## temporary and vaporized tiles at the end of combat.

@@ -54,9 +54,6 @@ var who_has_initiative := GeneralManager.who_has_initiative
 ## point_values determines the number of points that a letter scores for.
 var point_values  	:= GeneralManager.point_values
 
-## mult_values determines the multiplier on the score based on the length of a word.
-var mult_values		:= GeneralManager.mult_values
-
 ## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
 var word_list = GeneralManager.word_list
 
@@ -266,51 +263,56 @@ func _update_buffered_tiles_call():
 func _spawn_new_player_tile(grid_index: int):
 	if GeneralManager.is_combat_active == false:
 		return
-	## added_tile is a GridTile with the data from a LetterTile
-	var added_tile = grid_tile_scene.instantiate()
-	var called_tile = LetterTile
 	
-	if not priority_draw_list.is_empty():
-		called_tile = priority_draw_list.pop_back()
-		available_tiles.pop_at(called_tile.tile_index)
+	if available_tiles.size() > 0:
+		## added_tile is a GridTile with the data from a LetterTile
+		var added_tile = grid_tile_scene.instantiate()
+		var called_tile = LetterTile
+		
+		if not priority_draw_list.is_empty():
+			called_tile = priority_draw_list.pop_back()
+			available_tiles.pop_at(called_tile.tile_index)
+		
+		else:
+			## called_tile is a LetterTile
+			called_tile = available_tiles.pop_at(tile_rng.randi() % available_tiles.size())
+		
+		called_tile.current_age = 0
+		# Add the LetterTile to the GridTile so it has data
+		added_tile.tile = called_tile
+		
+		# Append the called_tile to the tiles_in_play array, add the added_tile to the tile_grid
+		tiles_in_play.append(called_tile)
+		racked_tiles.add_child(added_tile)
+		
+		added_tile.spawned_in()
+		
+		# Give it a grid index,
+		added_tile.tile.grid_index = grid_index
+		added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
+		added_tile.tile_clicked.connect(self._on_tile_clicked)
+		added_tile.tile_hovered.connect(self._is_tile_hovered)
+		
+		if added_tile.tile.notch1 == LetterTile.NotchTypes.ECHOING:
+			added_tile.tile.echo1 = true
+		if added_tile.tile.notch2 == LetterTile.NotchTypes.ECHOING:
+			added_tile.tile.echo2 = true
+		if added_tile.tile.notch3 == LetterTile.NotchTypes.ECHOING:
+			added_tile.tile.echo3 = true
+		
+		# Set the tile's drop position as well as the target position after dropping
+		# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
+		added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32.0) + 256.0), 264.0)
+		added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(added_tile.tile.grid_index / 4) * 32.0) + 296.0))
+		# Based on the index, we tell it what column to drop from, and it spawns above.
+		
+		added_tile.spawned_in()
+		await added_tile.move_to_position()
+		added_tile.play_tile_sound()
+		GameEventHandler.update_bag_tiles.emit()
 	
 	else:
-		## called_tile is a LetterTile
-		called_tile = available_tiles.pop_at(tile_rng.randi() % available_tiles.size())
-	
-	called_tile.current_age = 0
-	# Add the LetterTile to the GridTile so it has data
-	added_tile.tile = called_tile
-	
-	# Append the called_tile to the tiles_in_play array, add the added_tile to the tile_grid
-	tiles_in_play.append(called_tile)
-	racked_tiles.add_child(added_tile)
-	
-	added_tile.spawned_in()
-	
-	# Give it a grid index,
-	added_tile.tile.grid_index = grid_index
-	added_tile.set_name(str("GridTile" + str(added_tile.tile.grid_index)))
-	added_tile.tile_clicked.connect(self._on_tile_clicked)
-	added_tile.tile_hovered.connect(self._is_tile_hovered)
-	
-	if added_tile.tile.notch1 == LetterTile.NotchTypes.ECHOING:
-		added_tile.tile.echo1 = true
-	if added_tile.tile.notch2 == LetterTile.NotchTypes.ECHOING:
-		added_tile.tile.echo2 = true
-	if added_tile.tile.notch3 == LetterTile.NotchTypes.ECHOING:
-		added_tile.tile.echo3 = true
-	
-	# Set the tile's drop position as well as the target position after dropping
-	# We use modulo of 4 to determine the column, and the floor of dividing by four to determine the row. This should be foolproof.
-	added_tile.position = Vector2((((added_tile.tile.grid_index % 4 ) * 32.0) + 256.0), 264.0)
-	added_tile.tile.target = Vector2((((added_tile.tile.grid_index % 4) * 32.0) + 256.0),((floor(added_tile.tile.grid_index / 4) * 32.0) + 296.0))
-	# Based on the index, we tell it what column to drop from, and it spawns above.
-	
-	added_tile.spawned_in()
-	await added_tile.move_to_position()
-	added_tile.play_tile_sound()
-	GameEventHandler.update_bag_tiles.emit()
+		return
 
 # TODO: REWORK THIS
 func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_package, _pivot_position, target, attacker):

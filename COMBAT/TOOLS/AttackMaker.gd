@@ -157,6 +157,13 @@ func _on_export_button_pressed():
 	export.store_line("]")
 	export.store_line("")
 	
+	export.store_string("var EnemyAttackNumbers = [")
+	for i in attacks.size():
+		export.store_string(str(str(i) + ','))
+	export.store_line("]")
+	export.store_line("")
+	
+	
 	export.store_line("var EnemyAttackTargets = [")
 	for i in attacks.size():
 		export.store_line(str('"' + attack_targets[i] + '"' + ","))

@@ -6,6 +6,10 @@ enum IntentType {ATTACK, DEFEND, BUFF, DEBUFF, ATTACK_BUFF, ATTACK_DEBUFF, DEFEN
 signal intent_hovered(which: IntentIcon, is_hovering: bool)
 
 var type: IntentType
+var is_intent: bool = false
+
+var related_attack = []
+var related_enemy: Enemy = null
 
 var IntentDescriptions = {
 	"ATTACK": 			"This Enemy intends to Attack with this word.",
