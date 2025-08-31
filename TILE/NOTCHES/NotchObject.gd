@@ -58,7 +58,7 @@ func _ready():
 	%Nub.set_frame_coords(Vector2i(notch.type, 2))
 	%Marker.set_frame_coords(Vector2i(notch.type, 3))
 	add_to_group("Notches to Add")
-	NotchDescriptions["LEXICAL"] = str('This Tile gains an extra Letter. This Notch grants the letter "' + str(notch.letter.to_upper()) + '"')
+	NotchDescriptions["LEXICAL"] = str('This Tile gains an extra Letter. This Notch grants the letter "' + str(notch.letter.to_lower()) + '"')
 
 func _on_texture_button_down():
 	if tween:
