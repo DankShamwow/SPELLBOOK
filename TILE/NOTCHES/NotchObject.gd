@@ -4,25 +4,25 @@ class_name NotchObject
 @onready var notch: Notch
 
 var NotchDescriptions = {
-"REPEATING": 	"This Tile triggers an additional time.",
-"ECHOING":		"This Tile returns to the rack once when played.",
-"VAPORIZING":	"This Tile is permanently removed from your Bag when played.",
-"WEIGHTED":		"This Tile skips the Tile Buffer after being played.",
-"INERT":		"This Tile becomes immune to negative Statuses.",
-"GILDED":		"+5 gold at the end of combat if this Tile is Racked.",
-"PHANTOM":		"Creates two Temporary copies of this Tile when scored.",
-"FLAMING":		"When targeting an enemy, this Tile inflicts 3 Burn.",
-"REJUVENATING":	"Once per combat, heal for 3 when scoring this Tile.",
-"REINFORCED":	"When this Tile is scored, you gain 5 block.",
-"EAGER":		"This tile is drawn at the beginning of combat.",
-"PATIENT":		"This Tile gains +2 points per turn while held in your Rack. Resets when drawn.",
-"QUICK":		"This Tile gains +5 points when scored the turn it is drawn.",
-"OVERLOADED":	"When this Tile is scored, lose 1 Energy and double your current Word Score.",
-"BALANCED":		"This Tile gains +2 points for each pair of Tiles that come before and after it in the played word.",
-"LOCAL":		"This Tile gains +1 point for each Tile that comes after it in the played word.",
-"DISTANT":		"This Tile gains +1 point for each Tile that comes before it in the played word.",
-"PRICKLY":		"When targeting an enemy, this Tile inflicts Bleed equal to its Letter Score.",
-"POTENT":		"This tile gains +3 points."
+"REPEATING": 		"This Tile triggers an additional time.",
+"ECHOING":			"This Tile returns to the rack once when played.",
+"VAPORIZING":		"This Tile is permanently removed from your Bag when played.",
+"WEIGHTED":			"This Tile skips the Tile Buffer after being played.",
+"INERT":			"This Tile becomes immune to negative Statuses.",
+"GILDED":			"+5 gold at the end of combat if this Tile is Racked.",
+"PHANTOM":			"Creates two Temporary copies of this Tile when scored.",
+"FLAMING":			"When targeting an enemy, this Tile inflicts 3 Burn.",
+"REJUVENATING":		"Once per combat, heal for 3 when scoring this Tile.",
+"REINFORCED":		"When this Tile is scored, you gain 5 block.",
+"EAGER":			"This tile is drawn at the beginning of combat.",
+"PATIENT":			"This Tile gains +2 points per turn while held in your Rack. Resets when drawn.",
+"QUICK":			"This Tile gains +5 points when scored the turn it is drawn.",
+"OVERLOADED":		"When this Tile is scored, lose 1 Energy and double your current Word Score.",
+"BALANCED":			"This Tile gains +2 points for each pair of Tiles that come before and after it in the played word.",
+"LOCAL":			"This Tile gains +1 point for each Tile that comes after it in the played word.",
+"DISTANT":			"This Tile gains +1 point for each Tile that comes before it in the played word.",
+"PRICKLY":			"When targeting an enemy, this Tile inflicts Bleed equal to its Letter Score.",
+"POTENT":			"This tile gains +3 points."
 						}
 
 const UPPER_CORNER = Vector2(208, 88)
