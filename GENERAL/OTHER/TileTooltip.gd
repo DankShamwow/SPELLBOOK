@@ -23,7 +23,7 @@ var point_values  	= GeneralManager.point_values
 var TruncatedDescriptions = {
 "EMPTY":			"Empty",
 "REPEATING":		"+1 Additional Trigger",
-"ECHOING":			"+1 Re-rack on Play",
+"ECHOING":			"Re-racks on Play once",
 "VAPORIZING":		"Permanently Removed on Play",
 "WEIGHTED":			"Skips Buffer on Play",
 "INERT":			"Debuff Immunity",
@@ -50,6 +50,7 @@ var is_active  := false
 var current_score = 0
 
 func _ready() -> void:
+	size.y = get_minimum_size().y
 	modulate = Color.TRANSPARENT
 	hide()
 
@@ -131,7 +132,7 @@ func _show_tooltip(which: GridTile) -> void:
 		notch_1_text_line.append(TruncatedDescriptions.get(LetterTile.NotchTypes.keys()[which.tile.notch1]))
 		
 	notch_2_text_line.append(str(LetterTile.NotchTypes.keys()[which.tile.notch2]).to_pascal_case())
-	if not which.tile.notch3 == LetterTile.NotchTypes.EMPTY:
+	if not which.tile.notch2 == LetterTile.NotchTypes.EMPTY:
 		notch_2_text_line.append(":\n")
 		notch_2_text_line.append(TruncatedDescriptions.get(LetterTile.NotchTypes.keys()[which.tile.notch2]))
 		
