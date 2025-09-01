@@ -1672,15 +1672,8 @@ func _on_tile_bag_toggle(toggled_on):
 			
 func _is_tile_hovered(which: GridTile, is_hovering: bool):
 	if is_hovering == true:
-		if %TileTooltip.is_visible:
-			which.hovering = is_hovering
-			tile_tooltip_requested.emit(which)
-		else:
-			while is_hovering == true:
-				await get_tree().create_timer(0.5).timeout
-				which.hovering = is_hovering
-				tile_tooltip_requested.emit(which)
-				break
+		which.hovering = is_hovering
+		tile_tooltip_requested.emit(which)
 		
 	if is_hovering == false:
 		which.hovering = is_hovering
@@ -1688,15 +1681,8 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 
 func _is_mini_tile_hovered(which: MiniGridTile, is_hovering: bool):
 	if is_hovering == true:
-		if %TileTooltip.is_visible:
-			which.hovering = is_hovering
-			tile_tooltip_requested.emit(which)
-		else:
-			while is_hovering == true:
-				await get_tree().create_timer(0.5).timeout
-				which.hovering = is_hovering
-				tile_tooltip_requested.emit(which)
-				break
+		which.hovering = is_hovering
+		tile_mini_tooltip_requested.emit(which)
 	
 	if is_hovering == false:
 		tile_tooltip_hide_requested.emit()

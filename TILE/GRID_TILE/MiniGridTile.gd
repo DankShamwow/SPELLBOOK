@@ -17,6 +17,8 @@ enum MiniGridTileAction {
 
 var bag_open = false
 
+var hovering = false
+
 signal tile_hovered(which: MiniGridTile, is_hovering: bool)
 signal tile_clicked(which: MiniGridTile, action: MiniGridTileAction)
 

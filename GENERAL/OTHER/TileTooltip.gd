@@ -46,6 +46,7 @@ var TruncatedDescriptions = {
 
 var tween: Tween
 var is_visible := false
+var is_active  := false
 var current_score = 0
 
 func _ready() -> void:
@@ -56,11 +57,26 @@ func _process(_delta):
 	var screensize = get_viewport().get_visible_rect().size
 	var current_size = self.size
 	var tooltip_pos = get_global_mouse_position()
-	self.position.x = clamp(tooltip_pos.x + 8, 0, (screensize.x - current_size.x - 16))
-	self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
+	if GeneralManager.is_combat_active:
+		if tooltip_pos.y > 288 and tooltip_pos.x < 320:
+			self.position.x = clamp(tooltip_pos.x + 8, 0, (248 - current_size.x - 8))
+			self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
+			
+		elif tooltip_pos.y > 288 and tooltip_pos.x > 320:
+			self.position.x = clamp(tooltip_pos.x + 8, 400, (screensize.x - current_size.x - 16))
+			self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
+				
+		else:
+			self.position.x = clamp(tooltip_pos.x + 8, 0, (screensize.x - current_size.x - 16))
+			self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
+		
+	else:
+		self.position.x = clamp(tooltip_pos.x + 8, 0, (screensize.x - current_size.x - 16))
+		self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
 
 func _show_tooltip(which: GridTile) -> void:
 	is_visible = true
+	is_active  = true
 	if tween:
 		tween.kill()
 
@@ -128,7 +144,7 @@ func _show_tooltip(which: GridTile) -> void:
 	notch_2_text.set_text(final_notch_2_text.join(notch_2_text_line))
 	notch_3_text.set_text(final_notch_3_text.join(notch_3_text_line))
 
-	size = get_minimum_size()
+	size.y = get_minimum_size().y
 
 	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(show)
@@ -136,6 +152,7 @@ func _show_tooltip(which: GridTile) -> void:
 
 func _show_mini_tooltip(which: MiniGridTile) -> void:
 	is_visible = true
+	is_active  = true
 	if tween:
 		tween.kill()
 
@@ -203,14 +220,13 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 	notch_2_text.set_text(final_notch_2_text.join(notch_2_text_line))
 	notch_3_text.set_text(final_notch_3_text.join(notch_3_text_line))
 	
-	size = get_minimum_size()
+	size.y = get_minimum_size().y
 
 	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(show)
 	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
 
 func _hide_tooltip() -> void:
-	await get_tree().create_timer(fade_seconds).timeout
 	is_visible = false
 	if tween:
 		tween.kill()
@@ -222,5 +238,6 @@ func hide_animation() -> void:
 		tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(self, "modulate", Color.TRANSPARENT, fade_seconds)
 		tween.tween_callback(hide)
+		is_active = false
 	else:
 		pass
