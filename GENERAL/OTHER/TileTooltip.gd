@@ -50,8 +50,22 @@ var is_active  := false
 var current_score = 0
 
 func _ready() -> void:
-	size.y = get_minimum_size().y
 	modulate = Color.TRANSPARENT
+	
+	var notch_1_text_line = []
+	var notch_2_text_line = []
+	var notch_3_text_line = []
+	
+	var final_notch_1_text = ""
+	var final_notch_2_text = ""
+	var final_notch_3_text = ""
+	
+	notch_1_text.set_text(final_notch_1_text.join(notch_1_text_line))
+	notch_2_text.set_text(final_notch_2_text.join(notch_2_text_line))
+	notch_3_text.set_text(final_notch_3_text.join(notch_3_text_line))
+	
+	self.size.y = get_minimum_size().y
+	
 	hide()
 
 func _process(_delta):
@@ -145,11 +159,11 @@ func _show_tooltip(which: GridTile) -> void:
 	notch_2_text.set_text(final_notch_2_text.join(notch_2_text_line))
 	notch_3_text.set_text(final_notch_3_text.join(notch_3_text_line))
 
-	size.y = get_minimum_size().y
-
 	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(show)
 	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
+
+	self.size.y = get_minimum_size().y
 
 func _show_mini_tooltip(which: MiniGridTile) -> void:
 	is_visible = true

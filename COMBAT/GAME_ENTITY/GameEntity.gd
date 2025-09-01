@@ -20,8 +20,11 @@ var health: int
 ## damage to the entity's current health can be taken.
 var block := 0
 
-## This is the flat damage bonus that enemies can have.
-var attack_bonus: int
+## This is the flat point bonus that enemies can have.
+var point_bonus: int
+
+## This is the flat word length bonus that enemies can have.
+var length_bonus: int
 
 ## Defense is flat damage reduction on health damage.
 var defense: int
@@ -39,6 +42,7 @@ var is_target := false
 var has_initiative := false
 
 signal entity_clicked(which: GameEntity, action: GameEntityAction)
+signal entity_hovered(which: GameEntity, is_hovering: bool)
 signal entity_has_died(which: GameEntity)
 signal update_tile_graphics()
 signal update_tooltip_tile_graphics()
@@ -266,3 +270,9 @@ func _on_entity_button_gui_input(event: InputEvent) -> void:
 			entity_clicked.emit(
 				self, GameEntityAction.VIEW
 			)
+
+func _on_entity_mouse_entered() -> void:
+	entity_hovered.emit(self, true)
+
+func _on_entity_mouse_exited() -> void:
+	entity_hovered.emit(self, false)

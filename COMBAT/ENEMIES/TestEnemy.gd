@@ -2,8 +2,10 @@ extends Enemy
 class_name TestEnemy
 
 func _ready():
+	entity_name = "Test Enemy"
+	entity_description = "Just a silly lil' guy"
 	max_health = 100
-	health = 100
+	health = max_health
 	block = 0
 	max_energy = 3
 	defense = 10

@@ -153,22 +153,22 @@ func _ready():
 	who_has_initiative = character_path
 	character_path.has_initiative = true
 	character_path.reparent(combatants)
-	
 	character_path.update_buffered_tiles.connect(self._update_buffered_tiles_call)
-	
-	%TestEnemy.perform_attack.connect(self._spawn_new_enemy_word)
-	%TestEnemy.pass_turn.connect(self._pass_turn)
-	
-	character_path.entity_clicked.connect(self._on_entity_clicked)
-	%TestEnemy.entity_clicked.connect(self._on_entity_clicked)
-	
-	self.enemy_attack_finished.connect(%TestEnemy._perform_next_attack)
-	
 	character_path.update_tile_graphics.connect(self._update_tile_graphics)
-	%TestEnemy.update_tooltip_tile_graphics.connect(self._update_tooltip_tile_graphics)
 	
-	%TestEnemy.plan_next_turn()
-	#%TestEnemy.entity_has_died.connect(self._check_for_dead_enemies)
+	## Making space here to drag enemies from within the Encounter to the inside of the Combatants node
+	
+	for i in %Combatants.get_child_count():
+		# For ALL Combatants
+		%Combatants.get_child(i).entity_clicked.connect(self._on_entity_clicked)
+		
+		if %Combatants.get_child(i) is Enemy:
+			%Combatants.get_child(i).entity_hovered.connect(%EnemyTooltip._on_enemy_hovered)
+			%Combatants.get_child(i).perform_attack.connect(self._spawn_new_enemy_word)
+			%Combatants.get_child(i).pass_turn.connect(self._pass_turn)
+			%Combatants.get_child(i).update_tooltip_tile_graphics.connect(self._update_tooltip_tile_graphics)
+			self.enemy_attack_finished.connect(%Combatants.get_child(i)._perform_next_attack)
+			%Combatants.get_child(i).plan_next_turn()
 	
 	on_combat_start()
 	_check_turn_status()
@@ -248,7 +248,8 @@ func on_combat_start():
 			current_combat_deck[i].heal2 = false
 		if current_combat_deck[i].notch3 == LetterTile.NotchTypes.REJUVENATING:
 			current_combat_deck[i].heal3 = false
-
+			
+	
 	_populate_rack()
 
 func _populate_rack():
@@ -422,7 +423,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	await get_tree().create_timer(1.25).timeout
 	
 	for i in tiles_in_word.get_child_count():
-		tiles_in_word.get_child(-1).tile.target = %TestEnemy.position + %TestEnemy.pivot_offset
+		tiles_in_word.get_child(-1).tile.target = _pivot_position
 		tiles_in_word.get_child(-1).move_to_position()
 		tiles_in_word.get_child(-1).is_dying()
 		tiles_in_word.get_child(-1).reparent(tiles_to_kill)
@@ -1093,9 +1094,9 @@ func _score_word():
 			tiles_in_play.erase(tile_to_process.tile)
 
 		
-	_cleanup(total_score)
+	_cleanup(total_score, word_target)
 
-func _cleanup(total_score):
+func _cleanup(total_score, word_target):
 	# Make the bag look pretty just before the tiles go into it.
 	GameEventHandler.disable_tile_bag.emit(true)
 	for i in tiles_to_kill.get_child_count():
@@ -1139,7 +1140,7 @@ func _cleanup(total_score):
 	GameEventHandler.update_bag_tiles.emit()
 	letters_from_tiles.clear()
 	_word_from_tiles(letters_from_tiles)
-	_apply_score_to_target(total_score)
+	_apply_score_to_target(total_score, word_target)
 	_move_tiles_into_place()
 	print(character_path.current_energy)
 	GameEventHandler.disable_tile_bag.emit(false)
@@ -1446,14 +1447,12 @@ func _update_tooltip_tile_graphics(affected_tile_indices):
 				if affected_tile_indices.has(attack_list_child.get_child(j).tile.tile_index):
 					attack_list_child.get_child(j).update_tile_graphics()
 	
-func _apply_score_to_target(total_score):
-	print("Apply Score to Target: " + str(total_score))
-	for child in combatants.get_children():
-		if child is TestCharacter and child.is_target:
-			child.gain_block(total_score)
+func _apply_score_to_target(total_score, word_target):
+		if word_target is Character:
+			word_target.gain_block(total_score)
 			
-		if child is TestEnemy and child.is_target:
-			child.take_damage(total_score)
+		if word_target is Enemy:
+			word_target.take_damage(total_score)
 
 func _normalize_grid_tile_size():
 	for i in racked_tiles.get_child_count():

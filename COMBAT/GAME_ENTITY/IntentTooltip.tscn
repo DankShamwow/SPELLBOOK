@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cqs7i88dqwr6q"]
 
-[ext_resource type="Script" uid="uid://c7ctyq8jluosx" path="res://COMBAT/GAME_ENTITY/intent_tooltip.gd" id="1_pv1nf"]
+[ext_resource type="Script" uid="uid://c7ctyq8jluosx" path="res://COMBAT/GAME_ENTITY/IntentTooltip.gd" id="1_pv1nf"]
 [ext_resource type="Texture2D" uid="uid://dtdaj13ng2au7" path="res://SPRITES/GUI/IntentIcons.png" id="2_lajg6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_11cr3"]

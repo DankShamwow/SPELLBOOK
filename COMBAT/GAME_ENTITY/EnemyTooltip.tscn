@@ -1,0 +1,117 @@
+[gd_scene load_steps=7 format=3 uid="uid://dnc1puv73uvnc"]
+
+[ext_resource type="Script" uid="uid://0b5uud4xsghm" path="res://COMBAT/GAME_ENTITY/EnemyTooltip.gd" id="1_10uvr"]
+[ext_resource type="Texture2D" uid="uid://dfuqcfqeu48fn" path="res://SPRITES/GUI/StatIcons.png" id="2_rkpjk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_462qg"]
+atlas = ExtResource("2_rkpjk")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4fadm"]
+atlas = ExtResource("2_rkpjk")
+region = Rect2(20, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2wjt"]
+atlas = ExtResource("2_rkpjk")
+region = Rect2(40, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k2kpm"]
+atlas = ExtResource("2_rkpjk")
+region = Rect2(60, 0, 20, 20)
+
+[node name="EnemyTooltip" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 126)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_right = 80.0
+offset_bottom = 126.0
+grow_horizontal = 2
+script = ExtResource("1_10uvr")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="EnemyName" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enemy Name
+"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="HealthBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HealthIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/HealthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_462qg")
+stretch_mode = 4
+
+[node name="HealthText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HealthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+fit_content = true
+autowrap_mode = 0
+
+[node name="StrengthBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="StrengthIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/StrengthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_4fadm")
+stretch_mode = 4
+
+[node name="StrengthText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/StrengthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+fit_content = true
+autowrap_mode = 0
+
+[node name="DefenseBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DefenseIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/DefenseBox"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_y2wjt")
+stretch_mode = 4
+
+[node name="DefenseText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/DefenseBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+fit_content = true
+autowrap_mode = 0
+
+[node name="IntelligenceBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="IntelligenceIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/IntelligenceBox"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_k2kpm")
+stretch_mode = 4
+
+[node name="IntelligenceText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/IntelligenceBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+fit_content = true
+autowrap_mode = 0
