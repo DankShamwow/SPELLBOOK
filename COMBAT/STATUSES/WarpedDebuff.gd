@@ -9,18 +9,18 @@ var affected_tile_indices = []
 func _ready():
 	id = 10
 	status_name = "Warp"
-	status_description = "Warped Tiles have their Letter changed temporarily."
+	status_description = "Temporarily changes a Tile's Letter."
 	tile_status = true
 	print("STATUS ID: " + str(id))
 	super()
 
 func _update_graphics():
 	status_name = "Warp"
-	status_description = "Warped Tiles have their Letter changed temporarily."
+	status_description = "Temporarily changes a Tile's Letter."
 	super()
 	
 func _on_status_effect_mouse_entered():
-	status_description = "Warped Tiles have their Letter changed temporarily."
+	status_description = "Temporarily changes a Tile's Letter."
 	super()
 
 ## When this status is applied, this determines the amount of the status applied, if it decays each turn, and the duration of it.

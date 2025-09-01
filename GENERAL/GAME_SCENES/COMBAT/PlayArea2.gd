@@ -1671,28 +1671,32 @@ func _on_tile_bag_toggle(toggled_on):
 			%PlayButton.set_disabled(true)
 			
 func _is_tile_hovered(which: GridTile, is_hovering: bool):
-	
-	### scaling_factor determines the visaul size of tiles in certain contexts.
-	#var scaling_factor = float(7.0 / (tiles_in_word.get_child_count()+1))
-	#
-	#if tiles_in_word.get_children().has(which) && tiles_in_word.get_child_count() <= 7 && is_hovering == false:
-		#which.scale = Vector2(1, 1)
-	#
-	#if tiles_in_word.get_children().has(which) && tiles_in_word.get_child_count() > 7 && is_hovering == false:
-		#which.scale_to_word_size(scaling_factor)
-		
 	if is_hovering == true:
-		which.hovering = is_hovering
-		tile_tooltip_requested.emit(which)
-	
+		if %TileTooltip.is_visible:
+			which.hovering = is_hovering
+			tile_tooltip_requested.emit(which)
+		else:
+			while is_hovering == true:
+				await get_tree().create_timer(0.5).timeout
+				which.hovering = is_hovering
+				tile_tooltip_requested.emit(which)
+				break
+		
 	if is_hovering == false:
 		which.hovering = is_hovering
 		tile_tooltip_hide_requested.emit()
 
 func _is_mini_tile_hovered(which: MiniGridTile, is_hovering: bool):
-	
 	if is_hovering == true:
-		tile_mini_tooltip_requested.emit(which)
+		if %TileTooltip.is_visible:
+			which.hovering = is_hovering
+			tile_tooltip_requested.emit(which)
+		else:
+			while is_hovering == true:
+				await get_tree().create_timer(0.5).timeout
+				which.hovering = is_hovering
+				tile_tooltip_requested.emit(which)
+				break
 	
 	if is_hovering == false:
 		tile_tooltip_hide_requested.emit()

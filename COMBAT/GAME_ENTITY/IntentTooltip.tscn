@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqs7i88dqwr6q"]
+
+[ext_resource type="Script" uid="uid://c7ctyq8jluosx" path="res://COMBAT/GAME_ENTITY/intent_tooltip.gd" id="1_pv1nf"]
+[ext_resource type="Texture2D" uid="uid://dtdaj13ng2au7" path="res://SPRITES/GUI/IntentIcons.png" id="2_lajg6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11cr3"]
+atlas = ExtResource("2_lajg6")
+region = Rect2(0, 0, 24, 24)
+
+[node name="IntentTooltip" type="PanelContainer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = -276.0
+offset_bottom = 52.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_pv1nf")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="IntentHeaderContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="IntentTexture" type="TextureRect" parent="MarginContainer/VBoxContainer/IntentHeaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_11cr3")
+
+[node name="IntentHeader" type="RichTextLabel" parent="MarginContainer/VBoxContainer/IntentHeaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "
+"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="WordContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="IntentDescription" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+fit_content = true
+autowrap_mode = 2

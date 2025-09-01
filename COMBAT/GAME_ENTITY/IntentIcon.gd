@@ -8,7 +8,7 @@ signal intent_hovered(which: IntentIcon, is_hovering: bool)
 var type: IntentType
 var is_intent: bool = false
 
-var related_attack = []
+var related_attack: int = 0
 var related_enemy: Enemy = null
 
 var IntentDescriptions = {
@@ -21,6 +21,18 @@ var IntentDescriptions = {
 	"DEFEND_BUFF":		"This Enemy intends to Defend and give themself a positive Status Effect with this word.",
 	"DEFEND_DEBUFF":	"This Enemy intends to Defend and give you a negative Status Effect with this word.",
 	"OTHER":			"This Enemy intends to do something strange with this word."
+}
+
+var IntentNames = {
+	"ATTACK": 			"Attack",
+	"DEFEND": 			"Defend",
+	"BUFF":				"Buff",
+	"DEBUFF":			"Debuff",
+	"ATTACK_BUFF":		"Attack + Buff",
+	"ATTACK_DEBUFF":	"Attack + Debuff",
+	"DEFEND_BUFF":		"Defend + Buff",
+	"DEFEND_DEBUFF":	"Defend + Debuff",
+	"OTHER":			"Other"
 }
 
 func _ready():

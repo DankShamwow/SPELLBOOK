@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://2idct0fff6fu"]
+
+[ext_resource type="Script" uid="uid://bcmd2d84pw5pp" path="res://GENERAL/OTHER/MicroNotchTooltip.gd" id="1_k0pva"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_oc7kt"]
+[ext_resource type="Texture2D" uid="uid://b30istbrpksgs" path="res://SPRITES/GUI/NotchesSmall_v2.png" id="2_k0pva"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfwdq"]
+atlas = ExtResource("2_k0pva")
+region = Rect2(0, 0, 20, 20)
+
+[node name="MicroNotchTooltip" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -504.0
+offset_bottom = -450.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_k0pva")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NotchTypeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NotchTypeSprite" type="TextureRect" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_jfwdq")
+expand_mode = 3
+
+[node name="NotchTypeText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_oc7kt")
+theme_override_font_sizes/normal_font_size = 13
+text = "Type
+"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1

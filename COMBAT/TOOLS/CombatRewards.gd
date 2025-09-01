@@ -39,6 +39,7 @@ signal notch_tooltip_requested(which)
 signal notch_tooltip_hide_requested()
 
 #func _ready() -> void:
+	#StartingTiles.generate_starting_tiles()
 	#for i in starting_bag.size():
 		#current_deck.append(starting_bag[i])
 		#available_tiles.append(current_deck[i])
@@ -66,6 +67,7 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 	if is_hovering == true:
 		which.hovering = is_hovering
 		tile_tooltip_requested.emit(which)
+		notch_tooltip_hide_requested.emit()
 	
 	if is_hovering == false:
 		which.hovering = is_hovering
@@ -74,6 +76,7 @@ func _is_tile_hovered(which: GridTile, is_hovering: bool):
 func _is_notch_hovered(which: NotchObject, is_hovering: bool):
 	if is_hovering == true:
 		notch_tooltip_requested.emit(which)
+		tile_tooltip_hide_requested.emit()
 		
 	if is_hovering == false:
 		notch_tooltip_hide_requested.emit()
@@ -153,7 +156,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			var new_notch = NOTCH_OBJECT_SCENE.instantiate()
 			new_notch.notch = notches[i]
 			%NotchesParent.add_child(new_notch)
-			new_notch.update_tooltip.connect(%StickyTileTooltip._show_tooltip)
+			#new_notch.update_tooltip.connect(%TileTooltip._show_tooltip)
 			new_notch.notch_hovered.connect(self._is_notch_hovered)
 			var notch_tween = new_notch.create_tween()
 			notch_tween.tween_property(new_notch, "modulate:a", 0, 0.001)

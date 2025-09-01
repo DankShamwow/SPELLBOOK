@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_ca8vk"]
 [ext_resource type="Texture2D" uid="uid://dxere4fwlhw26" path="res://SPRITES/GUI/NotchesIcon.png" id="3_sp64j"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="4_o1a6g"]
-[ext_resource type="PackedScene" uid="uid://wej0j1330nxl" path="res://GENERAL/OTHER/StickyTileTooltip.tscn" id="7_ouwry"]
+[ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="7_ouwry"]
 [ext_resource type="PackedScene" uid="uid://bjvffdnl0v751" path="res://GENERAL/OTHER/NotchTooltip.tscn" id="8_ouwry"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ouwry"]
@@ -176,16 +176,20 @@ offset_right = 320.0
 offset_bottom = 480.0
 grow_horizontal = 2
 
-[node name="StickyTileTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("7_ouwry")]
+[node name="TileTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("7_ouwry")]
 unique_name_in_owner = true
-layout_mode = 1
-offset_left = 152.0
-offset_top = 56.0
-offset_right = 272.0
-offset_bottom = 192.0
+z_index = 160
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_right = 120.0
+grow_horizontal = 1
 
 [node name="NotchTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("8_ouwry")]
 unique_name_in_owner = true
+z_index = 160
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -472,8 +476,8 @@ grow_horizontal = 2
 
 [connection signal="notch_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/NotchTooltip" method="_hide_tooltip"]
 [connection signal="notch_tooltip_requested" from="." to="NotchAndTileRewardParent/NotchTooltip" method="_show_tooltip"]
-[connection signal="tile_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/StickyTileTooltip" method="_hide_tooltip"]
-[connection signal="tile_tooltip_requested" from="." to="NotchAndTileRewardParent/StickyTileTooltip" method="_show_tooltip"]
+[connection signal="tile_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_hide_tooltip"]
+[connection signal="tile_tooltip_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_show_tooltip"]
 [connection signal="pressed" from="RewardsButtonList/RewardsSkipButtonBox/RewardsSkipButton" to="." method="_on_rewards_skip_button_pressed"]
 [connection signal="pressed" from="NotchAndTileRewardParent/SkipButtonBox/SkipButton" to="." method="_on_skip_button_pressed"]
 [connection signal="pressed" from="NotchAndTileRewardParent/ConfirmButtonBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]

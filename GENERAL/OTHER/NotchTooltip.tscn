@@ -40,12 +40,13 @@ horizontal_alignment = 1
 
 [node name="NotchTypeContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="NotchTypeSprite" type="TextureRect" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 texture = SubResource("AtlasTexture_rt1gd")
-expand_mode = 3
+stretch_mode = 4
 
 [node name="NotchTypeText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/NotchTypeContainer"]
 unique_name_in_owner = true

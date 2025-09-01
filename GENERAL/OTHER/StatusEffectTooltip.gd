@@ -15,6 +15,13 @@ func _ready() -> void:
 	modulate = Color.TRANSPARENT
 	hide()
 
+func _process(_delta):
+	var screensize = get_viewport().get_visible_rect().size
+	var current_size = self.size
+	var tooltip_pos = get_global_mouse_position()
+	self.position.x = clamp(tooltip_pos.x, 0, (screensize.x - current_size.x - 16))
+	self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
+
 func _on_status_hovered(which: StatusEffect, is_hovering: bool) -> void:
 	
 	if is_hovering:

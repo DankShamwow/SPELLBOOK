@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://edlmf0f8whnf"]
+[gd_scene load_steps=11 format=3 uid="uid://edlmf0f8whnf"]
 
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_f2n6x"]
 [ext_resource type="Script" uid="uid://r6f8w7lmyped" path="res://GENERAL/OTHER/TileTooltip.gd" id="2_k8fq8"]
 [ext_resource type="Texture2D" uid="uid://bxcw10d6b43p7" path="res://SPRITES/TILES/TilesSmall.png" id="3_iemis"]
 [ext_resource type="Texture2D" uid="uid://c06ikp1h0vj11" path="res://SPRITES/LETTERS/LettersMedium_White.png" id="4_qb7ig"]
+[ext_resource type="Texture2D" uid="uid://b30istbrpksgs" path="res://SPRITES/GUI/NotchesSmall_v2.png" id="5_0a061"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nweyu"]
 atlas = ExtResource("3_iemis")
@@ -14,16 +15,16 @@ atlas = ExtResource("4_qb7ig")
 region = Rect2(0, 0, 20, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_utpcq"]
-atlas = ExtResource("3_iemis")
-region = Rect2(120, 0, 20, 20)
+atlas = ExtResource("5_0a061")
+region = Rect2(0, 0, 20, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pwr6l"]
-atlas = ExtResource("3_iemis")
-region = Rect2(140, 0, 20, 20)
+atlas = ExtResource("5_0a061")
+region = Rect2(0, 0, 20, 20)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6xkmg"]
-atlas = ExtResource("3_iemis")
-region = Rect2(160, 0, 20, 20)
+atlas = ExtResource("5_0a061")
+region = Rect2(0, 0, 20, 20)
 
 [node name="TileTooltip" type="PanelContainer"]
 texture_filter = 1
@@ -112,17 +113,16 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 texture = SubResource("AtlasTexture_utpcq")
-expand_mode = 3
+stretch_mode = 4
 
 [node name="Notch1Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch1Container"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_f2n6x")
-theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/normal_font_size = 10
 text = "Notch 1"
 fit_content = true
-autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="Notch2Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -132,17 +132,17 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 texture = SubResource("AtlasTexture_pwr6l")
-expand_mode = 3
+stretch_mode = 4
 
 [node name="Notch2Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch2Container"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 10
 text = "Notch 2"
 fit_content = true
 scroll_following = true
-autowrap_mode = 0
 vertical_alignment = 1
 
 [node name="Notch3Container" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -152,14 +152,14 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 texture = SubResource("AtlasTexture_6xkmg")
-expand_mode = 3
+stretch_mode = 4
 
 [node name="Notch3Text" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Notch3Container"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_f2n6x")
+theme_override_font_sizes/normal_font_size = 10
 text = "Notch 3"
 fit_content = true
-autowrap_mode = 0
 vertical_alignment = 1

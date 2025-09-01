@@ -70,7 +70,8 @@ func schedule_attack(attack_number: int):
 	attack_intent.update_intent_info()
 	attack_intent.is_intent = true
 	attack_intent.related_enemy = self
-	attack_intent.related_attack.append(attack_number)
+	attack_intent.related_attack = attack_number
+	attack_intent.intent_hovered.connect(self.get_parent().get_parent().find_child("IntentTooltip")._on_intent_hovered)
 
 func perform_enemy_attack(attack_number):
 	if self.health <= 0:

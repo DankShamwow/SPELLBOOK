@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://d12fqxkjylbeu"]
+[gd_scene load_steps=34 format=3 uid="uid://d12fqxkjylbeu"]
 
 [ext_resource type="Script" uid="uid://bkuymnlsmqvfo" path="res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.gd" id="1_d7kxf"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="2_dvygu"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="4_fhfjg"]
 [ext_resource type="PackedScene" uid="uid://opxx065lkaqc" path="res://GENERAL/OTHER/StatusEffectTooltip.tscn" id="5_crhsm"]
 [ext_resource type="Texture2D" uid="uid://bf4pb80s3hnmj" path="res://SPRITES/GUI/AttackButton.png" id="5_idy2k"]
+[ext_resource type="PackedScene" uid="uid://2idct0fff6fu" path="res://GENERAL/OTHER/MicroNotchTooltip.tscn" id="6_7a6io"]
 [ext_resource type="PackedScene" uid="uid://cqs7i88dqwr6q" path="res://COMBAT/GAME_ENTITY/IntentTooltip.tscn" id="7_wbqvs"]
 [ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="9_gbtod"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="9_lhr36"]
@@ -139,17 +140,39 @@ offset_bottom = 720.0
 texture = ExtResource("2_idy2k")
 
 [node name="TileTooltip" parent="." instance=ExtResource("2_fhfjg")]
-unique_name_in_owner = true
 z_index = 160
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0
 anchor_right = 0.0
-offset_left = -432.0
-offset_top = 8.0
-offset_right = -336.0
-offset_bottom = 138.0
+offset_left = -576.0
+offset_right = -480.0
+offset_bottom = 130.0
 grow_vertical = 0
+
+[node name="MicroNotchTooltip" parent="." instance=ExtResource("6_7a6io")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -472.0
+offset_top = 8.0
+offset_right = -976.0
+offset_bottom = -442.0
+
+[node name="MicroNotchTooltip2" parent="." instance=ExtResource("6_7a6io")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -472.0
+offset_top = 88.0
+offset_right = -976.0
+offset_bottom = -362.0
+
+[node name="MicroNotchTooltip3" parent="." instance=ExtResource("6_7a6io")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = -472.0
+offset_top = 48.0
+offset_right = -976.0
+offset_bottom = -402.0
 
 [node name="StatusEffectTooltip" parent="." instance=ExtResource("5_crhsm")]
 unique_name_in_owner = true
