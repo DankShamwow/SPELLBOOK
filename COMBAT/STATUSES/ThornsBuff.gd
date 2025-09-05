@@ -7,7 +7,7 @@ func _ready():
 	status_description = str("Attackers take " + str(self.amount) + " damage in return when they attack.")
 	tile_status = false
 	print("STATUS ID: " + str(id))
-	stack_type = StatusEffect.StackType.BOTH
+	stack_type = StatusEffect.StackType.AMOUNT
 	super()
 
 func _update_graphics():
@@ -25,12 +25,14 @@ func on_application(status_amount: int, does_status_decay: bool, status_duration
 	
 	if does_status_decay:
 		does_decay = true
+		amount = status_amount
 		duration = status_duration
 		%NumberLabel.text = str(duration)
 		
 	if not does_status_decay:
+		amount = status_amount
 		duration = 1
-		%NumberLabel.text = ""
+		%NumberLabel.text = str(amount)
 
 func on_turn_start():
 	if does_decay:

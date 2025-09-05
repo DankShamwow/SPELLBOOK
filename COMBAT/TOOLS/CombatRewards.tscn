@@ -185,6 +185,7 @@ anchor_left = 0.0
 anchor_right = 0.0
 offset_left = 0.0
 offset_right = 120.0
+offset_bottom = 148.0
 grow_horizontal = 1
 
 [node name="NotchTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("8_ouwry")]

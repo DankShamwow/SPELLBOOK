@@ -4,7 +4,7 @@ class_name TestEnemy
 func _ready():
 	entity_name = "Test Enemy"
 	entity_description = "Just a silly lil' guy"
-	max_health = 100
+	max_health = 2500
 	health = max_health
 	block = 0
 	max_energy = 3

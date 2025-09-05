@@ -23,6 +23,8 @@ var tile: LetterTile
 var bag_list = []
 
 signal tile_bag_toggle(toggled_on)
+signal tile_tooltip_requested(which)
+signal tile_tooltip_hide_requested()
 
 func _ready():
 	GameEventHandler.update_bag_tiles.connect(_on_update_bag_tiles)
@@ -43,6 +45,8 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 				
 				## bag_tile is a GridTile with the data of a LetterTile from your deck.
 				var bag_tile = grid_tile_scene.instantiate()
+
+				bag_tile.tile_hovered.connect(self._is_tile_hovered)
 
 				bag_tile.tile = current_combat_deck[i]
 				
@@ -88,6 +92,8 @@ func _on_tile_bag_button_toggled(toggled_on: bool):
 				## bag_tile is a GridTile with the data of a LetterTile from your deck.
 				var bag_tile = grid_tile_scene.instantiate()
 
+				bag_tile.tile_hovered.connect(self._is_tile_hovered)
+				
 				bag_tile.tile = current_deck[i]
 				
 				bag_grid.add_child(bag_tile)
@@ -197,6 +203,15 @@ func _on_update_bag_tiles() -> void:
 				if %TileBagButton.is_pressed():
 					bag_grid.get_child(tile_index).error_vision()
 
+func _is_tile_hovered(which: GridTile, is_hovering: bool):
+	if is_hovering == true:
+		which.hovering = is_hovering
+		tile_tooltip_requested.emit(which)
+		
+	if is_hovering == false:
+		which.hovering = is_hovering
+		tile_tooltip_hide_requested.emit()
+
 func _on_update_buffered_tiles() -> void:
 	for i in buffered_tiles.size():
 		var popped_buffer = buffered_tiles.pop_front()
@@ -206,6 +221,3 @@ func _on_update_buffered_tiles() -> void:
 
 func _on_disable_tile_bag(state):
 	%TileBagButton.set_disabled(state)
-
-func _on_map_toggle(toggled_on: Variant) -> void:
-	pass # Replace with function body.

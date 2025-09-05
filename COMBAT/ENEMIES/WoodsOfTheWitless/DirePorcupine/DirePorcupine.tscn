@@ -1,0 +1,162 @@
+[gd_scene load_steps=11 format=3 uid="uid://d1a4arsg7mtnr"]
+
+[ext_resource type="Script" uid="uid://8agbh7fcyf51" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/DirePorcupine/DirePorcupine.gd" id="1_r66ln"]
+[ext_resource type="Texture2D" uid="uid://c6bbiy24slla7" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/DirePorcupine/DirePorcupine.png" id="2_a8bxy"]
+[ext_resource type="Texture2D" uid="uid://crpy0ehpcx83j" path="res://SPRITES/COMBAT/HealthBar.png" id="3_i2kul"]
+[ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="4_hklj4"]
+[ext_resource type="Script" uid="uid://b4cnxgwcfc8v7" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/DirePorcupine/DirePorcupineAttacks.gd" id="5_ar4kr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpio6"]
+atlas = ExtResource("2_a8bxy")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3do4e"]
+atlas = ExtResource("2_a8bxy")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_18pmi"]
+atlas = ExtResource("3_i2kul")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q6nkw"]
+atlas = ExtResource("3_i2kul")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_st4p2"]
+atlas = ExtResource("3_i2kul")
+region = Rect2(0, 20, 10, 10)
+
+[node name="DirePorcupine" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = 8.0
+offset_right = 8.0
+pivot_offset = Vector2(1.5, 37)
+script = ExtResource("1_r66ln")
+
+[node name="Entity_Button" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+
+[node name="Entity_Sprite_Parts" type="Node2D" parent="Entity_Button"]
+texture_filter = 1
+
+[node name="Entity_Sprite" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+position = Vector2(24, 24)
+texture = SubResource("AtlasTexture_fpio6")
+
+[node name="Entity_Mask" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(24, 24)
+texture = SubResource("AtlasTexture_3do4e")
+
+[node name="Entity_Border" type="Sprite2D" parent="Entity_Button/Entity_Sprite_Parts"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+position = Vector2(24, 24)
+texture = SubResource("AtlasTexture_3do4e")
+
+[node name="EntityHealthBar" type="TextureProgressBar" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -8.0
+offset_top = 56.0
+offset_right = 64.0
+offset_bottom = 64.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 3
+stretch_margin_right = 3
+stretch_margin_bottom = 3
+texture_under = SubResource("AtlasTexture_18pmi")
+texture_over = SubResource("AtlasTexture_q6nkw")
+texture_progress = SubResource("AtlasTexture_st4p2")
+
+[node name="HealthBarLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 56.0
+offset_right = 112.0
+offset_bottom = 72.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_hklj4")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlockLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -56.0
+offset_top = 24.0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_hklj4")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TargetLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -56.0
+offset_top = 34.0
+offset_right = 40.0
+offset_bottom = 50.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_hklj4")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DataLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -56.0
+offset_top = 44.0
+offset_right = 40.0
+offset_bottom = 60.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_hklj4")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnemyAttackData" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_ar4kr")
+
+[node name="Statuses" type="GridContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -8.0
+offset_top = 64.0
+offset_right = 136.0
+offset_bottom = 104.0
+scale = Vector2(0.5, 0.5)
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 24
+columns = 4
+
+[node name="IntentBox" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 60.0
+alignment = 1
+
+[connection signal="mouse_entered" from="Entity_Button" to="." method="_on_entity_mouse_entered"]
+[connection signal="mouse_exited" from="Entity_Button" to="." method="_on_entity_mouse_exited"]

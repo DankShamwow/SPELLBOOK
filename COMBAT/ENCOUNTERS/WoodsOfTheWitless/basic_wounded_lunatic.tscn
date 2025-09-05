@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://3t5m3erjj4jj"]
+
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="1_6hgfu"]
+[ext_resource type="Script" uid="uid://ceihuado288as" path="res://COMBAT/ENCOUNTERS/SCRIPTS/basic_wounded_lunatic.gd" id="1_xw24h"]
+[ext_resource type="PackedScene" uid="uid://bb2av3xqc185h" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Lunatic/LunaticWeakened.tscn" id="3_xw24h"]
+
+[node name="BasicWoundedLunatic" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_xw24h")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("1_6hgfu")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="LunaticWeakened" parent="Combatants" instance=ExtResource("3_xw24h")]
+offset_left = 528.0
+offset_top = 184.0
+offset_right = 528.0
+offset_bottom = 184.0
+scale = Vector2(1.5, 1.5)

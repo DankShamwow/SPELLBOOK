@@ -20,13 +20,17 @@ var enemy_attack_intents := []
 ## The status data for each word
 var enemy_status_package_list := []
 ## Master list of enemy tiles
-var current_enemy_deck := []
+var current_enemy_deck: Array[LetterTile] = []
 ## The schedule of words to be played by the enemy next turn. This is an array of integers.
 var next_turn_attacks: Array[int] = []
+## The number of turns an Enemy has been alive for after a specific activation condition is met.
+var active_turns: int = 0
+## The dedicated RNG strand for enemies.
+var enemy_rng = RandomnessManager.enemy_rng
 
 const INTENT_ICON_SCENE: PackedScene = preload("res://COMBAT/GAME_ENTITY/IntentIcon.tscn")
 
-signal perform_attack(attack_to_perform: Array, attack_letter_tiles: Array, debuff_package: Array, pivot_position: Vector2, attacker: Enemy)
+signal perform_attack(attack_to_perform: Array, attack_letter_tiles: Array, debuff_package: Array, pivot_position: Vector2, target: String, attacker: Enemy)
 signal pass_turn()
 
 func _ready():
@@ -45,6 +49,10 @@ func _ready():
 	print(enemy_attack_count)
 	print(enemy_attack_list)
 	super()
+
+func _on_turn_start():
+	for i in current_enemy_deck.size():
+		current_enemy_deck[i].current_age += 1
 
 ## plan_next_turn is a function that schedules the attacks that an enemy will use on their next turn.
 ## This function should be where the bulk of an enemy's logic is.
@@ -73,15 +81,25 @@ func schedule_attack(attack_number: int):
 	attack_intent.related_attack = attack_number
 	attack_intent.intent_hovered.connect(self.get_parent().get_parent().find_child("IntentTooltip")._on_intent_hovered)
 
+func check_for_ownership(which: Enemy):
+	if which == self:
+		_perform_next_attack()
+		
+func _perform_next_attack():
+	pass
+
+## perform_enemy_attack performs the scheduled attack at the index given. Zero indexed.
 func perform_enemy_attack(attack_number):
 	if self.health <= 0:
 		return
 	
 	remove_energy(1)
+	
 	var attack_letter_tiles = []
+	
 	var attack_to_perform = enemy_attack_list[next_turn_attacks[attack_number]]
-	var debuff_package = enemy_status_package_list[attack_number]
-	var target = enemy_attack_targets[attack_number]
+	var debuff_package = enemy_status_package_list[next_turn_attacks[attack_number]]
+	var target = enemy_attack_targets[next_turn_attacks[attack_number]]
 	
 	for i in attack_to_perform.size():
 		attack_letter_tiles.append(current_enemy_deck[attack_to_perform[i]])

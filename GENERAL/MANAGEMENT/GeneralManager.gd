@@ -76,6 +76,12 @@ var rare_notch_ids = [6, 10, 13, 17, 19]
 
 var rare_notch_ids_no_lexical = [6, 10, 13, 17]
 
+## chapter_combat_clear_count tracks how many combats have been completed in the current chapter
+var chapter_combat_clear_count = 0
+## chapter_boss_encounter is the encounter that gets used for the chapter boss, as well as for the graphics on the map.
+var chapter_boss_encounter: Resource
+
+var combat_encounter: Resource
 
 ## Not to be confused with remove_tile_from_deck(); this function clears out all of the 
 ## temporary and vaporized tiles at the end of combat.

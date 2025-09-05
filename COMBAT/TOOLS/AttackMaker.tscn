@@ -94,41 +94,83 @@ stretch_mode = 0
 
 [node name="Repeating" parent="NotchGenerators" instance=ExtResource("4_ym842")]
 offset_left = 8.0
+offset_top = 408.0
+offset_right = 8.0
+offset_bottom = 408.0
+
+[node name="Inert" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 40.0
+offset_top = 408.0
+offset_right = 40.0
+offset_bottom = 408.0
+type = 4
+
+[node name="Rejuvenating" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 72.0
+offset_top = 408.0
+offset_right = 72.0
+offset_bottom = 408.0
+type = 8
+
+[node name="Reinforced" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 104.0
+offset_top = 408.0
+offset_right = 104.0
+offset_bottom = 408.0
+type = 9
+
+[node name="Flaming" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 136.0
+offset_top = 408.0
+offset_right = 136.0
+offset_bottom = 408.0
+type = 7
+
+[node name="Patient" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 168.0
+offset_top = 408.0
+offset_right = 168.0
+offset_bottom = 408.0
+type = 11
+
+[node name="Balanced" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 200.0
+offset_top = 408.0
+offset_right = 200.0
+offset_bottom = 408.0
+type = 14
+
+[node name="Local" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+offset_left = 8.0
 offset_top = 440.0
 offset_right = 8.0
 offset_bottom = 440.0
+type = 15
 
-[node name="Inert" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+[node name="Distant" parent="NotchGenerators" instance=ExtResource("4_ym842")]
 offset_left = 40.0
 offset_top = 440.0
 offset_right = 40.0
 offset_bottom = 440.0
-generator_notch_type = 4
+type = 16
 
-[node name="Rejuvenating" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+[node name="Prickly" parent="NotchGenerators" instance=ExtResource("4_ym842")]
 offset_left = 72.0
 offset_top = 440.0
 offset_right = 72.0
 offset_bottom = 440.0
-generator_notch_type = 8
+type = 17
 
-[node name="Reinforced" parent="NotchGenerators" instance=ExtResource("4_ym842")]
+[node name="Potent" parent="NotchGenerators" instance=ExtResource("4_ym842")]
 offset_left = 104.0
 offset_top = 440.0
 offset_right = 104.0
 offset_bottom = 440.0
-generator_notch_type = 9
-
-[node name="Flaming" parent="NotchGenerators" instance=ExtResource("4_ym842")]
-offset_left = 136.0
-offset_top = 440.0
-offset_right = 136.0
-offset_bottom = 440.0
-generator_notch_type = 7
+type = 18
 
 [node name="NinePatchRect2" type="NinePatchRect" parent="."]
 layout_mode = 0
-offset_top = 432.0
+offset_top = 400.0
 offset_right = 240.0
 offset_bottom = 480.0
 texture = ExtResource("3_5fbpu")

@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwrwa5d7ne21m"]
+
+[ext_resource type="Script" uid="uid://74rn46vof7k6" path="res://COMBAT/ENCOUNTERS/SCRIPTS/elite_brainstealer.gd" id="1_sbpt2"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_sbpt2"]
+[ext_resource type="PackedScene" uid="uid://5xsdwnlkqebr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Brainstealer/Brainstealer.tscn" id="3_sbpt2"]
+[ext_resource type="PackedScene" uid="uid://dmmxoh1w53kfr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/BrainstealerJuvenile/BrainstealerJuvenile.tscn" id="4_fups7"]
+
+[node name="EliteBrainstealer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_sbpt2")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_sbpt2")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Brainstealer" parent="Combatants" instance=ExtResource("3_sbpt2")]
+offset_left = 496.0
+offset_top = 136.0
+offset_right = 496.0
+offset_bottom = 136.0
+metadata/_edit_use_anchors_ = true
+
+[node name="BrainstealerJuvenile" parent="Combatants" instance=ExtResource("4_fups7")]
+offset_left = 416.0
+offset_top = 200.0
+offset_right = 416.0
+offset_bottom = 200.0
+metadata/_edit_use_anchors_ = true

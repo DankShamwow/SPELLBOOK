@@ -10,6 +10,6 @@ var StartingTileArray = []
 func generate_starting_tiles():
 	for i in starting_deck_numbers.size():
 		for j in starting_deck_numbers[i]:
-			print("Adding New Tile!")
+			#print("Adding New Tile!")
 			var new_tile = LetterTile.new().new_tile(LetterTile.TileType.BASIC, i, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, StartingTileArray.size())
 			StartingTileArray.append(new_tile)

@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://6sy5vay8vh4p"]
+
+[ext_resource type="Script" uid="uid://cirrx07m5vmnt" path="res://COMBAT/ENCOUNTERS/SCRIPTS/basic_pebble_golem.gd" id="1_s4q5k"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_nadgu"]
+[ext_resource type="PackedScene" uid="uid://crgkrlu17orcr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/PebbleGolem/PebbleGolem.tscn" id="3_nadgu"]
+
+[node name="BasicPebbleGolem" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_s4q5k")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_nadgu")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="PebbleGolem" parent="Combatants" instance=ExtResource("3_nadgu")]
+offset_left = 456.0
+offset_top = 200.0
+offset_right = 456.0
+offset_bottom = 200.0
+scale = Vector2(1.5, 1.5)

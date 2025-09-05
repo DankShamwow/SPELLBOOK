@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://caseqljymxddh"]
+[gd_scene load_steps=3 format=3 uid="uid://caseqljymxddh"]
 
 [ext_resource type="Script" uid="uid://cfm6ql1s4rydr" path="res://COMBAT/ENCOUNTERS/Encounter.gd" id="1_1iewe"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_fh7tn"]
 
 [node name="Encounter" type="Control"]
 layout_mode = 3
@@ -13,3 +14,7 @@ script = ExtResource("1_1iewe")
 
 [node name="Combatants" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+position = Vector2(320, 168)
+texture = ExtResource("2_fh7tn")

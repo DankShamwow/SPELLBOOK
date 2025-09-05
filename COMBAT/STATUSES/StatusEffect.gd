@@ -18,14 +18,19 @@ signal status_hovered(which: StatusEffect, is_hovering: bool)
 func _ready():
 	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
 	%NumberLabel.text = ""
+	%NumberLabel2.text = ""
 
 func _update_graphics():
 	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
-	if does_decay:
+	if does_decay and stack_type == StatusEffect.StackType.BOTH:
 		%NumberLabel.text = str(self.amount)
 
+	if does_decay and stack_type == StatusEffect.StackType.AMOUNT or stack_type == StatusEffect.StackType.DURATION or stack_type == StatusEffect.StackType.NONE:
+		%NumberLabel.text = str(self.duration)
+		%NumberLabel2.text = str(self.amount)
+
 	if not does_decay:
-		%NumberLabel.text = ""
+		%NumberLabel.text = str(self.amount)
 
 func _on_status_effect_mouse_entered():
 	status_hovered.emit(self, true)

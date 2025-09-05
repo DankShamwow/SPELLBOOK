@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://q08xri0i5gsh"]
+
+[ext_resource type="Script" uid="uid://ddlbva1pd4nmy" path="res://COMBAT/ENCOUNTERS/SCRIPTS/normal_solo_victim.gd" id="1_ftg4a"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_eo87i"]
+[ext_resource type="PackedScene" uid="uid://c487o5n7md3uo" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Victim/Victim.tscn" id="3_687jl"]
+
+[node name="NormalSoloVictim" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ftg4a")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_eo87i")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Victim" parent="Combatants" instance=ExtResource("3_687jl")]
+offset_left = 464.0
+offset_top = 200.0
+offset_right = 464.0
+offset_bottom = 200.0
+scale = Vector2(1.5, 1.5)

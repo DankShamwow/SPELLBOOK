@@ -5,11 +5,11 @@
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="3_8l33h"]
 
 [node name="StatusEffect" type="Control"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 24.0
 offset_bottom = 24.0
-size_flags_horizontal = 3
 script = ExtResource("1_mbwx6")
 
 [node name="TextureButton" type="TextureButton" parent="."]
@@ -27,9 +27,18 @@ vframes = 2
 [node name="NumberLabel" type="Label" parent="TextureButton"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_top = 20.0
+offset_top = 16.0
 offset_right = 28.0
-offset_bottom = 34.0
+offset_bottom = 30.0
+theme = ExtResource("3_8l33h")
+text = "1"
+horizontal_alignment = 2
+
+[node name="NumberLabel2" type="Label" parent="TextureButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 28.0
+offset_bottom = 14.0
 theme = ExtResource("3_8l33h")
 text = "1"
 horizontal_alignment = 2

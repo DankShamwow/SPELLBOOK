@@ -11,6 +11,10 @@ const BLEED_DEBUFF = preload("res://COMBAT/STATUSES/BleedDebuff.gd")
 const IRRADIATED_DEBUFF = preload("res://COMBAT/STATUSES/IrradiatedDebuff.gd")
 const MUDDLED_DEBUFF = preload("res://COMBAT/STATUSES/MuddledDebuff.gd")
 const WARPED_DEBUFF = preload("res://COMBAT/STATUSES/WarpedDebuff.gd")
+const THORNS_BUFF = preload("res://COMBAT/STATUSES/ThornsBuff.gd")
+const STRENGTH_BUFF = preload("res://COMBAT/STATUSES/StrengthBuff.gd")
+const DEXTERITY_BUFF = preload("res://COMBAT/STATUSES/DexterityBuff.gd")
+const INTELLIGENCE_BUFF = preload("res://COMBAT/STATUSES/IntelligenceBuff.gd")
 
 var StatusEffectList = {
 	"STONED": STONED,
@@ -24,4 +28,8 @@ var StatusEffectList = {
 	"IRRADIATED_DEBUFF": IRRADIATED_DEBUFF,
 	"MUDDLED_DEBUFF": MUDDLED_DEBUFF,
 	"WARPED_DEBUFF": WARPED_DEBUFF,
+	"THORNS_BUFF": THORNS_BUFF,
+	"STRENGTH_BUFF": STRENGTH_BUFF,
+	"DEXTERITY_BUFF": DEXTERITY_BUFF,
+	"INTELLIGENCE_BUFF": INTELLIGENCE_BUFF,
 }

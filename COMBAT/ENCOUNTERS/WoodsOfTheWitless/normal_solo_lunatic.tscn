@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1u1s4pute5ap"]
+
+[ext_resource type="Script" uid="uid://ccscobt68bpba" path="res://COMBAT/ENCOUNTERS/SCRIPTS/normal_solo_lunatic.gd" id="1_qecih"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_r42sl"]
+[ext_resource type="PackedScene" uid="uid://csueco8ki0b2c" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Lunatic/Lunatic.tscn" id="3_qecih"]
+
+[node name="NormalSoloLunatic" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_qecih")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_r42sl")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Lunatic" parent="Combatants" instance=ExtResource("3_qecih")]
+offset_left = 520.0
+offset_top = 192.0
+offset_right = 520.0
+offset_bottom = 192.0
+scale = Vector2(1.5, 1.5)

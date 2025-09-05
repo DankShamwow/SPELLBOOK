@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1peqv2s6qtuo"]
+[gd_scene load_steps=12 format=3 uid="uid://d1peqv2s6qtuo"]
 
 [ext_resource type="Texture2D" uid="uid://0iq2qawpqr7a" path="res://SPRITES/GUI/TileBagButton.png" id="1_hy7m7"]
 [ext_resource type="Script" uid="uid://bimuhn6gspaqt" path="res://TILE/TILE_BAG/TileBag.gd" id="1_ufeyo"]
 [ext_resource type="Script" uid="uid://dfw3kvi3i4osl" path="res://TILE/MaskArea.gd" id="2_yg64d"]
+[ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="4_tpdis"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hy7m7"]
 atlas = ExtResource("1_hy7m7")
@@ -115,11 +116,18 @@ theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 12
 columns = 10
 
+[node name="TileTooltip" parent="." instance=ExtResource("4_tpdis")]
+z_index = 256
+layout_mode = 1
+offset_bottom = 148.0
+
 [node name="StartPoseMarker" type="Marker2D" parent="."]
 position = Vector2(8, 24)
 
 [node name="GridStartMarker" type="Marker2D" parent="."]
 position = Vector2(-544, 48)
 
+[connection signal="tile_tooltip_hide_requested" from="." to="TileTooltip" method="_hide_tooltip"]
+[connection signal="tile_tooltip_requested" from="." to="TileTooltip" method="_show_tooltip"]
 [connection signal="toggled" from="CanvasLayer2/TileBagButton" to="." method="_on_tile_bag_button_toggled"]
 [connection signal="toggled" from="CanvasLayer2/TileBagButton" to="CanvasLayer/ColorRect" method="_on_tile_bag_button_toggled"]

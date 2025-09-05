@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpe3b6uxo8um"]
+
+[ext_resource type="Script" uid="uid://bkc6jmf4enqly" path="res://COMBAT/ENCOUNTERS/SCRIPTS/normal_pebble_snail.gd" id="1_btss7"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_btss7"]
+[ext_resource type="PackedScene" uid="uid://crgkrlu17orcr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/PebbleGolem/PebbleGolem.tscn" id="3_gsi2m"]
+[ext_resource type="PackedScene" uid="uid://clqemlsl6ysjq" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/DireSnail/DireSnail.tscn" id="4_btss7"]
+
+[node name="NormalPebbleSnail" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_btss7")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_btss7")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="PebbleGolem" parent="Combatants" instance=ExtResource("3_gsi2m")]
+offset_left = 392.0
+offset_top = 200.0
+offset_right = 392.0
+offset_bottom = 200.0
+scale = Vector2(1.5, 1.5)
+
+[node name="DireSnail" parent="Combatants" instance=ExtResource("4_btss7")]
+offset_left = 504.0
+offset_top = 184.0
+offset_right = 504.0
+offset_bottom = 184.0
+scale = Vector2(1.5, 1.5)

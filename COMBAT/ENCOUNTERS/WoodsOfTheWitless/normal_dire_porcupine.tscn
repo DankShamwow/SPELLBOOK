@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bo8e1ktattucx"]
+
+[ext_resource type="Script" uid="uid://ckrp47hxgm0h6" path="res://COMBAT/ENCOUNTERS/SCRIPTS/normal_dire_porcupine.gd" id="1_vok0c"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_8mntu"]
+[ext_resource type="PackedScene" uid="uid://d1a4arsg7mtnr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/DirePorcupine/DirePorcupine.tscn" id="3_eoyh2"]
+
+[node name="NormalDirePorcupine" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_vok0c")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_8mntu")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="DirePorcupine" parent="Combatants" instance=ExtResource("3_eoyh2")]
+offset_left = 448.0
+offset_top = 192.0
+offset_right = 448.0
+offset_bottom = 192.0
+scale = Vector2(1.5, 1.5)

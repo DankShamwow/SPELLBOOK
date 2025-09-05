@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://ght1aw0esskq"]
+
+[ext_resource type="Script" uid="uid://dsw7uedlo76wn" path="res://COMBAT/ENCOUNTERS/SCRIPTS/normal_solo_juvenile.gd" id="1_6gabs"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_1nqi2"]
+[ext_resource type="PackedScene" uid="uid://dmmxoh1w53kfr" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/BrainstealerJuvenile/BrainstealerJuvenile.tscn" id="3_yblci"]
+
+[node name="NormalSoloJuvenile" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_6gabs")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_1nqi2")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="BrainstealerJuvenile" parent="Combatants" instance=ExtResource("3_yblci")]
+offset_left = 488.0
+offset_top = 152.0
+offset_right = 488.0
+offset_bottom = 152.0

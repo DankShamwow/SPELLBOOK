@@ -52,35 +52,32 @@ position = Vector2(10, 10)
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
-visible = false
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
-visible = false
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
-visible = false
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 texture = ExtResource("2_ea6j7")
 hframes = 26
-vframes = 4
+vframes = 7
 
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
 modulate = Color(1, 1, 1, 0)

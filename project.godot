@@ -24,6 +24,7 @@ RandomnessManager="*res://GENERAL/MANAGEMENT/RandomnessManager.gd"
 GameEventHandler="*res://GENERAL/MANAGEMENT/GameEventHandler.gd"
 StartingTiles="*res://TILE/STARTING_DECKS/StartingTiles.gd"
 RandomStartingTiles="*res://TILE/STARTING_DECKS/RandomStartingTiles.gd"
+EncounterManager="*res://COMBAT/ENCOUNTERS/EncounterManager.gd"
 
 [display]
 
@@ -37,6 +38,14 @@ window/stretch/aspect="expand"
 folder_colors={
 "res://AUDIO/": "teal",
 "res://COMBAT/": "red",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/Brainstealer/": "orange",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/BrainstealerJuvenile/": "yellow",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/DirePorcupine/": "yellow",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/DireSnail/": "green",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/ForestSerpent/": "orange",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/Lunatic/": "yellow",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/PebbleGolem/": "green",
+"res://COMBAT/ENEMIES/WoodsOfTheWitless/Victim/": "yellow",
 "res://GENERAL/": "pink",
 "res://OLD_BAD/": "gray",
 "res://RELIC/": "blue",

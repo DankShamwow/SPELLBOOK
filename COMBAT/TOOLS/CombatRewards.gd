@@ -175,6 +175,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			new_notch.rotation_degrees = starting_rot
 			
 		for i in draws.size():
+			var draws_offset = 64 + 40 * (7 - draws.size())
 			print("Drawing new tile!")
 			var new_tile = GRID_TILE_SCENE.instantiate()
 			new_tile.tile = current_deck[draws[i]]
@@ -183,7 +184,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			new_tile.tile_hovered.connect(self._is_tile_hovered)
 			new_tile.toggle_monitorable()
 			new_tile.position = Vector2(592, 32)
-			new_tile.tile.target = Vector2(64+(80*i), (232 + (((i+1) % 2) * 48)))
+			new_tile.tile.target = Vector2(draws_offset +(80*i), (232 + (((i+1) % 2) * 48)))
 			new_tile.spawned_from_bag()
 			new_tile.move_to_position(0.5)
 			new_tile.play_tile_sound()

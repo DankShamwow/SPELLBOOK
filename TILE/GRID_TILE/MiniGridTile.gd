@@ -26,10 +26,10 @@ func _ready():
 	##This is the one we use outside of testing, at least when not testing the tile directly.
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
 	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 3))
-	#$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
-	#$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
-	#$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
+	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
+	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
+	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
+	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
 
 	## For testing purposes only
 	#var hasOverlay = randi_range(0, 5)
@@ -56,7 +56,7 @@ func update_tile_graphics():
 	
 	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(new_type, 0))
 	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(visual_letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 3))
+	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 6))
 	#$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
 	#$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
 	#$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))

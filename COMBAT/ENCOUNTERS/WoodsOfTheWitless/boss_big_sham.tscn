@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://crh38d64jqolk"]
+
+[ext_resource type="Script" uid="uid://c6hn1o4c1wq6i" path="res://COMBAT/ENCOUNTERS/SCRIPTS/boss_big_sham.gd" id="1_i5ux7"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_iamu0"]
+[ext_resource type="PackedScene" uid="uid://bgn1buqfnev83" path="res://COMBAT/ENEMIES/TestEnemy.tscn" id="3_uepdx"]
+
+[node name="BossBigSham" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_i5ux7")
+
+[node name="REFERENCE_BACKGROUND" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 168)
+texture = ExtResource("2_iamu0")
+
+[node name="Combatants" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="TestEnemy" parent="Combatants" instance=ExtResource("3_uepdx")]
+offset_left = 496.0
+offset_top = 160.0
+offset_right = 496.0
+offset_bottom = 160.0
+scale = Vector2(3, 3)

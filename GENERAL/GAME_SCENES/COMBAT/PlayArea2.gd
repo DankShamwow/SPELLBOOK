@@ -121,6 +121,15 @@ var relic_scene = preload("res://RELIC/Relic.tscn")
 ## sine_timer is the timer for the sine wave pattern of tiles in your played word.
 var sine_timer = 0
 
+var player_turn_count: int = 0
+var enemy_turn_count: int = 0
+
+var new_encounter
+
+var combatant_array = []
+
+var can_enable_play: bool = true
+
 signal update_bag_tiles()
 signal update_buffered_tiles()
 signal disable_tile_bag(state)
@@ -142,12 +151,14 @@ func _ready():
 	# Clone the player's deck into these arrays
 	for i in current_deck.size():
 		current_combat_deck.append(current_deck[i])
-		available_tiles.append(current_deck[i])
-		
+	
 		if current_deck[i].notch1 == LetterTile.NotchTypes.EAGER \
 		or current_deck[i].notch2 == LetterTile.NotchTypes.EAGER \
 		or current_deck[i].notch3 == LetterTile.NotchTypes.EAGER:
 			priority_draw_list.append(current_deck[i])
+	
+		else:
+			available_tiles.append(current_deck[i])
 	
 	# Give the player character the first turn, then pull him into the scene.
 	who_has_initiative = character_path
@@ -157,17 +168,20 @@ func _ready():
 	character_path.update_tile_graphics.connect(self._update_tile_graphics)
 	
 	## Making space here to drag enemies from within the Encounter to the inside of the Combatants node
+	new_encounter = GeneralManager.combat_encounter.instantiate()
+	self.add_child(new_encounter)
 	
 	for i in %Combatants.get_child_count():
 		# For ALL Combatants
 		%Combatants.get_child(i).entity_clicked.connect(self._on_entity_clicked)
+		combatant_array.append(%Combatants.get_child(i))
 		
 		if %Combatants.get_child(i) is Enemy:
 			%Combatants.get_child(i).entity_hovered.connect(%EnemyTooltip._on_enemy_hovered)
 			%Combatants.get_child(i).perform_attack.connect(self._spawn_new_enemy_word)
 			%Combatants.get_child(i).pass_turn.connect(self._pass_turn)
 			%Combatants.get_child(i).update_tooltip_tile_graphics.connect(self._update_tooltip_tile_graphics)
-			self.enemy_attack_finished.connect(%Combatants.get_child(i)._perform_next_attack)
+			self.enemy_attack_finished.connect(%Combatants.get_child(i).check_for_ownership)
 			%Combatants.get_child(i).plan_next_turn()
 	
 	on_combat_start()
@@ -234,6 +248,7 @@ func _input(event):
 
 func on_combat_start():
 	GeneralManager.is_combat_active = true
+	player_turn_count += 1
 	character_path.on_turn_start()
 	character_path.target_query()
 	
@@ -249,8 +264,10 @@ func on_combat_start():
 		if current_combat_deck[i].notch3 == LetterTile.NotchTypes.REJUVENATING:
 			current_combat_deck[i].heal3 = false
 			
-	
 	_populate_rack()
+	
+	await get_tree().create_timer(1).timeout
+	%TurnCounterLabel.display_turn_text(player_turn_count, true)
 
 func _populate_rack():
 	for i in range(0, 16):
@@ -271,8 +288,7 @@ func _spawn_new_player_tile(grid_index: int):
 		var called_tile = LetterTile
 		
 		if not priority_draw_list.is_empty():
-			called_tile = priority_draw_list.pop_back()
-			available_tiles.pop_at(called_tile.tile_index)
+			called_tile = priority_draw_list.pop_at(tile_rng.randi() % priority_draw_list.size())
 		
 		else:
 			## called_tile is a LetterTile
@@ -315,9 +331,167 @@ func _spawn_new_player_tile(grid_index: int):
 	else:
 		return
 
+func _calc_enemy_word_score(enemy: Enemy, word: Array, target: String):
+	var tile_score = 0
+	var points_score = 0
+	var mult_score = 0
+	var total_score = 0
+	var tile_retriggers = 0
+	var context_power = 0
+	var bonus_word_length = 0
+	var word_index = 0
+	
+	if target == "SELF" or target == "OTHER":
+		# Query Dexterity
+		context_power += enemy.query_status_value(13)
+		# Query Intelligence
+		bonus_word_length += enemy.query_status_value(14)
+
+	if target == "PLAYER":
+		# Query Strength
+		context_power += enemy.query_status_value(12)
+		# Query Intelligence
+		bonus_word_length += enemy.query_status_value(14)
+	
+	for i in word.size():
+		
+		var word_length = word.size()
+		var scored_tile = enemy.current_enemy_deck[word[i]]
+		
+		
+		if scored_tile.type == LetterTile.TileType.LOCKED:
+			continue
+		
+		scored_tile.word_index = word_index
+		scored_tile.word_length = word.size()
+		
+		word_index += 1
+		
+		# Query for Repeating notches
+		if scored_tile.notch1 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 1")
+			tile_retriggers += 1
+		if scored_tile.notch2 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 2")
+			tile_retriggers += 1
+		if scored_tile.notch3 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 3")
+			tile_retriggers += 1
+		
+		for j in tile_retriggers + 1:
+			tile_score += _score_tile_quiet(scored_tile)
+			tile_score += context_power
+			print(tile_score)
+			
+		points_score += tile_score
+		
+		tile_score = 0
+		tile_retriggers = 0
+
+		mult_score = floor((word_length + bonus_word_length) / 2)
+		
+	total_score = points_score * mult_score
+	
+	return total_score
+
+# This is here for dumb reasons.
+func _score_tile_quiet(scored_tile):
+	var letter_score = 0
+	if scored_tile.type == LetterTile.TileType.BASIC or scored_tile.type == LetterTile.TileType.LOCKED:
+		letter_score += point_values[scored_tile.played_letter]
+
+	elif scored_tile.type == LetterTile.TileType.STONED:
+		letter_score += 0
+		
+	elif scored_tile.type == LetterTile.TileType.BURNING:
+		letter_score += point_values[scored_tile.played_letter]
+		
+	elif scored_tile.type == LetterTile.TileType.PLAGUED:
+		letter_score += point_values[scored_tile.played_letter] - 1
+		if letter_score == 0:
+			letter_score += 1
+
+	elif scored_tile.type == LetterTile.TileType.CRUMBLING:
+		letter_score += point_values[scored_tile.played_letter]
+
+	if scored_tile.notch1 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if scored_tile.notch2 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+	if scored_tile.notch3 == LetterTile.NotchTypes.POTENT:
+		letter_score += 3
+
+	if scored_tile.notch1 == LetterTile.NotchTypes.PATIENT:
+		letter_score += scored_tile.current_age * 2
+	if scored_tile.notch2 == LetterTile.NotchTypes.PATIENT:
+		letter_score += scored_tile.current_age * 2
+	if scored_tile.notch3 == LetterTile.NotchTypes.PATIENT:
+		letter_score += scored_tile.current_age * 2
+
+	if scored_tile.notch1 == LetterTile.NotchTypes.QUICK and scored_tile.current_age == 0:
+		letter_score += 5
+	if scored_tile.notch2 == LetterTile.NotchTypes.QUICK and scored_tile.current_age == 0:
+		letter_score += 5
+	if scored_tile.notch3 == LetterTile.NotchTypes.QUICK and scored_tile.current_age == 0:
+		letter_score += 5
+
+	if scored_tile.notch1 == LetterTile.NotchTypes.DISTANT:
+		letter_score += scored_tile.word_index
+	if scored_tile.notch2 == LetterTile.NotchTypes.DISTANT:
+		letter_score += scored_tile.word_index
+	if scored_tile.notch3 == LetterTile.NotchTypes.DISTANT:
+		letter_score += scored_tile.word_index
+		
+	if scored_tile.notch1 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (scored_tile.word_length - scored_tile.word_index - 1)
+	if scored_tile.notch2 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (scored_tile.word_length - scored_tile.word_index - 1)
+	if scored_tile.notch3 == LetterTile.NotchTypes.LOCAL:
+		letter_score += (scored_tile.word_length - scored_tile.word_index - 1)
+
+	if scored_tile.notch1 == LetterTile.NotchTypes.BALANCED:
+		if scored_tile.word_length == scored_tile.word_index:
+			letter_score += 0
+		elif floor(scored_tile.word_length / 2.0) - scored_tile.word_index == 0:
+			if scored_tile.word_length % 2 == 1:
+				letter_score += 2 * scored_tile.word_index
+			else:
+				letter_score += (2 * (scored_tile.word_index - 1))
+		elif scored_tile.word_index < floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_index)
+		elif scored_tile.word_index >= floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_length - scored_tile.word_index - 1)
+			
+	if scored_tile.notch2 == LetterTile.NotchTypes.BALANCED:
+		if scored_tile.word_length == scored_tile.word_index:
+			letter_score += 0
+		elif floor(scored_tile.word_length / 2.0) - scored_tile.word_index == 0:
+			if scored_tile.word_length % 2 == 1:
+				letter_score += 2 * scored_tile.word_index
+			else:
+				letter_score += (2 * (scored_tile.word_index - 1))
+		elif scored_tile.word_index < floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_index)
+		elif scored_tile.word_index >= floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_length - scored_tile.word_index - 1)
+
+	if scored_tile.notch3 == LetterTile.NotchTypes.BALANCED:
+		if scored_tile.word_length == scored_tile.word_index:
+			letter_score += 0
+		elif floor(scored_tile.word_length / 2.0) - scored_tile.word_index == 0:
+			if scored_tile.word_length % 2 == 1:
+				letter_score += 2 * scored_tile.word_index
+			else:
+				letter_score += (2 * (scored_tile.word_index - 1))
+		elif scored_tile.word_index < floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_index)
+		elif scored_tile.word_index >= floor(scored_tile.word_length / 2.0):
+			letter_score += 2 * (scored_tile.word_length - scored_tile.word_index - 1)
+
+	return letter_score
+
 # TODO: REWORK THIS
 func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_package, _pivot_position, target, attacker):
-	
 	print(target)
 	
 	var enemy_letters = []
@@ -325,10 +499,14 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	var mult_score 			= 0
 	var points_score 		= 0
 	var total_score 		= 0
+	var tile_retriggers		= 0
 	var tile_score_count	= 0
 	var word_length 		= 0
 	var context_power 		= 0
 	var bonus_word_length	= 0
+
+	context_power += attacker.point_bonus
+	bonus_word_length += attacker.length_bonus
 
 	if target == "SELF" or target == "OTHER":
 		# Query Dexterity
@@ -339,6 +517,8 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	if target == "PLAYER":
 		# Query Strength
 		context_power += attacker.query_status_value(12)
+		# Query Intelligence
+		bonus_word_length += attacker.query_status_value(14)
 
 	for i in attack_to_perform.size():
 		if attack_letter_tiles[i].type == LetterTile.TileType.LOCKED:
@@ -369,40 +549,110 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	await get_tree().create_timer(0.4).timeout
 	
 	for i in tiles_in_word.get_child_count():
-		tile_score = enemy_letters[i].score_tile(tile_score_count)
-		tile_score += context_power
-		tile_score_count += 1
+		var scored_tile = enemy_letters[i]
 		word_length += 1
+		
+		scored_tile.tile.word_index = i
+		scored_tile.tile.word_length = tiles_in_word.get_child_count()
+		
+		# Query for Repeating notches
+		if scored_tile.tile.notch1 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 1")
+			tile_retriggers += 1
+		if scored_tile.tile.notch2 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 2")
+			tile_retriggers += 1
+		if scored_tile.tile.notch3 == LetterTile.NotchTypes.REPEATING:
+			print("Repeating of course! 3")
+			tile_retriggers += 1
+		
+		for j in tile_retriggers + 1:
+			tile_score += scored_tile.score_tile(tile_score_count)
+			tile_score += context_power
+			tile_score_count += 1
+			
+			
+			if scored_tile.tile.notch1 == LetterTile.NotchTypes.REINFORCED:
+				attacker.gain_block(5)
+			if scored_tile.tile.notch2 == LetterTile.NotchTypes.REINFORCED:
+				attacker.gain_block(5)
+			if scored_tile.tile.notch3 == LetterTile.NotchTypes.REINFORCED:
+				attacker.gain_block(5)
+		
+			if scored_tile.tile.notch1 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal1 == false:
+				attacker.gain_health(3)
+				scored_tile.tile.heal1 = true
+			if scored_tile.tile.notch2 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal2 == false:
+				attacker.gain_health(3)
+				scored_tile.tile.heal2 = true
+			if scored_tile.tile.notch3 == LetterTile.NotchTypes.REJUVENATING and scored_tile.tile.heal3 == false:
+				attacker.gain_health(3)
+				scored_tile.tile.heal3 = true
+				
+			if target == "PLAYER":
+				var burn_bonus = 0
+				var bleed_bonus = 0
+				
+				##TODO: Query for debuff-related boosts
+				
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.FLAMING:
+					character_path.add_status("BURN_DEBUFF", (3 + burn_bonus), true, (3 + burn_bonus))
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.FLAMING:
+					character_path.add_status("BURN_DEBUFF", (3 + burn_bonus), true, (3 + burn_bonus))
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.FLAMING:
+					character_path.add_status("BURN_DEBUFF", (3 + burn_bonus), true, (3 + burn_bonus))
+				
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.PRICKLY:
+					character_path.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.PRICKLY:
+					character_path.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.PRICKLY:
+					character_path.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
+				
+			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score) 
+			await get_tree().create_timer(0.12).timeout
+				
 		points_score += tile_score
+		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score) 
+		
+			
+		tile_score = 0
+		tile_retriggers = 0
+		await get_tree().create_timer(0.05).timeout
 		
 		mult_score = floor(word_length / 2)
+		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+		await get_tree().create_timer(0.05).timeout
 		
 		total_score = points_score * mult_score
 		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-		
-		await get_tree().create_timer(0.075).timeout
+		await get_tree().create_timer(0.05).timeout
 		
 	if bonus_word_length > 0:
 		for i in bonus_word_length:
+			word_length += 1
 			mult_score = floor(word_length / 2)
 			
 			total_score = points_score * mult_score
 			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 
-		total_score = points_score * mult_score
-		get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-		await get_tree().create_timer(0.075).timeout
+	total_score = points_score * mult_score
+	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+	await get_tree().create_timer(0.075).timeout
 	
 	if target == "PLAYER":
 		var damage = total_score
 		character_path.take_damage(damage)
 		
+		var thorns_damage = character_path.query_status_value(11)
+		if thorns_damage > 0:
+			attacker.take_damage(thorns_damage)
+		
 	elif target == "SELF":
-		%TestEnemy.gain_block(total_score)
+		attacker.gain_block(total_score)
 		
 	else:
-		var damage = total_score
-		character_path.take_damage(damage)
+		attacker.take_damage(0)
 	
 	if not status_package.is_empty():
 		for i in status_package.size():
@@ -423,6 +673,8 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 	await get_tree().create_timer(1.25).timeout
 	
 	for i in tiles_in_word.get_child_count():
+		tiles_in_word.get_child(-1).tile.word_index = 0
+		tiles_in_word.get_child(-1).tile.word_length = 0
 		tiles_in_word.get_child(-1).tile.target = _pivot_position
 		tiles_in_word.get_child(-1).move_to_position()
 		tiles_in_word.get_child(-1).is_dying()
@@ -430,7 +682,7 @@ func _spawn_new_enemy_word(attack_to_perform, attack_letter_tiles, status_packag
 		await get_tree().create_timer(0.04).timeout
 		
 	_cleanup_killed_tiles()
-	enemy_attack_finished.emit()
+	enemy_attack_finished.emit(attacker)
 
 func _tiles_in_word_update():
 	letters_from_tiles = []
@@ -710,7 +962,7 @@ func _word_from_tiles(letters_from_tiles):
 	print(word)
 	if word.length() >= 3 and current_target is GameEntity:
 		var is_word = word_list.get(word)
-		if is_word:
+		if is_word and can_enable_play:
 			get_node("WordLabel").text = str(word.to_upper() + " is a valid word!")
 			get_node("PlayButton").set_disabled(false)
 			get_tree().call_group("Tiles In Word", "toggle_word_glow", true)
@@ -754,6 +1006,7 @@ func _word_from_tiles(letters_from_tiles):
 
 func _on_play_button_pressed():
 	if character_path.has_initiative and character_path.current_energy > 0:
+		can_enable_play = false
 		_score_word()
 	else:
 		await _tiles_in_word_force_clear()
@@ -763,6 +1016,7 @@ func _score_word():
 	var word_target = current_target
 	
 	scoring_check = true
+	can_enable_play = false
 	get_node("PlayButton").set_disabled(true)
 	played_words_count 			+= 1
 	
@@ -793,7 +1047,8 @@ func _score_word():
 	if word_target is Character:
 		# Query Player Dexterity
 		context_power += character_path.query_status_value(13)
-		
+	
+	# Query Player Intelligence
 	bonus_word_length += character_path.query_status_value(14)
 	
 	for i in word_retriggers + 1:
@@ -956,28 +1211,28 @@ func _score_word():
 					if scored_tile.tile.notch3 == LetterTile.NotchTypes.PRICKLY:
 						current_target.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
 				
+				points_score += tile_score
+				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				
+				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
+				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 1")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 2")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
+					character_path.remove_energy(1)
+					points_score = points_score * 2
+					print("OVERLOADING... 3")
+					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				
 				await get_tree().create_timer(0.12).timeout
-			
-			points_score += tile_score
-			get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			
-						# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
-			if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-				character_path.remove_energy(1)
-				points_score = points_score * 2
-				print("OVERLOADING... 1")
-				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-				character_path.remove_energy(1)
-				points_score = points_score * 2
-				print("OVERLOADING... 2")
-				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
-				character_path.remove_energy(1)
-				points_score = points_score * 2
-				print("OVERLOADING... 3")
-				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-			
+
 			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
 			tile_score = 0
 			tile_retriggers = 0
@@ -1220,6 +1475,7 @@ func _spawn_replacement_tiles(remaining_tiles):
 	_tiles_in_word_update()
 	GameEventHandler.update_bag_tiles.emit()
 	scoring_check = false
+	can_enable_play = true
 	_check_turn_status()
 
 func _rename_tiles():
@@ -1249,55 +1505,11 @@ func _calc_raw_word_score():
 	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(raw_word_score)
 	return raw_word_score
 
-func _calc_enemy_word_score(enemy: Enemy, word: Array):
-	var points_score = 0
-	var mult_score = 0
-	var total_score = 0
-	var tile_retriggers = 0
-	for i in word.size():
-		var word_length = word.size()
-		var scored_tile = enemy.current_enemy_deck[word[i]]
-		
-		# Query for Repeating notches
-		if scored_tile.notch1 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 1")
-			tile_retriggers += 1
-		if scored_tile.notch2 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 2")
-			tile_retriggers += 1
-		if scored_tile.notch3 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 3")
-			tile_retriggers += 1
-		
-		for j in tile_retriggers + 1:
-			var tile_score = 0
-			if scored_tile.type == 0:
-				tile_score += point_values[scored_tile.played_letter]
-
-			elif scored_tile.type == 1 or scored_tile.type == 2:
-				tile_score += 0
-		
-			elif scored_tile.type == 3:
-				tile_score += point_values[scored_tile.played_letter]
-		
-			elif scored_tile.type == 4:
-				tile_score += point_values[scored_tile.played_letter] - 1
-				if tile_score == 0:
-					tile_score += 1
-			
-			points_score += tile_score
-			tile_score = 0
-			tile_retriggers = 0
-
-			mult_score = floor(word_length / 2)
-			
-			total_score = points_score * mult_score
-		
-	return total_score
-
 func _check_turn_status():
+	if current_target == null:
+		pass
 	
-	if character_path.is_target == false and %TestEnemy.is_target == false:
+	if not current_target is GameEntity:
 		%PlayButton.texture_normal.region 	= Rect2(0.0, 80.0, 128.0, 40.0)
 		%PlayButton.texture_pressed.region 	= Rect2(256.0, 80.0, 128.0, 40.0)
 		%PlayButton.texture_hover.region 	= Rect2(128.0, 80.0, 128.0, 40.0)
@@ -1309,7 +1521,8 @@ func _check_turn_status():
 		%PlayButton.texture_hover.region 	= Rect2(128.0, 40.0, 128.0, 40.0)
 		%PlayButton.texture_disabled.region = Rect2(384.0, 40.0, 128.0, 40.0)
 		%ShuffleButton.set_disabled(true)
-		%PlayButton.set_disabled(false)
+		if can_enable_play:
+			%PlayButton.set_disabled(false)
 	
 	elif not character_path.has_initiative:
 		%PlayButton.texture_normal.region 	= Rect2(0.0, 40.0, 128.0, 40.0)
@@ -1330,40 +1543,44 @@ func _check_turn_status():
 	_check_for_dead_enemies()
 
 func _pass_turn():
+	can_enable_play = false
 	_check_turn_status()
+	%PlayButton.set_disabled(true)
+	var current_index = wrapi(combatant_array.find(who_has_initiative) + 1, 0, combatant_array.size())
+	print("Current Index: " + str(current_index))
+	print(combatant_array.size())
 	
 	if who_has_initiative is Character:
 		for i in current_relics.size():
 			current_relics[i].on_turn_end()
+		enemy_turn_count += 1
+		%TurnCounterLabel.display_turn_text(enemy_turn_count, false)
+		await get_tree().create_timer(1.5).timeout
 	
-	# Perform end of turn procedures for whoever has the initiative:
-	who_has_initiative.on_turn_end()
-	
-	# Which GameEntity in the current combat has the initiative to take their turn?
-	var entity_number = who_has_initiative.get_index()
-
-	# Since we're passing the turn, we take that away from them
+	# Perform end of turn procedures for whoever has the initiative.
+	await who_has_initiative.on_turn_end()
 	who_has_initiative.has_initiative = false
-	who_has_initiative = null
 
-	if entity_number + 1 < combatants.get_child_count():
-		# And give it to the sibling directly beneath them in the list.
-		combatants.get_child(entity_number + 1).has_initiative = true
-		who_has_initiative = combatants.get_child(entity_number + 1)
-		
-	# If they're at the bottom, we wrap around back to the top.
-	else:
-		combatants.get_child(0).has_initiative = true
-		who_has_initiative = combatants.get_child(0)
+	who_has_initiative = combatant_array[current_index]
+	who_has_initiative.has_initiative = true
 	
-	who_has_initiative.on_turn_start()
+	# Perform start of turn procedures for whoever has the initiative.
+	await who_has_initiative.on_turn_start()
+	
 	if who_has_initiative is Character:
+		
 		for i in current_relics.size():
 			current_relics[i].on_turn_start()
+			
 		for i in tiles_in_play.size():
 			tiles_in_play[i].current_age += 1
-	
-	_check_turn_status()
+		
+		player_turn_count += 1
+		%TurnCounterLabel.display_turn_text(player_turn_count, true)
+		can_enable_play = true
+		
+		# Check the turn status for the player.
+		_check_turn_status()
 
 func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) -> void:
 	print(current_target)
@@ -1382,12 +1599,16 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 			attack_list.get_child(i).queue_free()
 	
 		attack_list.add_spacer(true)
+		attack_list.add_spacer(true)
 		
 		for i in which.enemy_attack_list.size():
 			sticky_target = which
 			var new_attack = HBoxContainer.new()
+			var new_info = HBoxContainer.new()
 			new_attack.set_alignment(BoxContainer.ALIGNMENT_BEGIN)
+			new_info.set_alignment(BoxContainer.ALIGNMENT_BEGIN)
 			attack_list.add_child(new_attack)
+			attack_list.add_child(new_info)
 			
 			for j in which.enemy_attack_list[i].size():
 				var current_attack = which.enemy_attack_list[i]
@@ -1396,36 +1617,39 @@ func _on_entity_clicked(which: GameEntity, action: GameEntity.GameEntityAction) 
 				new_tile.tile_hovered.connect(self._is_mini_tile_hovered)
 				new_attack.add_child(new_tile)
 			
-			var attack_score_value = RichTextLabel.new()
-			attack_score_value.text = str(_calc_enemy_word_score(which, which.enemy_attack_list[i]))
-			attack_score_value.set_fit_content(true)
-			attack_score_value.set_autowrap_mode(0)
-			attack_score_value.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
-			new_attack.add_child(attack_score_value)
-			
 			var attack_intent = intent_icon_scene.instantiate()
-			new_attack.add_child(attack_intent)
+			new_info.add_child(attack_intent)
 			attack_intent.type = IntentIcon.IntentType[which.enemy_attack_intents[i]]
 			attack_intent.update_intent_info()
 			
-			if not which.enemy_status_package_list[i].is_empty():
-				var status_package = which.enemy_status_package_list[i]
-				print("STATUS PACKAGE: " + str(status_package))
-				for j in status_package.size():
-					var subpackage = status_package[j]
-					print("STATUS SUBPACKAGE: " + str(subpackage))
-					var new_status = status_dictionary.get(subpackage[0])
-					var status_icon = status_effect_scene.instantiate()
-					status_icon.set_script(new_status)
-					new_attack.add_child(status_icon)
-					status_icon.amount = subpackage[1]
-					print(status_icon.amount)
-					status_icon.does_decay = bool(subpackage[2])
-					status_icon.duration = subpackage[3]
-					status_icon.status_hovered.connect(%StatusEffectTooltip._on_status_hovered)
-					print("STATUS ID: " + str(status_icon.id))
-					status_icon._update_graphics()
-					
+			var attack_score_value = RichTextLabel.new()
+			attack_score_value.text = str(_calc_enemy_word_score(which, which.enemy_attack_list[i], which.enemy_attack_intents[i]))
+			attack_score_value.set_fit_content(true)
+			attack_score_value.set_autowrap_mode(0)
+			attack_score_value.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
+			new_info.add_child(attack_score_value)
+			
+			if not which.enemy_status_package_list.is_empty():
+				if not which.enemy_status_package_list[i].is_empty():
+					var status_package = which.enemy_status_package_list[i]
+					print("STATUS PACKAGE: " + str(status_package))
+					for j in status_package.size():
+						var subpackage = status_package[j]
+						print("STATUS SUBPACKAGE: " + str(subpackage))
+						var new_status = status_dictionary.get(subpackage[0])
+						var status_icon = status_effect_scene.instantiate()
+						status_icon.set_script(new_status)
+						new_info.add_child(status_icon)
+						status_icon.amount = subpackage[1]
+						print(status_icon.amount)
+						status_icon.does_decay = bool(subpackage[2])
+						status_icon.duration = subpackage[3]
+						status_icon.status_hovered.connect(%StatusEffectTooltip._on_status_hovered)
+						print("STATUS ID: " + str(status_icon.id))
+						status_icon._update_graphics()
+			if i < which.enemy_attack_list.size():
+				attack_list.add_spacer(false)
+				attack_list.add_spacer(false)
 
 	current_target = which
 	print(current_target.name)
@@ -1453,6 +1677,9 @@ func _apply_score_to_target(total_score, word_target):
 			
 		if word_target is Enemy:
 			word_target.take_damage(total_score)
+			var thorns_damage = word_target.query_status_value(11)
+			if thorns_damage > 0:
+				character_path.take_damage(thorns_damage)
 
 func _normalize_grid_tile_size():
 	for i in racked_tiles.get_child_count():
@@ -1469,16 +1696,20 @@ func _check_for_dead_enemies():
 	
 			else:
 				# TODO: Replace this once enemy death animations are a thing.
+				combatant_array.remove_at(combatant_array.find(combatants.get_child(i)))
+				if current_target == current_enemy:
+					current_target = null
 				current_enemy.queue_free()
 	
 			print(remaining_enemies)
 			
-			if remaining_enemies == 0:
-				on_combat_end()
+	if remaining_enemies == 0:
+		on_combat_end()
 			
 func on_combat_end():
 	GeneralManager.is_combat_active = false
 	character_path.has_initiative = false
+	GeneralManager.chapter_combat_clear_count += 1
 	
 	%ShuffleButton.set_disabled(true)
 	%PlayButton.set_disabled(true)
@@ -1510,15 +1741,15 @@ func on_combat_end():
 	character_path.reparent(GeneralManager.replace_character_path)
 	
 	# TODO: Replace these values with values from the Encounter System that will be implemented later.
-	%CombatRewards._bringup_combat_rewards(50, 5, 0) 
+	%CombatRewards._bringup_combat_rewards(new_encounter.reward_gold, new_encounter.reward_notch_count, new_encounter.reward_relics) 
 	
-
 ### Audio Shaboingery
 func play_weighted_notch_sound():
 	if not $SoundParent/WeightedNotchSound.is_playing():
 		$SoundParent/WeightedNotchSound.play()
 
 ### Buttons and stuff below here!
+
 #func _on_test_button_pressed():
 	#get_node("TestButton").set_disabled(true)
 	#
@@ -1531,28 +1762,28 @@ func play_weighted_notch_sound():
 	#
 	#get_node("TestButton").set_disabled(false)
 	
-func _on_relic_button_pressed():
-	get_node("RelicButton").set_disabled(true)
-	print("Giving you an Upper Case!")
-	var new_relic = relic_dictionary.get("1")
-	var new_relic_2 = relic_dictionary.get("3")
-	var relic_node = relic_scene.instantiate()
-	var relic_node_2 = relic_scene.instantiate()
-	
-	relic_node.set_script(new_relic)
-	relic_node_2.set_script(new_relic_2)
-	
-	relic_node.scale = Vector2(2,2)
-	relic_node.position = Vector2((32 + (64 * current_relics.size())), 32)
-	current_relics.append(relic_node)
-	relics_collection.add_child(relic_node)
-	
-	relic_node_2.scale = Vector2(2,2)
-	relic_node_2.position = Vector2((32 + (64 * current_relics.size())), 32)
-	current_relics.append(relic_node_2)
-	relics_collection.add_child(relic_node_2)
-	
-	get_node("RelicButton").set_disabled(false)
+#func _on_relic_button_pressed():
+	#get_node("RelicButton").set_disabled(true)
+	#print("Giving you an Upper Case!")
+	#var new_relic = relic_dictionary.get("1")
+	#var new_relic_2 = relic_dictionary.get("3")
+	#var relic_node = relic_scene.instantiate()
+	#var relic_node_2 = relic_scene.instantiate()
+	#
+	#relic_node.set_script(new_relic)
+	#relic_node_2.set_script(new_relic_2)
+	#
+	#relic_node.scale = Vector2(2,2)
+	#relic_node.position = Vector2((32 + (64 * current_relics.size())), 32)
+	#current_relics.append(relic_node)
+	#relics_collection.add_child(relic_node)
+	#
+	#relic_node_2.scale = Vector2(2,2)
+	#relic_node_2.position = Vector2((32 + (64 * current_relics.size())), 32)
+	#current_relics.append(relic_node_2)
+	#relics_collection.add_child(relic_node_2)
+	#
+	#get_node("RelicButton").set_disabled(false)
 
 func _on_shuffle_button_pressed():
 	if character_path.current_energy > -99999:

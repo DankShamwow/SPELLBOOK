@@ -4,13 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://dtdaj13ng2au7" path="res://SPRITES/GUI/IntentIcons.png" id="2_d8pmy"]
 
 [node name="IntentIcon" type="Control"]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 3
 anchors_preset = 0
 offset_left = -8.0
 offset_top = -8.0
 offset_right = 16.0
 offset_bottom = 16.0
-size_flags_horizontal = 3
 script = ExtResource("1_ylpqw")
 
 [node name="TextureButton" type="TextureButton" parent="."]

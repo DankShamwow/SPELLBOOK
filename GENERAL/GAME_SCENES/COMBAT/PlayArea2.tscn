@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="2_fhfjg"]
 [ext_resource type="Texture2D" uid="uid://dtrboqq78f2xn" path="res://SPRITES/Godot_v4.4.1-stable_win64_tUrMHFT3TY.png" id="2_idy2k"]
 [ext_resource type="AudioStream" uid="uid://bn3y6mvieieat" path="res://AUDIO/NOTCH/WEIGHTED/weighted_notch_attempt_3.ogg" id="2_psil3"]
-[ext_resource type="PackedScene" uid="uid://bgn1buqfnev83" path="res://COMBAT/ENEMIES/TestEnemy.tscn" id="3_dvygu"]
 [ext_resource type="Texture2D" uid="uid://c1qpp0lb2gk8w" path="res://SPRITES/GUI/SmallButtons.png" id="4_fhfjg"]
 [ext_resource type="PackedScene" uid="uid://opxx065lkaqc" path="res://GENERAL/OTHER/StatusEffectTooltip.tscn" id="5_crhsm"]
 [ext_resource type="Texture2D" uid="uid://bf4pb80s3hnmj" path="res://SPRITES/GUI/AttackButton.png" id="5_idy2k"]
@@ -13,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://dnc1puv73uvnc" path="res://COMBAT/GAME_ENTITY/EnemyTooltip.tscn" id="8_7a6io"]
 [ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="9_gbtod"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="9_lhr36"]
+[ext_resource type="Script" uid="uid://ddi57atfgedsm" path="res://GENERAL/GAME_SCENES/COMBAT/TurnCounterLabel.gd" id="12_2w5x0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lhr36"]
 atlas = ExtResource("4_fhfjg")
@@ -226,7 +226,7 @@ offset_bottom = 152.0
 
 [node name="EnemyAttackList" type="VBoxContainer" parent="EnemyAttackListGUI/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 6
 
 [node name="PlayButtonGUI" type="NinePatchRect" parent="."]
 texture_filter = 1
@@ -354,14 +354,6 @@ z_as_relative = false
 [node name="Combatants" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="TestEnemy" parent="Combatants" instance=ExtResource("3_dvygu")]
-unique_name_in_owner = true
-offset_left = 517.0
-offset_top = 196.0
-offset_right = 517.0
-offset_bottom = 196.0
-scale = Vector2(1.5, 1.5)
-
 [node name="TestButton" type="TextureButton" parent="."]
 visible = false
 texture_filter = 1
@@ -426,6 +418,22 @@ theme = ExtResource("9_lhr36")
 theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TurnCounterLabel" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = 512.0
+offset_bottom = 192.0
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 52
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("12_2w5x0")
 
 [node name="PauseButton" type="TextureButton" parent="."]
 unique_name_in_owner = true

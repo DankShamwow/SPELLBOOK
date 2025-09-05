@@ -10,6 +10,7 @@ func _ready():
 	id = 10
 	status_name = "Warp"
 	status_description = "Temporarily changes a Tile's Letter."
+	stack_type = StatusEffect.StackType.NONE
 	tile_status = true
 	print("STATUS ID: " + str(id))
 	super()

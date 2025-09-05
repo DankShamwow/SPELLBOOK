@@ -37,6 +37,8 @@ func _ready() -> void:
 func _start_new_run() -> void:
 	_setup_event_connections()
 	GeneralManager.prepare_word_dict()
+	EncounterManager._load_area_encounters("WoodsOfTheWitless")
+	GeneralManager.chapter_boss_encounter = EncounterManager.grab_new_encounter("BOSS")
 	%NewMapHandler.generate_map()
 	var character_instance = character.instantiate()
 	%Character.add_child(character_instance)
@@ -92,22 +94,38 @@ func _setup_event_connections() -> void:
 	
 func _on_map_exited(room: Room) -> void:
 	match room.type:
+		
 		Room.RoomType.MONSTER:
+			if GeneralManager.chapter_combat_clear_count < 3:
+				GeneralManager.combat_encounter = EncounterManager.grab_new_encounter("BASIC")
+			else:
+				GeneralManager.combat_encounter = EncounterManager.grab_new_encounter("NORMAL")
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
+
+				
 		Room.RoomType.ELITE:
+			GeneralManager.combat_encounter = EncounterManager.grab_new_encounter("ELITE")
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
+
+			
 		Room.RoomType.BOSS:
+			GeneralManager.combat_encounter = GeneralManager.chapter_boss_encounter
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
+			
 		Room.RoomType.TREASURE:
 			_change_view(RELIQUARY_SCENE)
+			
 		Room.RoomType.LIBRARY:
 			_change_view(RELIQUARY_SCENE)
+			
 		Room.RoomType.SHOP:
 			_change_view(SHOP_SCENE)
+			
 		Room.RoomType.REST:
 			_change_view(REST_SCENE)
+			
 		Room.RoomType.RANDOM:
 			_change_view(RANDOM_EVENT_SCENE)

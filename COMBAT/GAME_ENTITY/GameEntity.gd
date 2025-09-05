@@ -52,6 +52,7 @@ enum GameEntityAction {
 }
 
 func _ready():
+	%EntityHealthBar.max_value = max_health
 	update_health_bar()
 	target_query()
 	%Entity_Button.gui_input.connect(self._on_entity_button_gui_input)
@@ -75,7 +76,6 @@ func on_turn_end():
 		var affected_tile_indices = %Statuses.get_child(i).on_turn_end()
 		if affected_tile_indices:
 			update_affected_tiles(affected_tile_indices)
-	
 	
 	%Entity_Border.modulate = Color(0, 0, 0, 1)
 	update_health_bar()
@@ -212,7 +212,7 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 
 	else:
 		effect_node.on_application(_amount, status_decay, _duration)
-		print("Could not find status.")
+		print("Could not find status. Applying status.")
 
 
 func query_status_value(status_id: int):
