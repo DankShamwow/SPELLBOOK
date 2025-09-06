@@ -1212,7 +1212,10 @@ func _score_word():
 						current_target.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
 				
 				points_score += tile_score
+				tile_score = 0
+				
 				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				await get_tree().create_timer(0.05).timeout
 				
 				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
 				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
@@ -1234,7 +1237,6 @@ func _score_word():
 				await get_tree().create_timer(0.12).timeout
 
 			# We're done scoring that letter, so we need to zero the letter score and prep for the next letter.
-			tile_score = 0
 			tile_retriggers = 0
 			await get_tree().create_timer(0.05).timeout
 			
