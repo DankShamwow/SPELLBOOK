@@ -125,6 +125,7 @@ func move_to_position(time:= 0.25):
 	tween.set_trans(Tween.TRANS_QUINT)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "position", tile.target, time)
+	update_tile_score_text(0, true)
 	await get_tree().create_timer(time/2).timeout
 	return true
 
@@ -193,7 +194,7 @@ func _on_tile_button_gui_input(event: InputEvent):
 			)
 
 func _on_tile_button_mouse_entered():
-	print("I've been entered!")
+	#print("I've been entered!")
 	if self.grid_ghost == true:
 		original_z = self.ghost_pair.z_index
 		self.ghost_pair.scale = self.ghost_pair.scale * 1.1
@@ -206,7 +207,7 @@ func _on_tile_button_mouse_entered():
 		tile_hovered.emit(self, true)
 
 func _on_tile_button_mouse_exited():
-	print("I've been exited!")
+	#print("I've been exited!")
 	if self.grid_ghost == true:
 		self.ghost_pair.scale = self.ghost_pair.scale / 1.1
 		self.ghost_pair.z_index = original_z
@@ -230,6 +231,7 @@ func spawned_from_bag():
 	tween2.tween_property(sprite, "scale", Vector2(1, 1), 0.05)
 
 func is_dying():
+	update_tile_score_text(0, true)
 	var tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
@@ -475,6 +477,20 @@ func juice_score():
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	tween.tween_property(self, "scale", current_size, 0.001)
 	return true
+
+func update_tile_score_text(tile_score: int, hide_text: bool = false):
+	if hide_text:
+		var tween = get_tree().create_tween()
+		tween.tween_property(%TileScoreText, "modulate:a", 0, 0.05)
+		%TileScoreText.visible = false
+	
+	if not %TileScoreText.visible and not hide_text:
+		var tween = get_tree().create_tween()
+		tween.tween_property(%TileScoreText, "modulate:a", 1, 0.1)
+		%TileScoreText.visible = true
+	
+	if not hide_text:
+		%TileScoreText.set_text("+" + str(tile_score))
 
 func toggle_monitorable() -> void:
 

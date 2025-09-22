@@ -19,7 +19,7 @@ var rare_notch_ids_no_lexical = GeneralManager.rare_notch_ids_no_lexical
 
 var reward_gold_button
 var reward_notch_button
-var reward_relic_button
+var reward_relic_button = preload("res://COMBAT/TOOLS/RewardsRelicButton.tscn")
 
 var first_click = false
 
@@ -31,6 +31,7 @@ var first_click = false
 var notches = []
 var draws = []
 var tiles = []
+var relics = []
 
 signal tile_tooltip_requested(which)
 signal tile_tooltip_hide_requested()
@@ -55,6 +56,9 @@ func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_r
 	
 	for i in current_deck.size():
 		available_tiles.append(current_deck[i])
+		
+	GeneralManager.rewards_screen_open = true
+	GeneralManager.rewards_screen_path = self
 	
 	var tween = self.create_tween()
 	tween.tween_property(self, "modulate:a", 0, 0.001)
@@ -62,6 +66,32 @@ func _bringup_combat_rewards(reward_gold: int, reward_notch_count: int, reward_r
 	tween.tween_property(self, "modulate:a", 1, 0.15)
 	
 	query_combat_rewards(reward_gold, reward_notch_count, reward_relics, reward_notch_uncommons, reward_notch_rares, reward_notch_specified)
+
+func _ready_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = []):
+	
+	for i in current_deck.size():
+		available_tiles.append(current_deck[i])
+	
+	query_combat_rewards(reward_gold, reward_notch_count, reward_relics, reward_notch_uncommons, reward_notch_rares, reward_notch_specified)
+
+func _show_rewards(state: bool):
+	
+	if state:
+		GeneralManager.rewards_screen_open = true
+		GeneralManager.rewards_screen_path = self
+		
+		var tween = self.create_tween()
+		tween.tween_property(self, "modulate:a", 0, 0.001)
+		tween.tween_property(self, "visible", true, 0.001)
+		tween.tween_property(self, "modulate:a", 1, 0.15)
+
+	else:
+		var tween = self.create_tween()
+		tween.tween_property(self, "modulate:a", 0, 0.15)
+		tween.tween_property(self, "visible", false, 0.001)
+	
+		GeneralManager.rewards_screen_open = false
+		GeneralManager.rewards_screen_path = null
 
 func _is_tile_hovered(which: GridTile, is_hovering: bool):
 	if is_hovering == true:
@@ -80,7 +110,6 @@ func _is_notch_hovered(which: NotchObject, is_hovering: bool):
 		
 	if is_hovering == false:
 		notch_tooltip_hide_requested.emit()
-
 
 func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = []):
 	if reward_gold > 0:
@@ -115,12 +144,17 @@ func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_reli
 		
 	if reward_relics > 0:
 		for i in reward_relics:
-			reward_relic_button = Button.new()
-			button_container.add_child(reward_relic_button)
-			reward_relic_button.pressed.connect(self._on_reward_relic_button_pressed)
+			var rewarded_relic = RelicManager.grab_new_relic("Relic")
+			relics.append(rewarded_relic)
+			var new_reward_relic_button = reward_relic_button.instantiate()
+			button_container.add_child(new_reward_relic_button)
+			new_reward_relic_button.assoc_relic = rewarded_relic
+			new_reward_relic_button.update_button_data()
+			new_reward_relic_button.rewards_relic_button_pressed.connect(self._on_reward_relic_button_pressed)
 		
 func _on_reward_gold_button_pressed():
 	if not reward_gold_button == null:
+		GameEventHandler.gold_changed.emit(int(reward_gold_button.text))
 		reward_gold_button.queue_free()
 	
 	await get_tree().create_timer(0.05).timeout
@@ -135,12 +169,18 @@ func _on_reward_notch_button_pressed():
 		tween.tween_property(%RewardsButtonList, "visible", false, 0.001)
 		populate_notches_draws_and_tiles(notches, draws, tiles)
 
-func _on_reward_relic_button_pressed():
+func _on_reward_relic_button_pressed(which: RewardsRelicButton):
+	if not which == null:
+		which.queue_free()
+	
+	await get_tree().create_timer(0.05).timeout
+	
 	if button_container.get_child_count() == 0:
 		await get_tree().create_timer(0.05).timeout
 		%RewardsSkipButtonLabel.text = str("PROCEED")
 
 # INFO: It is safe to call this multiple times, as this only populates the UI that appears when you click the notch reward button.
+@warning_ignore("shadowed_variable")
 func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array):
 	var tween = %NotchAndTileRewardParent.create_tween()
 	tween.tween_property(%NotchAndTileRewardParent, "modulate:a", 0, 0.001)
@@ -169,6 +209,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 				new_home_pose = Vector2(various_rng.randi_range(previous_starting_pose.x + (pose_spacing),  previous_starting_pose.x + (1.95 * pose_spacing)), various_rng.randi_range(144, 168))
 				previous_starting_pose = new_home_pose
 				
+			@warning_ignore("narrowing_conversion")
 			var starting_rot = various_rng.randi_range(-22.5, 22.5)
 			new_notch.position = new_home_pose
 			new_notch.home_pose = new_home_pose
@@ -203,7 +244,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 # WARNING: ONLY CALL THIS ONCE PER COMBAT REWARD. DO NOT CALL THIS MULTIPLE TIMES OTHERWISE IT WILL REPLACE THE LOOT.
 func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count: int = 0, specified_rewards: Array = []):
 	var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-	var notch_sum = notch_count + uncommon_count + rare_count + specified_rewards.size()
+	var _notch_sum = notch_count + uncommon_count + rare_count + specified_rewards.size()
 	for i in notch_count:
 		var notch_tables = [common_notch_ids, uncommon_notch_ids, rare_notch_ids]
 		var table_weights = PackedFloat32Array([65, 25, 10])
@@ -234,7 +275,6 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
 		notches.append(new_notch)
 		
-	
 	for i in rare_count:
 		var notch_type_roll = rare_notch_ids[reward_rng.randi() % rare_notch_ids.size()]
 		var notch_letter_roll = ""
@@ -442,4 +482,10 @@ func _on_rewards_skip_button_pressed() -> void:
 	tween.tween_property(self, "modulate:a", 0, 0.15)
 	tween.tween_property(self, "visible", false, 0.001)
 	
-	GameEventHandler.combat_exited.emit()
+	GeneralManager.rewards_screen_open = false
+	GeneralManager.rewards_screen_path = null
+	
+	GameEventHandler.reward_depleted.emit()
+	
+	if GeneralManager.current_location == "COMBAT":
+		GameEventHandler.combat_exited.emit()

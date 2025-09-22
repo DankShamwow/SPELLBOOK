@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://d12fqxkjylbeu"]
+[gd_scene load_steps=26 format=3 uid="uid://d12fqxkjylbeu"]
 
 [ext_resource type="Script" uid="uid://bkuymnlsmqvfo" path="res://GENERAL/GAME_SCENES/COMBAT/PlayArea2.gd" id="1_d7kxf"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="2_dvygu"]
@@ -13,38 +13,6 @@
 [ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="9_gbtod"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="9_lhr36"]
 [ext_resource type="Script" uid="uid://ddi57atfgedsm" path="res://GENERAL/GAME_SCENES/COMBAT/TurnCounterLabel.gd" id="12_2w5x0"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lhr36"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(0, 48, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s05qo"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(192, 48, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dwwrx"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(96, 48, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ry10l"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(288, 48, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jqcwj"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(0, 72, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5dqmd"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(192, 72, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yx2gr"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(96, 72, 96, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ddm0t"]
-atlas = ExtResource("4_fhfjg")
-region = Rect2(288, 72, 96, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6r2oq"]
 atlas = ExtResource("4_fhfjg")
@@ -148,7 +116,6 @@ anchor_left = 0.0
 anchor_right = 0.0
 offset_left = -472.0
 offset_right = -352.0
-offset_bottom = 148.0
 grow_vertical = 0
 
 [node name="StatusEffectTooltip" parent="." instance=ExtResource("5_crhsm")]
@@ -354,43 +321,15 @@ z_as_relative = false
 [node name="Combatants" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="TestButton" type="TextureButton" parent="."]
-visible = false
-texture_filter = 1
-layout_mode = 1
-offset_left = 160.0
-offset_right = 256.0
-offset_bottom = 24.0
-texture_normal = SubResource("AtlasTexture_lhr36")
-texture_pressed = SubResource("AtlasTexture_s05qo")
-texture_hover = SubResource("AtlasTexture_dwwrx")
-texture_disabled = SubResource("AtlasTexture_ry10l")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="RelicButton" type="TextureButton" parent="."]
-visible = false
-texture_filter = 1
-layout_mode = 1
-offset_left = 384.0
-offset_right = 480.0
-offset_bottom = 24.0
-texture_normal = SubResource("AtlasTexture_jqcwj")
-texture_pressed = SubResource("AtlasTexture_5dqmd")
-texture_hover = SubResource("AtlasTexture_yx2gr")
-texture_disabled = SubResource("AtlasTexture_ddm0t")
-ignore_texture_size = true
-stretch_mode = 0
-
 [node name="TileBagStartPoint" type="Marker2D" parent="."]
 position = Vector2(592, 48)
 
 [node name="WordLabel" type="Label" parent="."]
 layout_mode = 1
-offset_left = 192.0
-offset_top = 152.0
-offset_right = 448.0
-offset_bottom = 176.0
+offset_left = 128.0
+offset_top = 160.0
+offset_right = 512.0
+offset_bottom = 184.0
 theme = ExtResource("9_lhr36")
 theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
@@ -434,6 +373,15 @@ autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("12_2w5x0")
+
+[node name="KillButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 128.0
+offset_right = 168.0
+offset_bottom = 160.0
+text = "KILL ENEMIES"
 
 [node name="PauseButton" type="TextureButton" parent="."]
 unique_name_in_owner = true
@@ -487,7 +435,6 @@ layout_mode = 1
 [connection signal="tile_mini_tooltip_requested" from="." to="TileTooltip" method="_show_mini_tooltip"]
 [connection signal="tile_tooltip_hide_requested" from="." to="TileTooltip" method="_hide_tooltip"]
 [connection signal="tile_tooltip_requested" from="." to="TileTooltip" method="_show_tooltip"]
-[connection signal="pressed" from="TestButton" to="." method="_on_test_button_pressed"]
-[connection signal="pressed" from="RelicButton" to="." method="_on_relic_button_pressed"]
+[connection signal="pressed" from="KillButton" to="." method="_on_kill_button_pressed"]
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ShuffleButton" to="." method="_on_shuffle_button_pressed"]

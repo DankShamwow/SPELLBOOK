@@ -7,17 +7,21 @@ func _ready():
 	relic_rarity = RelicRarity.COMMON
 	relic_description = "Tiles from the top half of the rack give an additional 3 points."
 	relic_flavor_text = "The upper case from a printing press. It is vaguely magical, and makes you feel a touch lighter."
+	%Relic_Label.set_text("")
 	super()
-
+	
 func grid_index_effect(grid_index, word):
 	if grid_index <= 7:
 		if word == "uppercase":
 			juice_relic()
 			total_activations += 1
+			await get_tree().create_timer(0.025).timeout
 			return 5
+			
 		else:
 			juice_relic()
 			total_activations += 1
+			await get_tree().create_timer(0.025).timeout
 			return 3
 	else:
 		return 0

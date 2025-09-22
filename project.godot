@@ -12,15 +12,15 @@ config_version=5
 
 config/name="SPELLBOOK"
 run/main_scene="uid://eh1eet3fjoai"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GeneralManager="*res://GENERAL/MANAGEMENT/GeneralManager.gd"
 StatusDictionary="*res://COMBAT/STATUSES/StatusDictionary.gd"
-RelicDictionary="*res://GENERAL/MANAGEMENT/RelicDictionary.gd"
 RandomnessManager="*res://GENERAL/MANAGEMENT/RandomnessManager.gd"
+RelicManager="*res://GENERAL/MANAGEMENT/RelicManager.gd"
 GameEventHandler="*res://GENERAL/MANAGEMENT/GameEventHandler.gd"
 StartingTiles="*res://TILE/STARTING_DECKS/StartingTiles.gd"
 RandomStartingTiles="*res://TILE/STARTING_DECKS/RandomStartingTiles.gd"

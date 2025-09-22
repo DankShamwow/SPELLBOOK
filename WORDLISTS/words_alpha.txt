@@ -6827,7 +6827,6 @@ ainoi
 ains
 ainsell
 ainsells
-aint
 ainu
 ainus
 aioli
@@ -19366,7 +19365,6 @@ arenoid
 arenose
 arenosity
 arenous
-arent
 arenulous
 areocentric
 areographer
@@ -46545,7 +46543,6 @@ canso
 cansos
 canst
 canstick
-cant
 cantab
 cantabank
 cantabile
@@ -70513,9 +70510,7 @@ coul
 coulage
 could
 couldest
-couldn
 couldna
-couldnt
 couldron
 couldst
 coulee
@@ -85093,15 +85088,10 @@ didine
 didinium
 didle
 didler
-didn
-didna
-didnt
-dido
 didodecahedral
 didodecahedron
 didoes
 didonia
-didos
 didrachm
 didrachma
 didrachmal
@@ -90826,8 +90816,6 @@ doers
 does
 doeskin
 doeskins
-doesn
-doesnt
 doest
 doeth
 doeuvre
@@ -91473,7 +91461,6 @@ donship
 donsy
 donsie
 donsky
-dont
 donum
 donut
 donuts
@@ -129423,7 +129410,6 @@ gre
 greable
 greably
 grease
-greaseball
 greasebush
 greased
 greasehorn
@@ -131954,7 +131940,6 @@ hadjes
 hadji
 hadjis
 hadland
-hadnt
 hadramautian
 hadrom
 hadrome
@@ -134099,8 +134084,6 @@ haslets
 haslock
 hasmonaean
 hasmonaeans
-hasn
-hasnt
 hasp
 hasped
 haspicol
@@ -134381,7 +134364,6 @@ hautein
 hautesse
 hauteur
 hauteurs
-hav
 havage
 havaiki
 havaikian
@@ -134407,7 +134389,6 @@ havenful
 havening
 havenless
 havens
-havent
 havenward
 haver
 haveral
@@ -135176,7 +135157,6 @@ hectorship
 hectostere
 hectowatt
 hecuba
-hed
 heddle
 heddlemaker
 heddler
@@ -137353,7 +137333,6 @@ herulian
 hervati
 herve
 herzegovinian
-hes
 heshvan
 hesychasm
 hesychast
@@ -157724,12 +157703,10 @@ iotized
 iotizing
 iou
 you
-youd
 youden
 youdendrift
 youdith
 youff
-youl
 young
 youngberry
 youngberries
@@ -157755,7 +157732,6 @@ youp
 youpon
 youpons
 your
-youre
 yourn
 yours
 yoursel
@@ -157790,7 +157766,6 @@ youths
 youthsome
 youthtide
 youthwort
-youve
 youward
 youwards
 youze
@@ -158747,7 +158722,6 @@ isms
 isn
 isnad
 isnardia
-isnt
 iso
 isoabnormal
 isoagglutination
@@ -159496,7 +159470,6 @@ itchreed
 itchweed
 itchwood
 itcze
-itd
 itea
 iteaceae
 itel
@@ -159578,7 +159551,6 @@ itineritis
 itineritive
 itinerous
 itys
-itll
 itmo
 ito
 itoism
@@ -187016,7 +186988,6 @@ mightiness
 mightyship
 mightless
 mightly
-mightnt
 mights
 miglio
 migmatite
@@ -196195,7 +196166,6 @@ mustify
 mustily
 mustiness
 musting
-mustnt
 musts
 mustulent
 musumee
@@ -251027,8 +250997,6 @@ probanishment
 probankruptcy
 probant
 probargaining
-probaseball
-probasketball
 probata
 probate
 probated
@@ -255977,7 +255945,6 @@ pucherite
 puchero
 puck
 pucka
-puckball
 pucker
 puckerbush
 puckered
@@ -259489,6 +259456,7 @@ racoons
 racovian
 racquet
 racquetball
+racquetballs
 racquets
 rad
 rada
@@ -288128,7 +288096,6 @@ sherris
 sherrises
 sherryvallies
 sherwani
-shes
 shesha
 sheth
 shetland
@@ -288999,9 +288966,6 @@ shoulderette
 shouldering
 shoulders
 shouldest
-shouldn
-shouldna
-shouldnt
 shouldst
 shoulerd
 shoupeltin
@@ -292878,6 +292842,7 @@ skedgewith
 skedlock
 skee
 skeeball
+skeeballs
 skeech
 skeed
 skeeg
@@ -294120,6 +294085,7 @@ slynesses
 sling
 slingback
 slingball
+slingballs
 slinge
 slinger
 slingers
@@ -296088,6 +296054,8 @@ socages
 soccage
 soccages
 soccer
+soccerball
+soccerballs
 soccerist
 soccerite
 soccers
@@ -297033,14 +297001,12 @@ somdiel
 some
 somebody
 somebodies
-somebodyll
 someday
 somedays
 somedeal
 somegate
 somehow
 someone
-someonell
 someones
 somepart
 someplace
@@ -314736,8 +314702,6 @@ szaibelyite
 szekler
 szlachta
 szopelka
-t
-ta
 taa
 taal
 taalbond
@@ -320652,11 +320616,8 @@ thatching
 thatchless
 thatchwood
 thatchwork
-thatd
-thatll
 thatn
 thatness
-thats
 thaught
 thaumantian
 thaumantias
@@ -320837,17 +320798,14 @@ thegnship
 thegnworthy
 they
 theyaou
-theyd
 theiform
 theileria
-theyll
 thein
 theine
 theines
 theinism
 theins
 their
-theyre
 theirn
 theirs
 theirselves
@@ -321242,7 +321200,6 @@ therebetween
 thereby
 therebiforn
 thereckly
-thered
 therefor
 therefore
 therefrom
@@ -321251,7 +321208,6 @@ therein
 thereinafter
 thereinbefore
 thereinto
-therell
 theremin
 theremins
 therence
@@ -321265,7 +321221,6 @@ thereonto
 thereout
 thereover
 thereright
-theres
 theresa
 therese
 therethrough
@@ -322239,7 +322194,6 @@ thyself
 thysen
 thishow
 thislike
-thisll
 thisn
 thisness
 thissen
@@ -322466,7 +322420,6 @@ thort
 thorter
 thortveitite
 thos
-those
 thou
 thoued
 though
@@ -362951,8 +362904,6 @@ washwoman
 washwomen
 washwork
 wasir
-wasn
-wasnt
 wasoga
 wasp
 waspen
@@ -364184,8 +364135,6 @@ werehyena
 werejaguar
 wereleopard
 werelion
-weren
-werent
 weretiger
 werewall
 werewolf
@@ -364326,14 +364275,10 @@ wettings
 wettish
 wettishness
 wetumpka
-weve
 wevet
 wewenoc
 wezen
 wezn
-wf
-wg
-wh
 wha
 whabby
 whack
@@ -364451,7 +364396,6 @@ what
 whata
 whatabouts
 whatchy
-whatd
 whatever
 whatkin
 whatlike
@@ -364460,9 +364404,7 @@ whatna
 whatness
 whatnot
 whatnots
-whatre
 whatreck
-whats
 whatsis
 whatso
 whatsoeer
@@ -364650,7 +364592,6 @@ whencever
 wheneer
 whenever
 whenness
-whens
 whenso
 whensoever
 whensomever
@@ -365020,7 +364961,6 @@ whirroo
 whirrs
 whirs
 whirtle
-whys
 whish
 whished
 whishes
@@ -365280,7 +365220,6 @@ whizzingly
 whizzle
 who
 whoa
-whod
 whodunit
 whodunits
 whodunnit
@@ -365313,7 +365252,6 @@ wholewise
 wholism
 wholisms
 wholistic
-wholl
 wholly
 whom
 whomble
@@ -367084,8 +367022,6 @@ wonner
 wonners
 wonning
 wonnot
-wons
-wont
 wonted
 wontedly
 wontedness
@@ -367748,8 +367684,6 @@ wouhleche
 would
 wouldest
 woulding
-wouldn
-wouldnt
 wouldst
 woulfe
 wound

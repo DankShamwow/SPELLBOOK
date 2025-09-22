@@ -41,34 +41,32 @@ func _set_rng_seed(new_seed: int) -> void:
 	_set_reward_rng(random_seed)
 	_set_various_rng(random_seed)
 
-func _set_tile_rng(random_seed):
-	tile_rng.set_seed(random_seed)
+func _set_tile_rng(new_seed):
+	tile_rng.set_seed(new_seed)
 	
-func _set_relic_rng(random_seed):
-	relic_rng.set_seed(random_seed)
+func _set_relic_rng(new_seed):
+	relic_rng.set_seed(new_seed)
 	
-func _set_event_rng(random_seed):
-	event_rng.set_seed(random_seed)
+func _set_event_rng(new_seed):
+	event_rng.set_seed(new_seed)
 
-func _set_map_rng(random_seed):
-	map_rng.set_seed(random_seed)
+func _set_map_rng(new_seed):
+	map_rng.set_seed(new_seed)
 
-func _set_encounter_rng(random_seed):
-	encounter_rng.set_seed(random_seed)
+func _set_encounter_rng(new_seed):
+	encounter_rng.set_seed(new_seed)
 
-func _set_enemy_rng(random_seed):
-	enemy_rng.set_seed(random_seed)
+func _set_enemy_rng(new_seed):
+	enemy_rng.set_seed(new_seed)
 
-func _set_debuff_rng(random_seed):
-	debuff_rng.set_seed(random_seed)
+func _set_debuff_rng(new_seed):
+	debuff_rng.set_seed(new_seed)
 
-func _set_reward_rng(random_seed):
-	reward_rng.set_seed(random_seed)
+func _set_reward_rng(new_seed):
+	reward_rng.set_seed(new_seed)
 
-func _set_various_rng(random_seed):
-	various_rng.set_seed(random_seed)
-	
-
+func _set_various_rng(new_seed):
+	various_rng.set_seed(new_seed)
 
 # rng.seed = hash("player_specified_seed")
 # rng.state = state_to_be_saved

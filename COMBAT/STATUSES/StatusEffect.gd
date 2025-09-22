@@ -16,12 +16,12 @@ enum StackType {NONE, AMOUNT, DURATION, BOTH}
 signal status_hovered(which: StatusEffect, is_hovering: bool)
 
 func _ready():
-	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
+	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10.0)))
 	%NumberLabel.text = ""
 	%NumberLabel2.text = ""
 
 func _update_graphics():
-	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10)))
+	%Icon.set_frame_coords(Vector2i(id % 10, floor(id / 10.0)))
 	if does_decay and stack_type == StatusEffect.StackType.BOTH:
 		%NumberLabel.text = str(self.amount)
 

@@ -67,7 +67,7 @@ func pick_random_word():
 	random_key = word_list.keys().pick_random()
 	
 	while sorted_words.get_position() < sorted_words.get_length():
-		if sorted_words.get_line() == random_key:
+		if not sorted_words.get_line() == random_key:
 			pick_random_word()
 			return
 		else:
@@ -181,6 +181,12 @@ func submit_word():
 		not_words.seek_end()
 		
 		%NonwordButton.set_pressed(false)
+	
+	if not %NewCategory.get_text() == "":
+		var new_category = str(random_key + "-- " + %NewCategory.get_text())
+		new_categories.store_line(new_category)
+		new_categories.seek_end()
+		%NewCategory.clear()
 	
 	print("Writing...")
 	sorted_words.store_line(random_key)

@@ -6,3 +6,5 @@ karn
 robe
 crystallisable
 electrofusion
+pyrotheology
+warlock

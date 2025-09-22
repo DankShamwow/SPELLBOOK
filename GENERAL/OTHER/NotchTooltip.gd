@@ -21,6 +21,7 @@ func _process(_delta):
 	self.position.x = clamp(tooltip_pos.x + 8, 0, (screensize.x - current_size.x - 16))
 	self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
 
+
 func _ready() -> void:
 	modulate = Color.TRANSPARENT
 	hide()

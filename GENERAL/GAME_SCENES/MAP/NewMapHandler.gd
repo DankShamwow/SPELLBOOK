@@ -147,7 +147,7 @@ func _generate_starting_points() -> Array[int]:
 
 	return y_coordinates
 func _create_strands(x: int, y: int) -> int:
-	var next_room: Room
+	var next_room: Room = null
 	var current_room = map_data[x][y] as Room
 	
 	if x == 7 or x == 14:
@@ -314,7 +314,7 @@ func _setup_room_weights():
 		room_type_weight_total += weight
 		random_room_type_weights[key] = room_type_weight_total
 
-func _on_new_map_button_toggled(toggled_on: bool) -> void:
+func _on_new_map_button_toggled(_toggled_on: bool) -> void:
 	if GeneralManager.is_map_open == false:
 		print("Map opening!")
 		GeneralManager.is_map_open = true

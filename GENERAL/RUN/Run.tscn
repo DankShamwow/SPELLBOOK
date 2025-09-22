@@ -1,13 +1,16 @@
-[gd_scene load_steps=13 format=3 uid="uid://gx3didg4ceg8"]
+[gd_scene load_steps=17 format=3 uid="uid://gx3didg4ceg8"]
 
 [ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
+[ext_resource type="PackedScene" uid="uid://cgtc1vnsv3tjl" path="res://RELIC/RelicTooltip.tscn" id="2_kanhh"]
 [ext_resource type="PackedScene" uid="uid://cpbsotfmvd85a" path="res://RELIC/RelicContainer.tscn" id="2_l3v56"]
 [ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_s26kh"]
 [ext_resource type="Texture2D" uid="uid://bmvy0sic8twxp" path="res://SPRITES/GUI/MapIcon.png" id="6_qmdm6"]
 [ext_resource type="PackedScene" uid="uid://cx5nftaudi8yv" path="res://GENERAL/GAME_SCENES/MAP/NewMapHandler.tscn" id="6_s26kh"]
+[ext_resource type="Script" uid="uid://cu62src2w1f7d" path="res://GENERAL/RUN/GoldTracker.gd" id="8_gtple"]
 [ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="8_qmdm6"]
+[ext_resource type="Texture2D" uid="uid://byxxi45b53k5b" path="res://SPRITES/GUI/GoldIcon.png" id="9_qpx1f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qpx1f"]
 atlas = ExtResource("6_qmdm6")
@@ -25,6 +28,10 @@ region = Rect2(32, 0, 32, 32)
 atlas = ExtResource("6_qmdm6")
 region = Rect2(64, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_3wfjo"]
+atlas = ExtResource("9_qpx1f")
+region = Rect2(0, 0, 32, 32)
+
 [node name="Run" type="Control"]
 layout_mode = 3
 anchors_preset = 5
@@ -33,8 +40,16 @@ anchor_right = 0.5
 grow_horizontal = 2
 script = ExtResource("1_0uibq")
 
+[node name="RunStats" type="Node" parent="."]
+
 [node name="PermanentUI" type="CanvasLayer" parent="."]
 layer = 10
+
+[node name="RelicTooltip" parent="PermanentUI" instance=ExtResource("2_kanhh")]
+unique_name_in_owner = true
+offset_left = -304.0
+offset_right = -175.0
+offset_bottom = 84.0
 
 [node name="NewMapHandler" parent="PermanentUI" instance=ExtResource("6_s26kh")]
 unique_name_in_owner = true
@@ -107,6 +122,7 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [node name="RelicContainerGradient" parent="PermanentUI" instance=ExtResource("2_l3v56")]
+unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -114,6 +130,7 @@ offset_left = -304.0
 offset_top = 48.0
 offset_right = 304.0
 offset_bottom = 96.0
+grow_horizontal = 2
 
 [node name="TileBag" parent="PermanentUI" instance=ExtResource("2_n48is")]
 anchors_preset = -1
@@ -135,7 +152,7 @@ texture_pressed = SubResource("AtlasTexture_kanhh")
 texture_hover = SubResource("AtlasTexture_oh08a")
 texture_disabled = SubResource("AtlasTexture_25s7n")
 
-[node name="ColorRect" type="ColorRect" parent="PermanentUI"]
+[node name="HealthTracker" type="ColorRect" parent="PermanentUI"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -144,7 +161,7 @@ offset_top = 8.0
 offset_right = -224.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="PermanentUI/ColorRect"]
+[node name="Label" type="Label" parent="PermanentUI/HealthTracker"]
 layout_mode = 0
 offset_right = 80.0
 offset_bottom = 32.0
@@ -154,7 +171,8 @@ text = "HEALTH"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect2" type="ColorRect" parent="PermanentUI"]
+[node name="GoldTracker" type="HBoxContainer" parent="PermanentUI"]
+unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -162,14 +180,17 @@ offset_left = -208.0
 offset_top = 8.0
 offset_right = -128.0
 offset_bottom = 40.0
+script = ExtResource("8_gtple")
 
-[node name="Label" type="Label" parent="PermanentUI/ColorRect2"]
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 32.0
+[node name="GoldIcon" type="TextureRect" parent="PermanentUI/GoldTracker"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_3wfjo")
+
+[node name="GoldLabel" type="Label" parent="PermanentUI/GoldTracker"]
+unique_name_in_owner = true
+layout_mode = 2
 theme = ExtResource("2_bybjp")
-theme_override_colors/font_color = Color(1, 0.686275, 0, 1)
-text = "GOLD"
 horizontal_alignment = 1
 vertical_alignment = 1
 

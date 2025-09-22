@@ -6,12 +6,20 @@ var is_bag_open			:= false
 
 var is_map_open			:= false
 
+var rewards_screen_open := false
+
+## Path to the currently open rewards screen, if there is one. If not, one can be opened.
+var rewards_screen_path = null
+
 ## character_path is the path from root to player's character; the character should NEVER be uninstantiated.
 var character_path		= null
 
 var current_character 	= null
 
 var replace_character_path = null
+
+## Current map node type for making things work nicer.
+var current_location = null
 
 ## current_deck is the list of LetterTiles in the player's deck.
 var current_deck		= []
@@ -61,7 +69,10 @@ var who_has_initiative: GameEntity
 var point_values  	:= [1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10]
 
 ## word_list starts as an empty dictionary but is populated at startup with the contents of a wordlist file.
-var word_list := {}
+var word_list: Dictionary[String, bool] = {}
+
+## bonus_word_list starts as an empty dictionary but is populated as more relics are acquired during a run.
+var bonus_word_list: Dictionary[String, bool] = {}
 
 ## tile_scaling_factor is the scaling factor for tiles based on the length of a word. 
 var tile_scaling_factor: float = 1.0
@@ -110,11 +121,16 @@ func rearrange_deck_tiles():
 	for i in current_deck.size():
 		current_deck[i].tile_index = i
 
+## Populates the game's word dictionary. This will need to be reworked after the Inquisitor is implemented, since his wordlist is separate.
 func prepare_word_dict():
+	bonus_word_list.clear()
 	var file = FileAccess.open(text_file_path, FileAccess.READ)
 	while file.get_position() < file.get_length():
 		var filter = file.get_line()
 		if filter.length() >= 3:
 			var filter_pass = str(filter[0] + filter[0] + filter[0])
-			if not filter == filter_pass:
+			if not filter == filter_pass and not word_list.has(filter):
 				word_list[str(filter)] = true
+
+func add_bonus_words(bonus_words: Dictionary):
+	bonus_word_list.merge(bonus_words)

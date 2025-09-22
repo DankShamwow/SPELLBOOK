@@ -1,7 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://da8mp5mxfdjgb"]
+[gd_scene load_steps=9 format=3 uid="uid://da8mp5mxfdjgb"]
 
-[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_2kpxq"]
 [ext_resource type="Script" uid="uid://cfb2d7vvbcjra" path="res://GENERAL/GAME_SCENES/RELIQUARY/Reliquary.gd" id="1_y1ykw"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_bot1t"]
+[ext_resource type="Texture2D" uid="uid://bgh5howdhitkm" path="res://SPRITES/GUI/ReliquaryChest.png" id="3_v1r7g"]
+[ext_resource type="PackedScene" uid="uid://cngb2lpnr1tax" path="res://COMBAT/TOOLS/CombatRewards.tscn" id="4_v1r7g"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_sm8a2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sm8a2"]
+atlas = ExtResource("3_v1r7g")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bot1t"]
+atlas = ExtResource("3_v1r7g")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5yglh"]
+atlas = ExtResource("3_v1r7g")
+region = Rect2(64, 0, 64, 64)
 
 [node name="Reliquary" type="Control"]
 custom_minimum_size = Vector2(640, 360)
@@ -11,35 +26,66 @@ offset_right = 640.0
 offset_bottom = 480.0
 script = ExtResource("1_y1ykw")
 
+[node name="BackgroundPosition" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Background" type="Sprite2D" parent="BackgroundPosition"]
+unique_name_in_owner = true
+position = Vector2(0, 168)
+texture = ExtResource("2_bot1t")
+
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -136.0
-offset_top = -60.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="SkipButtonBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 488.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 248.0
+texture = ExtResource("5_sm8a2")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="SkipButton" type="Button" parent="SkipButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "SKIP"
+
+[node name="ReliquaryChest" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 264.0
+offset_top = 144.0
+offset_right = 328.0
+offset_bottom = 208.0
 scale = Vector2(2, 2)
-theme = ExtResource("1_2kpxq")
+toggle_mode = true
+texture_normal = SubResource("AtlasTexture_sm8a2")
+texture_pressed = SubResource("AtlasTexture_bot1t")
+texture_disabled = SubResource("AtlasTexture_5yglh")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("1_2kpxq")
-theme_override_font_sizes/font_size = 26
-text = "Reliquary"
-horizontal_alignment = 1
+[node name="CombatRewards" parent="." instance=ExtResource("4_v1r7g")]
+unique_name_in_owner = true
+layout_mode = 1
 
-[node name="Button" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Go back to Map"
-
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="SkipButtonBox/SkipButton" to="." method="_on_skip_button_pressed"]
+[connection signal="toggled" from="ReliquaryChest" to="." method="_on_reliquary_chest_toggled"]

@@ -120,6 +120,8 @@ func take_damage(damage):
 
 func lose_health(health_loss):
 	self.health -= health_loss
+	update_health_bar()
+	check_for_death()
 
 func gain_health(healing):
 	if self.health < self.max_health:
@@ -139,6 +141,16 @@ func check_for_death():
 func remove_energy(value: int):
 	self.current_energy -= value
 	update_health_bar()
+
+func gain_max_health(value: int):
+	self.max_health += value
+	self.health += value
+	update_health_bar()
+
+func gain_max_health_empty(value: int):
+	self.max_health += value
+	update_health_bar()
+
 
 ## add_statues applies a Status to a target, and determines the amount of the status applied, if it decays each turn, and the duration of it.
 func add_status(status: String, status_amount: int, does_status_decay: bool, status_duration: int) -> void:
@@ -252,6 +264,7 @@ func update_affected_tiles(affected_tile_indices):
 	
 func update_health_bar():
 	%EntityHealthBar.value = self.health
+	%EntityHealthBar.max_value = self.max_health
 	%HealthBarLabel.text = str(str(self.health) + "/" + str(self.max_health))
 	%BlockLabel.text = str("Block: " + str(self.block))
 	%DataLabel.text = str("Energy: " + str(self.current_energy))

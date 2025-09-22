@@ -290,6 +290,7 @@ func _force_home():
 		has_affected_notch1 = false
 		paired_tile.tile.notch1 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter1 = ""
+		paired_tile.toggle_monitorable()
 		paired_tile.update_notch_graphics(1, true)
 		
 		paired_tile = null
@@ -300,6 +301,7 @@ func _force_home():
 		has_affected_notch2 = false
 		paired_tile.tile.notch2 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter2 = ""
+		paired_tile.toggle_monitorable()
 		paired_tile.update_notch_graphics(2, true)
 		
 		paired_tile = null
@@ -310,6 +312,7 @@ func _force_home():
 		has_affected_notch3 = false
 		paired_tile.tile.notch3 = LetterTile.NotchTypes.EMPTY
 		paired_tile.tile.bonus_letter3 = ""
+		paired_tile.toggle_monitorable()
 		paired_tile.update_notch_graphics(3, true)
 		
 		paired_tile = null

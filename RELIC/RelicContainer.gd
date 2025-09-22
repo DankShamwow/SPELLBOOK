@@ -6,30 +6,29 @@ class_name RelicContainer
 ## current_relics is the list of Relics that the player currently has.
 var current_relics = GeneralManager.current_relics
 
-var relic_dictionary = RelicDictionary.RelicList
 const RELIC_SCENE := preload("res://RELIC/Relic.tscn")
 
 func _ready() -> void:
-	pass
+	GameEventHandler.add_relic.connect(self.add_relic)
 
 func add_relics(relics_array: Array[Relic]) -> void:
 	for relic: Relic in relics_array:
 		add_relic(relic.relic_id)
 		
 func add_relic(relic_id: int) -> void:
-	#if has_relic(relic_id):
-		#return
+	var found_relic = RelicManager.relic_ids.find_key(relic_id)
+	var granted_relic = RelicManager.relic_list.get(found_relic)
+	
+	var relic_node = RELIC_SCENE.instantiate() as Relic
+	
+	if RelicManager.loaded_relics.get(relic_id):
+		relic_node.set_script(RelicManager.loaded_relics.get(relic_id))
+	
+	else:
+		granted_relic = load(granted_relic)
+		relic_node.set_script(granted_relic)
 	
 	print("Adding relic " + str(relic_id) + ".")
-	var new_relic = relic_dictionary.get(str(relic_id))
-	var relic_node = RELIC_SCENE.instantiate() as Relic
-	relic_node.set_script(new_relic)
 	%RelicCollection.add_child(relic_node)
+	relic_node.on_pickup_effect()
 	current_relics.append(relic_node)
-
-func has_relic(id: int) -> bool:
-	for relic in %RelicCollection.get_children():
-		if relic.relic_id == id and is_instance_valid(relic):
-			return true
-	
-	return false

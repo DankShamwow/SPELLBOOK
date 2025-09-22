@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cg20swu6v7qa7"]
+[gd_scene load_steps=4 format=3 uid="uid://cg20swu6v7qa7"]
 
 [ext_resource type="Script" uid="uid://6qch5jad6qt7" path="res://RELIC/Relic.gd" id="1_h6dk7"]
 [ext_resource type="Texture2D" uid="uid://bhtpjsf0hlo4x" path="res://SPRITES/RELICS/Relics.png" id="2_ct0xs"]
+[ext_resource type="Texture2D" uid="uid://dgq36c5jgdc8g" path="res://SPRITES/RELICS/Relics_Mask.png" id="3_5vcl4"]
 
 [node name="Relic" type="Control"]
 custom_minimum_size = Vector2(32, 32)
@@ -18,20 +19,30 @@ offset_right = 32.0
 offset_bottom = 32.0
 
 [node name="Relic_Sprite" type="Sprite2D" parent="Relic_Button"]
+unique_name_in_owner = true
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("2_ct0xs")
 hframes = 10
-vframes = 2
+vframes = 3
 
 [node name="Relic_Mask" type="Sprite2D" parent="Relic_Button"]
+unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 position = Vector2(16, 16)
-texture = ExtResource("2_ct0xs")
+texture = ExtResource("3_5vcl4")
 hframes = 10
-vframes = 2
+vframes = 3
 
-[connection signal="gui_input" from="Relic_Button" to="." method="_on_relic_button_gui_input"]
+[node name="Relic_Label" type="RichTextLabel" parent="Relic_Button"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 40.0
+offset_bottom = 38.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+
 [connection signal="mouse_entered" from="Relic_Button" to="." method="_on_relic_button_mouse_entered"]
 [connection signal="mouse_exited" from="Relic_Button" to="." method="_on_relic_button_mouse_exited"]

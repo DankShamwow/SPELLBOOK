@@ -6,6 +6,7 @@ const RELIQUARY_SCENE := preload("res://GENERAL/GAME_SCENES/RELIQUARY/Reliquary.
 const SHOP_SCENE := preload("res://GENERAL/GAME_SCENES/SHOP/Shop.tscn")
 const REST_SCENE := preload("res://GENERAL/GAME_SCENES/REST/Rest.tscn")
 const RANDOM_EVENT_SCENE := preload("res://GENERAL/GAME_SCENES/RANDOM_EVENT/RandomEventScene.tscn")
+const SPECIALTY_REWARDS_SCENE := preload("res://COMBAT/TOOLS/SpecialtyRewards.tscn")
 
 const TEST_CHARACTER_SCENE := preload("res://COMBAT/CHARACTERS/TestCharacter.tscn")
 
@@ -26,6 +27,7 @@ signal add_relic(relic_id: int)
 var character = null
 
 func _ready() -> void:
+	GameEventHandler.specialty_rewards_popup.connect(self.popup_specialty_rewards)
 	var replace_character_path = %Character
 	GeneralManager.replace_character_path = replace_character_path
 	if not character:
@@ -38,6 +40,7 @@ func _start_new_run() -> void:
 	_setup_event_connections()
 	GeneralManager.prepare_word_dict()
 	EncounterManager._load_area_encounters("WoodsOfTheWitless")
+	RelicManager._load_relics()
 	GeneralManager.chapter_boss_encounter = EncounterManager.grab_new_encounter("BOSS")
 	%NewMapHandler.generate_map()
 	var character_instance = character.instantiate()
@@ -45,6 +48,7 @@ func _start_new_run() -> void:
 	character_instance.scale = Vector2(1.5, 1.5)
 	character_instance.position = Vector2(72, 192)
 	GeneralManager.character_path = character_instance
+	GameEventHandler.gold_changed.emit(100)
 	
 	StartingTiles.generate_starting_tiles()
 	
@@ -77,6 +81,11 @@ func _on_relic_button_pressed():
 
 	%RELIC.set_disabled(false)
 
+func popup_specialty_rewards(reward_notch_count: int = 0, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = [], allow_tiles: bool = false, draw_size: int = 0):
+	var popup = SPECIALTY_REWARDS_SCENE.instantiate()
+	$CurrentView.get_child(0).add_child(popup)
+	popup._bringup_specialty_rewards(reward_notch_count, reward_notch_uncommons, reward_notch_rares, reward_notch_specified, allow_tiles, draw_size)
+
 func _setup_event_connections() -> void:
 	GameEventHandler.combat_exited.connect(_show_map)
 	GameEventHandler.shop_exited.connect(_show_map)
@@ -102,30 +111,37 @@ func _on_map_exited(room: Room) -> void:
 				GeneralManager.combat_encounter = EncounterManager.grab_new_encounter("NORMAL")
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
+			GeneralManager.current_location = "COMBAT"
 
 				
 		Room.RoomType.ELITE:
 			GeneralManager.combat_encounter = EncounterManager.grab_new_encounter("ELITE")
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
-
+			GeneralManager.current_location = "COMBAT"
 			
 		Room.RoomType.BOSS:
 			GeneralManager.combat_encounter = GeneralManager.chapter_boss_encounter
 			_change_view(COMBAT_SCENE)
 			GeneralManager.is_combat_active = true
+			GeneralManager.current_location = "COMBAT"
 			
 		Room.RoomType.TREASURE:
 			_change_view(RELIQUARY_SCENE)
+			GeneralManager.current_location = "RELIQUARY"
 			
 		Room.RoomType.LIBRARY:
 			_change_view(RELIQUARY_SCENE)
+			GeneralManager.current_location = "LIBRARY"
 			
 		Room.RoomType.SHOP:
 			_change_view(SHOP_SCENE)
+			GeneralManager.current_location = "SHOP"
 			
 		Room.RoomType.REST:
 			_change_view(REST_SCENE)
+			GeneralManager.current_location = "REST"
 			
 		Room.RoomType.RANDOM:
 			_change_view(RANDOM_EVENT_SCENE)
+			GeneralManager.current_location = "EVENT"

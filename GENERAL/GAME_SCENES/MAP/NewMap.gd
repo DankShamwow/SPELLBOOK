@@ -12,8 +12,6 @@ const MAP_LINE = preload("res://GENERAL/GAME_SCENES/MAP/MapLine.tscn")
 
 var camera_edge_x: float
 
-signal map_toggle(toggled_on)
-
 func _input(event: InputEvent) -> void:
 	if GeneralManager.is_bag_open == false:
 		if event.is_action_pressed("scroll_up"):
@@ -41,10 +39,10 @@ func _on_map_bringup(map_data: Array[Array], camera_position: float = 0.0):
 					new_map_room.show_selected()
 			
 		
-	var new_map_room := MAP_ROOM.instantiate() as MapRoom
-	rooms.add_child(new_map_room)
-	new_map_room.room = map_data[15][3]
-	new_map_room.selected.connect(self._on_map_room_selected)
+	var boss_room := MAP_ROOM.instantiate() as MapRoom
+	rooms.add_child(boss_room)
+	boss_room.room = map_data[15][3]
+	boss_room.selected.connect(self._on_map_room_selected)
 	_connect_lines(map_data[15][3])
 	
 	var map_height_pixels := 200

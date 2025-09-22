@@ -123,6 +123,19 @@ libraries = {
 &"": SubResource("AnimationLibrary_bq3va")
 }
 
+[node name="TileScoreText" type="RichTextLabel" parent="Tile_Button"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "+0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="SoundParent" type="Node" parent="."]
 
 [node name="DestructionSound" type="AudioStreamPlayer" parent="SoundParent"]
