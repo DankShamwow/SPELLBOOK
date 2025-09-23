@@ -1228,7 +1228,6 @@ func _score_word():
 						current_target.add_status("BLEED_DEBUFF", (point_values[scored_tile.tile.played_letter] + bleed_bonus), true, (point_values[scored_tile.tile.played_letter] + bleed_bonus))
 				
 				points_score += tile_score
-				tile_score = 0
 				
 				get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				await get_tree().create_timer(0.05).timeout
@@ -1236,19 +1235,24 @@ func _score_word():
 				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
 				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 1")
 					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 2")
 					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 3")
 					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
+				
+				tile_score = 0
 				
 				await get_tree().create_timer(0.07).timeout
 
