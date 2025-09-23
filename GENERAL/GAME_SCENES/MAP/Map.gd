@@ -107,7 +107,7 @@ func _spawn_room(room: Room) -> void:
 	var new_map_room := MAP_ROOM.instantiate() as MapRoom
 	rooms.add_child(new_map_room)
 	new_map_room.room = room
-	new_map_room.selected.connect(_on_map_room_selected)
+	new_map_room.selected.connect(self._on_map_room_selected)
 	_connect_lines(room)
 	
 	if room.selected and room.column < sections_crossed:

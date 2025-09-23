@@ -80,6 +80,7 @@ func unlock_next_rooms() -> void:
 
 func _on_map_room_selected(room: Room, map_room: MapRoom) -> void:
 	get_tree().call_group("Available Rooms", "disable_button")
+	print(get_tree())
 	map_room.available = false
 	map_room.room.selected = true
 	

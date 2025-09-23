@@ -39,6 +39,7 @@ func show_selected() -> void:
 
 func disable_button() -> void:
 	%MapButton.set_disabled(true)
+	animation_player.stop()
 
 func _on_map_button_pressed() -> void:
 	if not available:

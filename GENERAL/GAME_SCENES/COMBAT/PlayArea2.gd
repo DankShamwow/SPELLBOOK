@@ -1107,24 +1107,22 @@ func _score_word():
 				
 				# Pull any bonus point effects from relics.
 				for l in current_relics.size():
-					
 					# Grid index based effects
 					tile_score += await current_relics[l].grid_index_effect(scored_tile.tile.grid_index, word)
 					scored_tile.update_tile_score_text(tile_score)
 					%TileScoreLabel.text = str(tile_score)
-					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
-					
+				
+				for l in current_relics.size():
 					# Letter based effects
 					tile_score += await current_relics[l].letter_score_effect(scored_tile.tile.played_letter, word, word_target, tile_score)
 					scored_tile.update_tile_score_text(tile_score)
 					%TileScoreLabel.text = str(tile_score)
-					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
-					
+				
+				for l in current_relics.size():
 					# Effects based on the total count of scored tiles
 					tile_score += await current_relics[l].x_letters_played_effect(scored_tile_count, tile_score, word)
 					scored_tile.update_tile_score_text(tile_score)
 					%TileScoreLabel.text = str(tile_score)
-					# TODO: Add a thing that shows the total score of a letter as it iterates through scoring.
 					
 				# If a tile has Phantom, then add two dumb clones of it to the available tiles list.
 				if scored_tile.tile.notch1 == LetterTile.NotchTypes.PHANTOM:

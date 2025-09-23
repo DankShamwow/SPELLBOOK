@@ -219,7 +219,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			var draws_offset = 64 + 40 * (7 - draws.size())
 			print("Drawing new tile!")
 			var new_tile = GRID_TILE_SCENE.instantiate()
-			new_tile.tile = current_deck[draws[i]]
+			new_tile.tile = draws[i]
 			%PlayerTilesParent.add_child(new_tile)
 			new_tile.tile_clicked.connect(self._on_tile_clicked)
 			new_tile.tile_hovered.connect(self._is_tile_hovered)
@@ -306,10 +306,7 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 			draw_limit = 7
 	
 	for i in draw_limit:
-		var pop_location = (tile_rng.randi() % available_tiles.size())
-		draws.append(available_tiles[pop_location].tile_index)
-		available_tiles.pop_at(pop_location)
-		print(pop_location)
+		draws.append(available_tiles.pop_at(tile_rng.randi() % available_tiles.size()))
 		print(draws)
 
 	for i in 5:

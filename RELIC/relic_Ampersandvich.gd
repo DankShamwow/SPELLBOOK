@@ -31,6 +31,7 @@ func word_length_bonus_effect(word: String):
 		GeneralManager.character_path.gain_health(20)
 		await get_tree().create_timer(0.025).timeout
 		return 2
+		
 	elif word.contains("and"):
 		juice_relic()
 		total_activations += 1
