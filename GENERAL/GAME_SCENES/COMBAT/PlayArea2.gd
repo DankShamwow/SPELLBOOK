@@ -1074,6 +1074,13 @@ func _score_word():
 				
 			scored_tile.toggle_word_glow()
 			
+			if not scored_tile.paired_tile_1 == null:
+				scored_tile.paired_tile_1 = null
+			if not scored_tile.paired_tile_2 == null:
+				scored_tile.paired_tile_2 = null
+			if not scored_tile.paired_tile_3 == null:
+				scored_tile.paired_tile_3 = null
+			
 			for k in current_relics.size():
 				
 				# Pull any letter retrigger effects from relics
@@ -1235,18 +1242,21 @@ func _score_word():
 				# If a tile has OVERLOADED and the player has at least one energy, remove an energy and double the word score.
 				if scored_tile.tile.notch1 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					scored_tile.update_tile_score_text((tile_score + points_score))
 					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 1")
 					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch2 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					scored_tile.update_tile_score_text((tile_score + points_score))
 					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 2")
 					get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
 				if scored_tile.tile.notch3 == LetterTile.NotchTypes.OVERLOADED and character_path.current_energy > 0:
 					character_path.remove_energy(1)
+					scored_tile.update_tile_score_text((tile_score + points_score))
 					%TileScoreLabel.text = str(tile_score + points_score)
 					points_score = points_score * 2
 					# print("OVERLOADING... 3")
@@ -1295,7 +1305,7 @@ func _score_word():
 		total_score = total_score * await current_relics[i].word_score_multiplier_effect(word)
 	
 	get_node("ScoreLabel").text = str(points_score) + "x" + str(mult_score) + "=" + str(total_score)
-	await get_tree().create_timer(0.075).timeout
+	await get_tree().create_timer(0.125).timeout
 
 	# Post-processing for the scoring algorithm.
 	for i in tiles_in_word.get_child_count():
@@ -1371,7 +1381,6 @@ func _score_word():
 			tile_to_process.reparent(tiles_to_kill)
 			tiles_in_play.erase(tile_to_process.tile)
 
-		
 	_cleanup(total_score, word_target)
 
 func _cleanup(total_score, word_target):
@@ -1379,11 +1388,12 @@ func _cleanup(total_score, word_target):
 	GameEventHandler.disable_tile_bag.emit(true)
 	for i in tiles_to_kill.get_child_count():
 		var last_letter = tiles_to_kill.get_child(i)
-		last_letter.remove_from_group("Tiles In Word")
 
 		if last_letter == null:
 			print("UH OH! FUCKY WUCKY!")
 			continue
+		
+		last_letter.remove_from_group("Tiles In Word")
 		
 		# This is bad implementation, and might be the source of a bug.
 		if last_letter.tile.notch1 == LetterTile.NotchTypes.WEIGHTED \
