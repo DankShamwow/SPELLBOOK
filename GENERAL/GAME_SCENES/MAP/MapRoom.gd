@@ -49,3 +49,5 @@ func _on_map_button_pressed() -> void:
 	selected.emit(room, self)
 	animation_player.play("select")
 	
+#func _on_map_room_selected():
+	#pass

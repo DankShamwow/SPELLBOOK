@@ -7,7 +7,7 @@ func _ready():
 	relic_id = 5
 	relic_name = "Absurdist Fishbowl"
 	relic_rarity = RelicRarity.COMMON
-	relic_description = 'Curated words relating to "kinds of fish" grant +5 max health when played.'
+	relic_description = 'Curated words relating to "kinds of fish" grant +1 max health when played.'
 	relic_flavor_text = "Seeing the fish swim inside makes you feel happy. You hope it doesn't get invaded by fishbowl-sized monsters."
 	%Relic_Label.set_text("")
 	super()
@@ -27,7 +27,7 @@ func word_played_effect(word, target = null):
 	if relic_dict.get(word):
 		juice_relic()
 		total_activations += 1
-		GeneralManager.character_path.gain_max_health(5)
+		GeneralManager.character_path.gain_max_health(1)
 		await get_tree().create_timer(0.025).timeout
 		return
 	else:
