@@ -77,7 +77,7 @@ var bonus_word_list: Dictionary[String, bool] = {}
 ## tile_scaling_factor is the scaling factor for tiles based on the length of a word. 
 var tile_scaling_factor: float = 1.0
 
-var text_file_path = "res://WORDLISTS/words_alpha.txt"
+var text_file_path = "res://WORDLISTS/words_filtered.txt"
 
 var common_notch_ids = [3, 7, 9, 11, 14, 15, 16, 18]
 

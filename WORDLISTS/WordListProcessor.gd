@@ -1,6 +1,6 @@
 extends Node2D
 
-var text_file_path = "res://WORDLISTS/words_alpha.txt"
+var text_file_path = "res://WORDLISTS/words_filtered.txt"
 var exported_words = "res://WORDLISTS/STANDARD/"
 
 var filter = ""
