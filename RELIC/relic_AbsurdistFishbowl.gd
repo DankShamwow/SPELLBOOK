@@ -22,8 +22,8 @@ func on_pickup_effect():
 	GeneralManager.add_bonus_words(relic_dict)
 	relic_dict.clear()
 	return null
-	
-func word_played_effect(word, target = null):
+
+func word_played_effect(word, _target = null):
 	if relic_dict.get(word):
 		juice_relic()
 		total_activations += 1

@@ -58,6 +58,7 @@ folder_colors={
 
 "Notches to Add"=""
 "Tiles to Add"=""
+"Tiles in Word"="Tiles currently in the played word."
 
 [gui]
 

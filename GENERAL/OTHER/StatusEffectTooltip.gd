@@ -12,6 +12,8 @@ var is_visible := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	GameEventHandler.status_hovered.connect(_on_status_hovered)
+	
 	modulate = Color.TRANSPARENT
 	hide()
 

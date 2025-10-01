@@ -46,10 +46,7 @@ var has_affected_notch1 := false
 var has_affected_notch2 := false
 var has_affected_notch3 := false
 
-signal send_back_home(which: NotchObject)
 signal has_paired()
-signal notch_hovered(which: NotchObject, is_hovering: bool)
-signal update_tooltip(which: GridTile)
 
 func _ready():
 	print(notch.type)
@@ -114,19 +111,19 @@ func _on_texture_button_up():
 				if overlaps[i].get_parent().get_parent().tile.notch1 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch2 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch3 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 	
@@ -213,7 +210,7 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
-			notch_hovered.emit(self, true)
+			GameEventHandler.notch_hovered.emit(self, true)
 	
 	elif overlaps.name == "Notch2Area" and paired_tile.tile.notch2 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
@@ -232,7 +229,7 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
-			notch_hovered.emit(self, true)
+			GameEventHandler.notch_hovered.emit(self, true)
 		
 	elif overlaps.name == "Notch3Area" and paired_tile.tile.notch3 == LetterTile.NotchTypes.EMPTY:
 		tween = get_tree().create_tween()
@@ -252,7 +249,7 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		if folded:
 			$AnimationPlayer.play("unfold")
 			folded = false
-			notch_hovered.emit(self, true)
+			GameEventHandler.notch_hovered.emit(self, true)
 
 	else:
 		return
@@ -274,14 +271,14 @@ func _on_texture_button_mouse_entered():
 	original_z = self.z_index
 	self.scale = self.scale * 1.1
 	self.z_index = 128
-	notch_hovered.emit(self, true)
+	GameEventHandler.notch_hovered.emit(self, true)
 	
 func _on_texture_button_mouse_exited():
 	has_mouse = false
 	print(has_mouse)
 	self.scale = self.scale / 1.1
 	self.z_index = original_z
-	notch_hovered.emit(self, false)
+	GameEventHandler.notch_hovered.emit(self, false)
 
 func _force_home():
 	if has_affected_notch1 == true:
@@ -328,7 +325,7 @@ func _send_back_home():
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_SPRING)
 	tween.tween_property(self, "position", home_pose, 1)
-	send_back_home.emit(self)
+	GameEventHandler.send_back_home.emit(self)
 	
 func _query_paired_tile():
 	return paired_tile

@@ -51,6 +51,9 @@ var current_score = 0
 
 func _ready() -> void:
 	modulate = Color.TRANSPARENT
+	GameEventHandler.tile_tooltip_requested.connect(_show_tooltip)
+	GameEventHandler.tile_mini_tooltip_requested.connect(_show_mini_tooltip)
+	GameEventHandler.tile_tooltip_hide_requested.connect(_hide_tooltip)
 	
 	var notch_1_text_line = []
 	var notch_2_text_line = []
@@ -90,6 +93,7 @@ func _process(_delta):
 		self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
 	
 func _show_tooltip(which: GridTile) -> void:
+	print(self.get_parent().name)
 	is_visible = true
 	is_active  = true
 	if tween:

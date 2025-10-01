@@ -30,10 +30,11 @@ var enemy_rng = RandomnessManager.enemy_rng
 
 const INTENT_ICON_SCENE: PackedScene = preload("res://COMBAT/GAME_ENTITY/IntentIcon.tscn")
 
-signal perform_attack(attack_to_perform: Array, attack_letter_tiles: Array, debuff_package: Array, pivot_position: Vector2, target: String, attacker: Enemy)
-signal pass_turn()
 
 func _ready():
+	
+	GameEventHandler.enemy_attack_finished.connect(check_for_ownership)
+	
 	enemy_deck = %EnemyAttackData.EnemyDeck
 	enemy_attack_count = %EnemyAttackData.EnemyAttackCount
 	enemy_attack_targets = %EnemyAttackData.EnemyAttackTargets
@@ -104,7 +105,7 @@ func perform_enemy_attack(attack_number):
 	for i in attack_to_perform.size():
 		attack_letter_tiles.append(current_enemy_deck[attack_to_perform[i]])
 		
-	perform_attack.emit(attack_to_perform, attack_letter_tiles, debuff_package, (self.position + self.pivot_offset), target, self)
+	GameEventHandler.perform_attack.emit(attack_to_perform, attack_letter_tiles, debuff_package, (self.position + self.pivot_offset), target, self)
 
 	await %IntentBox.get_child(0).juice_attack_perform()
 	%IntentBox.get_child(0).queue_free()

@@ -18,7 +18,6 @@ enum GridTileAction {
 }
 
 var bag_open = false
-
 var hovering = false
 
 ## Feature for the tile grid
@@ -30,10 +29,8 @@ var paired_tile_1 = null
 var paired_tile_2 = null
 var paired_tile_3 = null
 
-signal tile_hovered(which: GridTile, is_hovering: bool)
-signal tile_clicked(which: GridTile, action: GridTileAction)
-
 var glow_tween: Tween
+var scale_tween: Tween
 
 func _ready():
 	
@@ -58,6 +55,12 @@ func _ready():
 	##$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 5))
 	##$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 6))
 
+func _process(_delta: float) -> void:
+	## If scoring isn't happening, and the tile isn't going through another scaling process
+	## and isn't being hovered and isn't at the proper scale, tween it to the proper scale.
+	if not GeneralManager.scoring_is_active and not scale_tween and not hovering and not scale == is_at_scale():
+		determine_tile_scale()
+
 func update_tile_graphics():
 	print("Updating graphics...")
 	
@@ -67,7 +70,7 @@ func update_tile_graphics():
 	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	
 	var new_type = tile.type
-	var played_letter = tile.played_letter
+	var _played_letter = tile.played_letter
 	var visual_letter = tile.visual_letter
 	var new_notch1 = tile.notch1
 	var new_notch2 = tile.notch2
@@ -142,6 +145,50 @@ func play_tile_destruction_sound():
 	if not $SoundParent/DestructionSound.is_playing():
 		$SoundParent/DestructionSound.play()
 
+func is_at_scale():
+	var scaling_factor: float = 1.0
+	
+	if self.get_parent().name == "TilesInWord" and not hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0))
+			
+		else:
+			scaling_factor = 1.0
+		
+	elif not self.get_parent().name == "TilesInWord" and not hovering:
+		scaling_factor = 1.0
+	
+	#print(scaling_factor)
+	#print(self.tile.word_length)
+	
+	var scalar = Vector2(scaling_factor, scaling_factor)
+	
+	return scalar
+
+func determine_tile_scale(speed: float = 0.1):
+	var scaling_factor: float = 1.0
+	
+	if self.get_parent().name == "TilesInWord" and not hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0))
+		else:
+			scaling_factor = 1.0
+	
+	elif self.get_parent().name == "TilesInWord" and hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0)) * 1.1
+		else:
+			scaling_factor = 1.1
+	
+	elif not self.get_parent().name == "TilesInWord" and hovering:
+		scaling_factor = 1.1
+		
+	else:
+		scaling_factor = 1.0
+		
+	scale_tween = get_tree().create_tween()
+	scale_tween.tween_property(self, "scale", Vector2(scaling_factor, scaling_factor), speed)
+
 func toggle_word_glow(state: bool = false):
 	if glow_tween:
 			glow_tween.kill()
@@ -183,39 +230,51 @@ func _on_tile_button_gui_input(event: InputEvent):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			print("Left Clickety!")
 			play_tile_sound()
-			tile_clicked.emit(
+			GameEventHandler.tile_clicked.emit(
 				self, GridTileAction.PLAY
 			)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			print("Right Clickety!")
 			play_tile_sound()
-			tile_clicked.emit(
+			GameEventHandler.tile_clicked.emit(
 				self, GridTileAction.VIEW
 			)
 
 func _on_tile_button_mouse_entered():
 	#print("I've been entered!")
+	hovering = true
 	if self.grid_ghost == true:
+		self.ghost_pair.hovering = true
+		self.hovering = true
 		original_z = self.ghost_pair.z_index
-		self.ghost_pair.scale = self.ghost_pair.scale * 1.1
+		self.ghost_pair.determine_tile_scale(0.0075)
+		self.determine_tile_scale(0.0075)
 		self.ghost_pair.z_index = 128
-		tile_hovered.emit(self.ghost_pair, true)
+		GameEventHandler.tile_hovered.emit(self.ghost_pair, true)
+		GameEventHandler.tile_tooltip_requested.emit(self.ghost_pair)
 	else:
 		original_z = self.z_index
-		self.scale = self.scale * 1.1
+		determine_tile_scale()
 		self.z_index = 128
-		tile_hovered.emit(self, true)
+		GameEventHandler.tile_hovered.emit(self, true)
+		GameEventHandler.tile_tooltip_requested.emit(self)
 
 func _on_tile_button_mouse_exited():
 	#print("I've been exited!")
+	hovering = false
 	if self.grid_ghost == true:
-		self.ghost_pair.scale = self.ghost_pair.scale / 1.1
+		self.ghost_pair.hovering = false
+		self.hovering = false
+		self.ghost_pair.determine_tile_scale()
+		self.determine_tile_scale()
 		self.ghost_pair.z_index = original_z
-		tile_hovered.emit(self.ghost_pair, false)
+		GameEventHandler.tile_hovered.emit(self.ghost_pair, false)
+		GameEventHandler.tile_tooltip_hide_requested.emit()
 	else:
-		self.scale = self.scale / 1.1
+		determine_tile_scale()
 		self.z_index = original_z
-		tile_hovered.emit(self, false)
+		GameEventHandler.tile_hovered.emit(self, false)
+		GameEventHandler.tile_tooltip_hide_requested.emit()
 
 func spawned_in():
 	var tween = get_tree().create_tween()
@@ -224,54 +283,46 @@ func spawned_in():
 
 func spawned_from_bag():
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.000001)
 	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.05)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.000001)
-	tween2.tween_property(sprite, "scale", Vector2(1, 1), 0.05)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.000001)
+	scale_tween.tween_property(sprite, "scale", Vector2(1, 1), 0.05)
 
 func is_dying():
 	update_tile_score_text(0, true)
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
 	
 func is_destroyed():
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
 	play_tile_destruction_sound()
 	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 0), 0.25)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.05)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.05)
 	
 	await get_tree().create_timer(0.25).timeout
 	self.queue_free()
 	
 func is_vanishing():
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 0), 0.15)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.15)
-	
-func scale_to_word_size(scaling_factor):
-	var tween = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(scaling_factor, scaling_factor), 0.1)
-	
-func scale_back_to_grid():
-	var tween = get_tree().create_tween()
-	tween.tween_property(sprite, "scale", Vector2(1, 1), 0.1)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.15)
 
 func is_being_added_to_deck():
 	var tween = get_tree().create_tween()
-	var tween2 = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(0, 0, 0, 0), 0.5)
-	tween2.tween_property(sprite, "scale", Vector2(0, 0), 0.5)
+	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.5)
 
 ## Function that handles the scoring of a tile.
 func score_tile(count):
@@ -469,13 +520,13 @@ func score_tile_quiet():
 
 func juice_score():
 	var current_size = self.scale
-	var tween = get_tree().create_tween()
+	scale_tween = get_tree().create_tween()
 	var tween2 = get_tree().create_tween()
-	tween.tween_property(self, "scale", self.scale * 1.35, 0.1)
+	scale_tween.tween_property(self, "scale", self.scale * 1.35, 0.1)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property(self, "scale", self.scale / 1.35, 0.01)
+	scale_tween.tween_property(self, "scale", self.scale / 1.35, 0.01)
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
-	tween.tween_property(self, "scale", current_size, 0.001)
+	scale_tween.tween_property(self, "scale", current_size, 0.001)
 	return true
 
 func update_tile_score_text(tile_score: int, hide_text: bool = false):

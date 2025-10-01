@@ -4,6 +4,8 @@ class_name IntentTooltip
 @export var fade_seconds := 0.2
 
 var tween: Tween
+
+@warning_ignore("shadowed_variable_base_class")
 var is_visible := false
 
 var point_values  	:= GeneralManager.point_values
@@ -53,6 +55,8 @@ func _on_intent_hovered(which: IntentIcon, is_hovering: bool) -> void:
 			var attack_score_value = RichTextLabel.new()
 			attack_score_value.set_text(str(_calc_enemy_word_score(which.related_enemy, which.related_enemy.enemy_attack_list[which.related_attack], which.type)))
 			attack_score_value.set_fit_content(true)
+			
+			@warning_ignore("int_as_enum_without_cast", "int_as_enum_without_match")
 			attack_score_value.set_autowrap_mode(0)
 			attack_score_value.set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER)
 			%WordContainer.add_child(attack_score_value)

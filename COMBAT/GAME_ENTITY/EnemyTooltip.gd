@@ -8,6 +8,9 @@ var is_visible := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	GameEventHandler.entity_hovered.connect(_on_enemy_hovered)
+	
 	modulate = Color.TRANSPARENT
 	
 	var health_text = []

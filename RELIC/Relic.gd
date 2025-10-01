@@ -68,7 +68,7 @@ func on_pickup_effect():
 	return null
 	
 ## Function that handles what should happen at the start of each turn.
-func on_turn_start():
+func on_turn_start(turn: int = 0):
 	return 0
 
 ## Function that handles what should happen at the end of each turn.
@@ -104,7 +104,7 @@ func word_played_effect(word, target = null):
 	return 0
 	
 ## Function that happens every "x" letters played.
-func x_letters_played_effect(scored_letter_count: int, letter_score: int, word: String):
+func x_letters_played_effect(letter_score: int, word: String):
 	return 0
 
 ## Function that handles what should happen if a tile has a certain grid index.
@@ -119,8 +119,8 @@ func letter_retrigger_effect(letter, word):
 func word_retrigger_effect(word):
 	return 0
 
-## Function that checks to see if a word has been mangled in any way, such as for any added prefixes and suffixes.
-func mangle_check(word: String, prefix_1: String = "", prefix_2: String = "", prefix_3: String = "", suffix_1: String = "", suffix_2: String = "", suffix_3: String = ""):
+## Function that determines if a tile should echo for any special reason.
+func tile_echo_effect(tile: LetterTile):
 	return null
 
 ## Function for the Sentence Mixer relic.

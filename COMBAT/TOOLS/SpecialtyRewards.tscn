@@ -395,9 +395,5 @@ offset_left = -320.0
 offset_right = -320.0
 grow_horizontal = 2
 
-[connection signal="notch_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/NotchTooltip" method="_hide_tooltip"]
-[connection signal="notch_tooltip_requested" from="." to="NotchAndTileRewardParent/NotchTooltip" method="_show_tooltip"]
-[connection signal="tile_tooltip_hide_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_hide_tooltip"]
-[connection signal="tile_tooltip_requested" from="." to="NotchAndTileRewardParent/TileTooltip" method="_show_tooltip"]
 [connection signal="pressed" from="NotchAndTileRewardParent/SkipButtonBox/SkipButton" to="." method="_on_skip_button_pressed"]
 [connection signal="pressed" from="NotchAndTileRewardParent/ConfirmButtonBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]

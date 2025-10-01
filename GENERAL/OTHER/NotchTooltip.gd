@@ -23,6 +23,10 @@ func _process(_delta):
 
 
 func _ready() -> void:
+	
+	GameEventHandler.notch_tooltip_requested.connect(_show_tooltip)
+	GameEventHandler.notch_tooltip_hide_requested.connect(_hide_tooltip)
+	
 	modulate = Color.TRANSPARENT
 	hide()
 	
@@ -42,6 +46,8 @@ func _show_tooltip(which: NotchObject) -> void:
 	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(show)
 	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
+	
+	self.size.y = self.get_minimum_size().y
 
 func _hide_tooltip() -> void:
 	

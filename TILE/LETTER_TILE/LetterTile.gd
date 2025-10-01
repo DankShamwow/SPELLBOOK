@@ -31,6 +31,7 @@ enum NotchTypes {EMPTY, REPEATING, ECHOING, VAPORIZING, WEIGHTED, INERT, GILDED,
 var echo1 := false
 var echo2 := false
 var echo3 := false
+var special_echo := false
 var echoed_this_word := false
 
 # healNUM determines if a Rejuvenating tile has healed this combat.

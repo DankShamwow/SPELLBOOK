@@ -10,7 +10,7 @@ func _ready():
 	%Relic_Label.set_text("")
 	super()
 
-func word_score_multiplier_effect(word: String, target = null):
+func word_score_multiplier_effect(word: String, _target = null):
 	if word.contains("qua"):
 		juice_relic()
 		total_activations += 1

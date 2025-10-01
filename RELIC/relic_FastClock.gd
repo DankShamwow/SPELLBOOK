@@ -15,10 +15,13 @@ func _ready():
 func on_pickup_effect():
 	GameEventHandler.specialty_rewards_popup.emit(0, 0, 0, [11, 11, 11], false, 7)
 
-func on_turn_start():
-	for i in tiles_in_play.size():
-			tiles_in_play[i].current_age += 1
-	juice_relic()
-	total_activations += 1
-	await get_tree().create_timer(0.025).timeout
-	return
+func on_turn_start(turn: int = 0):
+	if turn == 1:
+		return
+	else:
+		for i in tiles_in_play.size():
+				tiles_in_play[i].current_age += 1
+		juice_relic()
+		total_activations += 1
+		await get_tree().create_timer(0.025).timeout
+		return

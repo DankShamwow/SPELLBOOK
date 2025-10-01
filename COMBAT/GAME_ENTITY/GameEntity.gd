@@ -41,12 +41,6 @@ var is_target := false
 ## Does this GameEntity have the initiative to take their turn?
 var has_initiative := false
 
-signal entity_clicked(which: GameEntity, action: GameEntityAction)
-signal entity_hovered(which: GameEntity, is_hovering: bool)
-signal entity_has_died(which: GameEntity)
-signal update_tile_graphics()
-signal update_tooltip_tile_graphics()
-
 enum GameEntityAction {
 	TARGET, VIEW
 }
@@ -92,7 +86,7 @@ func target_query():
 	else:
 		%TargetLabel.text = "I don't know what I am!"
 
-func take_damage(damage):
+func take_damage(damage: int, reason: String = "UNDEFINED_REASON"):
 
 	print("Score Received:" + str(damage))
 
@@ -106,6 +100,8 @@ func take_damage(damage):
 				self.health -= post_reduction_damage
 			else:
 				self.health -= 1
+				
+
 
 	else:
 		var post_reduction_damage = damage - self.defense
@@ -114,29 +110,33 @@ func take_damage(damage):
 		else:
 			self.health -= 1
 		
-	print(damage)
+	print(str(self.name) + " has taken damage. Reason: " + reason)
 	update_health_bar()
-	check_for_death()
+	check_for_death(reason)
 
-func lose_health(health_loss):
+func lose_health(health_loss, reason: String = "UNDEFINED_REASON"):
 	self.health -= health_loss
+	print(str(self.name) + " has lost health. Reason: " + reason)
 	update_health_bar()
-	check_for_death()
+	check_for_death(reason)
 
-func gain_health(healing):
+func gain_health(healing, reason: String = "UNDEFINED_REASON"):
 	if self.health < self.max_health:
 		self.health += healing
+		print(str(self.name) + " has gained health. Reason: " + reason)
 		if self.health > self.max_health:
 			self.health = self.max_health
 	update_health_bar()
 
-func gain_block(block_value):
+func gain_block(block_value, reason: String = "UNDEFINED_REASON"):
 	self.block += block_value
+	print(str(self.name) + " has gained block. Reason: " + reason)
 	update_health_bar()
 
-func check_for_death():
+func check_for_death(cause: String):
 	if self.health <= 0:
-		entity_has_died.emit(self)
+		GameEventHandler.entity_has_died.emit(self, cause)
+		print(str(self.name) + " has died. Cause of Death: " + cause)
 
 func remove_energy(value: int):
 	self.current_energy -= value
@@ -164,20 +164,15 @@ func add_status(status: String, status_amount: int, does_status_decay: bool, sta
 	effect_node.set_script(new_status)
 	%Statuses.add_child(effect_node)
 
-	var outside = %Statuses.get_parent().get_parent().get_parent()
-	var tooltip = outside.find_child("StatusEffectTooltip")
-	# First is GameEntity, Second is Combatants, Third should be PlayArea
-	effect_node.status_hovered.connect(tooltip._on_status_hovered)
-
 	if effect_node.tile_status == true:
 		var affected_tile_indices = effect_node.on_application(_amount, status_decay, _duration)
 		if affected_tile_indices.size() == 0:
 			effect_node.queue_free()
 		elif %Statuses.get_parent() is Character:
-			update_tile_graphics.emit(affected_tile_indices)
+			GameEventHandler.update_tile_graphics.emit(affected_tile_indices)
 			return
 		elif %Statuses.get_parent() is Enemy:
-			update_tooltip_tile_graphics.emit(affected_tile_indices)
+			GameEventHandler.update_tile_tooltip_graphics.emit(%Statuses.get_parent(), affected_tile_indices)
 			return
 		else:
 			print("Uh Oh!")
@@ -240,9 +235,9 @@ func remove_status_check():
 			if status_to_check.tile_status == true:
 				var affected_tile_indices =  status_to_check.on_duration_expiry()
 				if %Statuses.get_parent() is Character:
-					update_tile_graphics.emit(affected_tile_indices)
+					GameEventHandler.update_tile_graphics.emit(affected_tile_indices)
 				elif %Statuses.get_parent() is Enemy:
-					update_tooltip_tile_graphics.emit(affected_tile_indices)
+					GameEventHandler.update_tile_tooltip_graphics.emit(%Statuses.get_parent(), affected_tile_indices)
 					
 			else:
 				status_to_check.on_duration_expiry()
@@ -258,9 +253,9 @@ func clear_status_effects():
 
 func update_affected_tiles(affected_tile_indices):
 	if %Statuses.get_parent() is Character:
-		update_tile_graphics.emit(affected_tile_indices)
+		GameEventHandler.update_tile_graphics.emit(affected_tile_indices)
 	elif %Statuses.get_parent() is Enemy:
-		update_tooltip_tile_graphics.emit(affected_tile_indices)
+		GameEventHandler.update_tile_tooltip_graphics.emit(affected_tile_indices)
 	
 func update_health_bar():
 	%EntityHealthBar.value = self.health
@@ -274,18 +269,18 @@ func _on_entity_button_gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			print("Left Clunkety!")
 			is_target = true
-			entity_clicked.emit(
+			GameEventHandler.entity_clicked.emit(
 				self, GameEntityAction.TARGET
 			)
 			
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			print("Right Clunkety!")
-			entity_clicked.emit(
+			GameEventHandler.entity_clicked.emit(
 				self, GameEntityAction.VIEW
 			)
 
 func _on_entity_mouse_entered() -> void:
-	entity_hovered.emit(self, true)
+	GameEventHandler.entity_hovered.emit(self, true)
 
 func _on_entity_mouse_exited() -> void:
-	entity_hovered.emit(self, false)
+	GameEventHandler.entity_hovered.emit(self, false)

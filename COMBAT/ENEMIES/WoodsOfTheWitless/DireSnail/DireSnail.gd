@@ -34,4 +34,4 @@ func _perform_next_attack():
 	if self.current_energy > 0:
 		perform_enemy_attack(0)
 	else:
-		pass_turn.emit()
+		GameEventHandler.pass_turn.emit()

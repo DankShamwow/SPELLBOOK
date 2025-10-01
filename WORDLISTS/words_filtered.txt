@@ -66943,7 +66943,6 @@ hazy
 hazzan
 hazzanim
 hazzans
-he
 head
 headache
 headaches
@@ -68116,7 +68115,6 @@ herstories
 herstory
 hertz
 hertzes
-hes
 hesitance
 hesitances
 hesitancies
@@ -78582,7 +78580,6 @@ isthmus
 isthmuses
 istle
 istles
-it
 italianate
 italianated
 italianates
@@ -137721,7 +137718,6 @@ sherries
 sherris
 sherrises
 sherry
-shes
 shetland
 shetlands
 sheuch

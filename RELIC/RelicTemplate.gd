@@ -25,7 +25,7 @@ func letter_score_effect(_letter, _word, _target, _tile_score):
 	return 0
 	
 ## Function that happens every "x" letters played.
-func x_letters_played_effect(_scored_letter_count, _letter_score, _word):
+func x_letters_played_effect(_letter_score, _word):
 	return 0
 
 ## Function that handles what should happen if a tile has a certain grid index.

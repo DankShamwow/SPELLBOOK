@@ -5,6 +5,7 @@ var relic_dict: Dictionary[String, bool] = {
 	"thekid": true,
 	"theguy": true,
 	"theboshy": true,
+	"boshy": true,
 	"deliciousfruit": true,
 	"hatsunemiku": true,
 }
