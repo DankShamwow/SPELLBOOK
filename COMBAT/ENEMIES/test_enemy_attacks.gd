@@ -21,6 +21,8 @@ LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.N, Le
 LetterTile.new().new_tile(LetterTile.TileType.BASIC, LetterTile.TileLetter.G, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, 15),
 ]
 
+var TestDict = {0: [ [0,1,2,3], "PLAYER", "ATTACK_DEBUFF", [["WARPED_DEBUFF", 3, 1, 3, "PLAYER"], ] ]}
+
 var EnemyAttack0 = [0,1,2,3,]
 
 var EnemyAttack1 = [4,5,6,7,8,]

@@ -18,7 +18,7 @@ const MINI_GRID_TILE_SCENE: PackedScene = preload("res://TILE/GRID_TILE/MiniGrid
 const STATUS_EFFECT_SCENE: PackedScene = preload("res://COMBAT/STATUSES/StatusEffect.tscn")
 
 func _ready() -> void:
-	var description_size = %IntentDescription.size
+	description_size = %IntentDescription.size
 	modulate = Color.TRANSPARENT
 	hide()
 
@@ -130,7 +130,6 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array, type: int):
 		var word_length = word.size()
 		var scored_tile = enemy.current_enemy_deck[word[i]]
 		
-		
 		if scored_tile.type == LetterTile.TileType.LOCKED:
 			continue
 		
@@ -141,19 +140,15 @@ func _calc_enemy_word_score(enemy: Enemy, word: Array, type: int):
 		
 		# Query for Repeating notches
 		if scored_tile.notch1 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 1")
 			tile_retriggers += 1
 		if scored_tile.notch2 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 2")
 			tile_retriggers += 1
 		if scored_tile.notch3 == LetterTile.NotchTypes.REPEATING:
-			print("Repeating of course! 3")
 			tile_retriggers += 1
 		
 		for j in tile_retriggers + 1:
 			tile_score += _score_tile_quiet(scored_tile)
 			tile_score += context_power
-			print(tile_score)
 			
 		points_score += tile_score
 		

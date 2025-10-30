@@ -7,6 +7,7 @@ const NOTCH_OBJECT_SCENE = preload("res://TILE/NOTCHES/NotchObject.tscn")
 var tile_rng = RandomnessManager.tile_rng
 var reward_rng = RandomnessManager.reward_rng
 var various_rng = RandomnessManager.various_rng
+var shop_rng = RandomnessManager.shop_rng
 
 var starting_bag = StartingTiles.StartingTileArray
 var current_deck = GeneralManager.current_deck
@@ -25,6 +26,8 @@ var tier_3_lexical_pool = GeneralManager.tier_3_lexical_pool
 var tier_4_lexical_pool = GeneralManager.tier_4_lexical_pool
 
 var first_click = false
+var refresh: bool = false
+var use_shop_rng: bool = false
 
 @export var fade_in_mask: ColorRect
 @export var button_container: VBoxContainer
@@ -52,7 +55,13 @@ func _ready() -> void:
 	#
 	#query_combat_rewards(50, 5, 0, 3, 1, [19, 19, 19])
 
-func _bringup_specialty_rewards(reward_notch_count: int = 0, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = [], allow_tiles: bool = false, draw_size: int = 0):
+func _bringup_specialty_rewards(reward_notch_count: int = 0, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = [], allow_tiles: bool = false, draw_size: int = 0, refresh_tiles: bool = false, from_shop: bool = false):
+	
+	if refresh_tiles:
+		refresh = true
+	
+	if from_shop:
+		use_shop_rng = true
 	
 	if available_tiles.size() == 0:
 		for i in current_deck.size():
@@ -106,12 +115,11 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			
 		for i in draws.size():
 			var draws_offset = 64 + 40 * (7 - draws.size())
-			print("Drawing new tile!")
 			var new_tile = GRID_TILE_SCENE.instantiate()
 			new_tile.tile = current_deck[draws[i]]
 			%PlayerTilesParent.add_child(new_tile)
 			new_tile.toggle_monitorable()
-			new_tile.position = Vector2(592, 32)
+			new_tile.position = Vector2(592, 16)
 			new_tile.tile.target = Vector2(draws_offset +(80*i), (232 + (((i+1) % 2) * 48)))
 			new_tile.spawned_from_bag()
 			new_tile.move_to_position(0.5)
@@ -120,7 +128,6 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 
 		if allow_tiles:
 			for i in tiles.size():
-				print("Cooking new tile!")
 				var new_tile = GRID_TILE_SCENE.instantiate()
 				new_tile.tile = tiles[i]
 				%NewTilesParent.add_child(new_tile)
@@ -156,9 +163,17 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 		# REMEMBER NITWIT, YOU GOTTA SUBTRACT ONE BECAUSE IT'S AN ARRAY AND IT STARTS AT ZERO.
 		var notch_type_roll = notch_table_roll[reward_rng.randi() % notch_table_roll.size()]
 		var notch_letter_roll = ""
+		
+		
 		if notch_type_roll == 19:
-			var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
-			notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+			if not use_shop_rng:
+				var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+				
+			else:
+				var lexical_table_roll = lexical_tables[shop_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[shop_rng.randi() % lexical_table_roll.size()]
+			
 			notch_letter_roll = letters[notch_letter_roll]
 			
 		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
@@ -182,8 +197,14 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 		var notch_letter_roll = ""
 		
 		if notch_type_roll == 19:
-			var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
-			notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+			if not use_shop_rng:
+				var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+				
+			else:
+				var lexical_table_roll = lexical_tables[shop_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[shop_rng.randi() % lexical_table_roll.size()]
+			
 			notch_letter_roll = letters[notch_letter_roll]
 		
 		var new_notch = Notch.new().new_notch(notch_type_roll, notch_letter_roll)
@@ -193,8 +214,14 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 		var notch_letter_roll = ""
 		
 		if specified_rewards[i] == 19:
-			var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
-			notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+			if not use_shop_rng:
+				var lexical_table_roll = lexical_tables[reward_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[reward_rng.randi() % lexical_table_roll.size()]
+				
+			else:
+				var lexical_table_roll = lexical_tables[shop_rng.rand_weighted(lexical_table_weights)]
+				notch_letter_roll = lexical_table_roll[shop_rng.randi() % lexical_table_roll.size()]
+			
 			notch_letter_roll = letters[notch_letter_roll]
 		
 		var new_notch = Notch.new().new_notch(specified_rewards[i], notch_letter_roll)
@@ -217,8 +244,6 @@ func set_notch_reward_rng(notch_count: int, uncommon_count: int = 0, rare_count:
 		var pop_location = (tile_rng.randi() % available_tiles.size())
 		draws.append(available_tiles[pop_location].tile_index)
 		available_tiles.pop_at(pop_location)
-		print(pop_location)
-		print(draws)
 
 	if allow_tiles:
 		for i in 5:
@@ -264,7 +289,7 @@ func _on_tile_clicked(which: GridTile, action: GridTile.GridTileAction):
 func _is_notch_hovered(which: NotchObject, is_hovering: bool):
 	if is_hovering == true:
 		GameEventHandler.notch_tooltip_requested.emit(which)
-		GameEventHandler.tile_tooltip_hide_requested.emit()
+		GameEventHandler.tile_tooltip_hide_requested.emit(true)
 		
 	if is_hovering == false:
 		GameEventHandler.notch_tooltip_hide_requested.emit()
@@ -333,7 +358,7 @@ func _on_confirm_button_pressed() -> void:
 					await get_tree().create_timer(0.15).timeout
 			
 			for i in %PlayerTilesParent.get_child_count():
-				%PlayerTilesParent.get_child(-1).tile.target = Vector2(592, 32)
+				%PlayerTilesParent.get_child(-1).tile.target = Vector2(592, 16)
 				%PlayerTilesParent.get_child(-1).move_to_position(0.5)
 				%PlayerTilesParent.get_child(-1).is_being_added_to_deck()
 				%PlayerTilesParent.get_child(-1).reparent(%TilesToKill)
@@ -350,8 +375,9 @@ func _on_confirm_button_pressed() -> void:
 			
 			
 			for i in is_selected_tile.size():
+				is_selected_tile[i].tile.tile_index = current_deck.size()
 				current_deck.append(is_selected_tile[i].tile)
-				is_selected_tile[i].tile.target = Vector2(592, 32)
+				is_selected_tile[i].tile.target = Vector2(592, 16)
 				is_selected_tile[i].is_being_added_to_deck()
 				is_selected_tile[i].move_to_position(0.5)
 				is_selected_tile[i].reparent(%TilesToKill)
@@ -382,4 +408,10 @@ func _cleanup():
 	tween.tween_property(%NotchAndTileRewardParent, "visible", false, 0.001)
 	
 	await get_tree().create_timer(0.16).timeout
+	
+	if refresh:
+		available_tiles.clear()
+		for i in current_deck.size():
+			available_tiles.append(current_deck[i])
+	
 	self.queue_free()

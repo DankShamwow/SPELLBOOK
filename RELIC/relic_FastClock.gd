@@ -6,14 +6,15 @@ var tiles_in_play = GeneralManager.tiles_in_play
 func _ready():
 	relic_id = 20
 	relic_name = "Fast Clock"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'On pickup, draft 3 Patient Notches. Patient Notches scale twice as quickly.'
 	relic_flavor_text = "While holding this clock, everything seems to speed up around you."
 	%Relic_Label.set_text("")
 	super()
 	
 func on_pickup_effect():
-	GameEventHandler.specialty_rewards_popup.emit(0, 0, 0, [11, 11, 11], false, 7)
+	GameEventHandler.specialty_rewards_popup.emit(0, 0, 0, [11, 11, 11], false, 7, false, false)
 
 func on_turn_start(turn: int = 0):
 	if turn == 1:

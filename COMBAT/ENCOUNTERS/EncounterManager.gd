@@ -43,7 +43,6 @@ func _load_area_encounters(area: String):
 	
 	var full_path: String = "res://COMBAT/ENCOUNTERS/" + area + "/"
 	var area_encounter_list = ResourceLoader.list_directory(full_path)
-	print(area_encounter_list)
 	
 	for i in area_encounter_list.size():
 		
@@ -71,27 +70,17 @@ func _load_area_encounters(area: String):
 			var encounter_name = area + "_boss_" + str(boss_count)
 			boss_encounter_pool[encounter_name] = saved_path
 			boss_encounters_available.append(encounter_name)
+			print(saved_path)
 			boss_count += 1
 		
-		print(basic_encounter_pool)
-		print(normal_encounter_pool)
-		print(elite_encounter_pool)
-		print(boss_encounter_pool)
-		
-		print(basic_encounters_available)
-		print(normal_encounters_available)
-		print(elite_encounters_available)
-		print(boss_encounters_available)
 		
 func grab_new_encounter(tier: String):
 	var grabbed_encounter: String
 	
 	if tier == "BASIC":
 		if basic_encounters_available.size() > 0:
-			print(basic_encounters_available)
 			
 			grabbed_encounter = basic_encounters_available.pop_at(encounter_rng.randi() % basic_encounters_available.size())
-			print(grabbed_encounter)
 			
 			if cached_encounters.has(grabbed_encounter):
 				return cached_encounters.get(grabbed_encounter)
@@ -100,7 +89,6 @@ func grab_new_encounter(tier: String):
 				print("Loading encounter...")
 				var loaded_encounter = ResourceLoader.load(basic_encounter_pool.get(grabbed_encounter))
 				cached_encounters[grabbed_encounter] = loaded_encounter
-				print(loaded_encounter)
 				return loaded_encounter
 			
 		else:
@@ -112,7 +100,6 @@ func grab_new_encounter(tier: String):
 		if normal_encounters_available.size() > 0:
 			
 			grabbed_encounter = normal_encounters_available.pop_at(encounter_rng.randi() % normal_encounters_available.size())
-			print(grabbed_encounter)
 			
 			if cached_encounters.has(grabbed_encounter):
 				return cached_encounters.get(grabbed_encounter)
@@ -121,7 +108,6 @@ func grab_new_encounter(tier: String):
 				print("Loading encounter...")
 				var loaded_encounter = ResourceLoader.load(normal_encounter_pool.get(grabbed_encounter))
 				cached_encounters[grabbed_encounter] = loaded_encounter
-				print(loaded_encounter)
 				return loaded_encounter
 			
 		else:
@@ -133,7 +119,6 @@ func grab_new_encounter(tier: String):
 		if elite_encounters_available.size() > 0:
 			
 			grabbed_encounter = elite_encounters_available.pop_at(encounter_rng.randi() % elite_encounters_available.size())
-			print(grabbed_encounter)
 			
 			if cached_encounters.has(grabbed_encounter):
 				return cached_encounters.get(grabbed_encounter)
@@ -142,7 +127,6 @@ func grab_new_encounter(tier: String):
 				print("Loading encounter...")
 				var loaded_encounter = ResourceLoader.load(elite_encounter_pool.get(grabbed_encounter))
 				cached_encounters[grabbed_encounter] = loaded_encounter
-				print(loaded_encounter)
 				return loaded_encounter
 			
 		else:
@@ -154,18 +138,15 @@ func grab_new_encounter(tier: String):
 		if boss_encounters_available.size() > 0:
 			
 			grabbed_encounter = boss_encounters_available.pop_at(encounter_rng.randi() % boss_encounters_available.size())
-			print(grabbed_encounter)
 			
 			if cached_encounters.has(grabbed_encounter):
 				return cached_encounters.get(grabbed_encounter)
 			
 			else:
 				print("Loading encounter...")
-				var load_path = boss_encounter_pool.get(grabbed_encounter)
-				print(load_path)
 				var loaded_encounter = ResourceLoader.load(boss_encounter_pool.get(grabbed_encounter))
 				cached_encounters[grabbed_encounter] = loaded_encounter
-				print(loaded_encounter)
+				print(grabbed_encounter)
 				return loaded_encounter
 			
 		else:

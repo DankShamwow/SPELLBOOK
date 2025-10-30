@@ -4,7 +4,8 @@ class_name QuaSeal
 func _ready():
 	relic_id = 9
 	relic_name = "Seal of Qua-ity"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Playing a word that contains "qua" multiplies the final score by 1.5.'
 	relic_flavor_text = str('"No, it is [b]NOT[/b] misspelled. This seal ensures that whatever it is stamped on contains ' + "'qua'" + ' in a quantity of at least one."')
 	%Relic_Label.set_text("")

@@ -1,11 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://by15p4c2auvkj"]
+[gd_scene load_steps=20 format=3 uid="uid://by15p4c2auvkj"]
 
 [ext_resource type="Script" uid="uid://cch6efpdfewhy" path="res://TILE/GRID_TILE/GridTile.gd" id="1_h3das"]
 [ext_resource type="Texture2D" uid="uid://ci5etw0xebh5s" path="res://SPRITES/TILES/LetterTiles.png" id="2_adt6t"]
+[ext_resource type="Shader" uid="uid://di0kv5wlogrg" path="res://TILE/GRID_TILE/WarpedShader.gdshader" id="3_kt46p"]
 [ext_resource type="Texture2D" uid="uid://cbhs7wbjvvuwh" path="res://SPRITES/TILES/TileSpriteMask.png" id="3_l10u7"]
 [ext_resource type="AudioStream" uid="uid://b4yfx6n23x4rl" path="res://AUDIO/TILE/destruction_vaporization_attempt_1.ogg" id="4_dlbwe"]
 [ext_resource type="AudioStream" uid="uid://cgm5mblgsqast" path="res://AUDIO/MISC/SCORING/scoring_sound_attempt_1.ogg" id="5_u3g1w"]
 [ext_resource type="AudioStream" uid="uid://bnhp4hq5jtxrp" path="res://AUDIO/TILE/tile_sound_attempt3.ogg" id="6_u3g1w"]
+[ext_resource type="AudioStream" uid="uid://ci1x0nhl2pfsl" path="res://AUDIO/NOTCH/OVERLOADED/overloaded_attempt_1.ogg" id="7_plc3u"]
+[ext_resource type="AudioStream" uid="uid://beb5w8rtcqp1o" path="res://AUDIO/NOTCH/ECHOING/echoing_attempt_1.ogg" id="7_qnvav"]
+[ext_resource type="AudioStream" uid="uid://cgrvo67mmwtq3" path="res://AUDIO/NOTCH/PHANTOM/phantom_attempt_1.ogg" id="8_uhdth"]
+[ext_resource type="AudioStream" uid="uid://v5cshtwpert2" path="res://AUDIO/NOTCH/WEIGHTED/weighted_notch_attempt_4.ogg" id="9_uhdth"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_u3g1w"]
 blend_mode = 1
@@ -23,6 +28,11 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.03125, 0.03125)
 metadata/_snap_enabled = true
 metadata/_snap_count = 32
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kt46p"]
+resource_local_to_scene = true
+shader = ExtResource("3_kt46p")
+shader_parameter/is_warped = false
 
 [sub_resource type="Animation" id="Animation_l10u7"]
 resource_name = "ChangeToNewType"
@@ -70,6 +80,7 @@ offset_right = 32.0
 offset_bottom = 32.0
 
 [node name="Tile_Sprite" type="Node2D" parent="Tile_Button"]
+unique_name_in_owner = true
 position = Vector2(16, 16)
 
 [node name="Word_Glow" type="TextureRect" parent="Tile_Button/Tile_Sprite"]
@@ -85,36 +96,50 @@ mouse_filter = 2
 texture = SubResource("GradientTexture2D_fjty2")
 
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
 
 [node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_kt46p")
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
+frame = 26
+region_rect = Rect2(0, 32, 32, 32)
 
 [node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
+frame = 78
 
 [node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
+frame = 104
 
 [node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
+frame = 130
 
 [node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_adt6t")
 hframes = 26
 vframes = 7
+frame = 156
 
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_l10u7")
 
@@ -139,16 +164,35 @@ vertical_alignment = 1
 [node name="SoundParent" type="Node" parent="."]
 
 [node name="DestructionSound" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
 stream = ExtResource("4_dlbwe")
-volume_db = -8.0
 
 [node name="ScoringSoundAttempt1" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
 stream = ExtResource("5_u3g1w")
 volume_db = -8.0
 
 [node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
 stream = ExtResource("6_u3g1w")
 volume_db = -8.0
+
+[node name="EchoingAttempt1" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("7_qnvav")
+
+[node name="OverloadedAttempt1" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("7_plc3u")
+volume_db = -8.0
+
+[node name="PhantomAttempt1" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("8_uhdth")
+
+[node name="WeightedNotchAttempt4" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("9_uhdth")
 
 [node name="PairingPoly" type="Control" parent="."]
 anchors_preset = 0

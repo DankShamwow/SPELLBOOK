@@ -15,10 +15,8 @@ var camera_edge_x: float
 func _input(event: InputEvent) -> void:
 	if GeneralManager.is_bag_open == false:
 		if event.is_action_pressed("scroll_up"):
-			print("scrolling up!")
 			camera_2d.position.x -= SCROLL_SPEED
 		elif event.is_action_pressed("scroll_down"):
-			print("scrolling down!")
 			camera_2d.position.x += SCROLL_SPEED
 
 		camera_2d.position.x = clamp(camera_2d.position.x, 50, camera_edge_x)
@@ -80,7 +78,6 @@ func unlock_next_rooms() -> void:
 
 func _on_map_room_selected(room: Room, map_room: MapRoom) -> void:
 	get_tree().call_group("Available Rooms", "disable_button")
-	print(get_tree())
 	map_room.available = false
 	map_room.room.selected = true
 	

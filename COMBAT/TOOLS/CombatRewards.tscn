@@ -429,7 +429,7 @@ grow_horizontal = 2
 mouse_filter = 2
 
 [node name="MarkerParent" type="Node2D" parent="."]
-visible = false
+position = Vector2(-320, 0)
 
 [node name="Marker2D" type="Marker2D" parent="MarkerParent"]
 position = Vector2(208, 88)

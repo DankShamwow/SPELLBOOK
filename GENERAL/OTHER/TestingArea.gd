@@ -35,4 +35,4 @@ func _ready():
 		$Node2D.add_child(random_tile)
 		random_tile.position = Vector2(randi_range(100, 300), randi_range(100, 300))
 		
-	print(get_tree().get_nodes_in_group("Notches to Add"))
+	#print(get_tree().get_nodes_in_group("Notches to Add"))

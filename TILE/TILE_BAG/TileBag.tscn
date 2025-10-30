@@ -49,7 +49,14 @@ script = ExtResource("1_ufeyo")
 no_click_area = NodePath("CanvasLayer")
 fade_in_mask = NodePath("CanvasLayer/ColorRect")
 bag_scroller = NodePath("CanvasLayer/TextureRect/ScrollContainer")
-bag_grid = NodePath("CanvasLayer/TextureRect/ScrollContainer/GridContainer")
+bag_grid = NodePath("CanvasLayer/TextureRect/ScrollContainer/BagGrid")
+
+[node name="TileTooltip" parent="." instance=ExtResource("4_tpdis")]
+z_index = 256
+layout_mode = 1
+offset_left = -440.0
+offset_right = -320.0
+offset_bottom = 148.0
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="."]
 layer = 11
@@ -110,17 +117,12 @@ offset_top = 48.0
 offset_right = 576.0
 offset_bottom = 368.0
 
-[node name="GridContainer" type="GridContainer" parent="CanvasLayer/TextureRect/ScrollContainer"]
+[node name="BagGrid" type="GridContainer" parent="CanvasLayer/TextureRect/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 12
 columns = 10
-
-[node name="TileTooltip" parent="." instance=ExtResource("4_tpdis")]
-z_index = 256
-layout_mode = 1
-offset_left = -440.0
-offset_right = -320.0
 
 [node name="StartPoseMarker" type="Marker2D" parent="."]
 position = Vector2(8, 24)
@@ -128,7 +130,5 @@ position = Vector2(8, 24)
 [node name="GridStartMarker" type="Marker2D" parent="."]
 position = Vector2(-544, 48)
 
-[connection signal="tile_tooltip_hide_requested" from="." to="TileTooltip" method="_hide_tooltip"]
-[connection signal="tile_tooltip_requested" from="." to="TileTooltip" method="_show_tooltip"]
 [connection signal="toggled" from="CanvasLayer2/TileBagButton" to="." method="_on_tile_bag_button_toggled"]
 [connection signal="toggled" from="CanvasLayer2/TileBagButton" to="CanvasLayer/ColorRect" method="_on_tile_bag_button_toggled"]

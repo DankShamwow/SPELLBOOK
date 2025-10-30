@@ -49,7 +49,7 @@ var has_affected_notch3 := false
 signal send_back_home(which: NotchObject)
 signal has_paired()
 signal notch_hovered(which: NotchObject, is_hovering: bool)
-signal update_tooltip(which: GridTile)
+signal update_tile_tooltip(which: GridTile)
 
 #func _ready():
 
@@ -116,19 +116,19 @@ func _on_texture_button_up():
 				if overlaps[i].get_parent().get_parent().tile.notch1 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch2 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch3 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					update_tooltip.emit(paired_tile)
+					update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 	

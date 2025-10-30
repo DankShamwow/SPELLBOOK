@@ -6,7 +6,8 @@ var relic_dict: Dictionary[String, bool] = {}
 func _ready():
 	relic_id = 3
 	relic_name = "Jeweled Butterfly"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Curated words relating to "gemstones" give you 5 gold per tile when scored.'
 	relic_flavor_text = "[i]Danaus saphirae[/i]. The favorite snack of several geopodes, including salipedes, crystal spiders, and rock crabs."
 	%Relic_Label.set_text("")
@@ -16,7 +17,7 @@ func _ready():
 func on_pickup_effect():
 	var wordlist = FileAccess.open("res://WORDLISTS/Categories/Gemstones.txt", FileAccess.READ)
 	while wordlist.get_position() < wordlist.get_length():
-		print("Working...")
+		#print("Working...")
 		relic_dict[str(wordlist.get_line())] = true
 	wordlist.close()
 	return null

@@ -49,7 +49,7 @@ var has_affected_notch3 := false
 signal has_paired()
 
 func _ready():
-	print(notch.type)
+	#print(notch.type)
 	%LeftWing.set_frame_coords(Vector2i(notch.type, 0))
 	%RightWing.set_frame_coords(Vector2i(notch.type, 1))
 	%Nub.set_frame_coords(Vector2i(notch.type, 2))
@@ -104,26 +104,26 @@ func _on_texture_button_up():
 	if %Area2D.has_overlapping_areas():
 		var overlaps = %Area2D.get_overlapping_areas()
 		for i in overlaps.size():
-			print(overlaps[i].get_parent().get_parent())
-			print(overlaps)
+			#print(overlaps[i].get_parent().get_parent())
+			#print(overlaps)
 			if overlaps[i].get_parent().get_parent() is GridTile:
 				print("Pairing found!")
 				if overlaps[i].get_parent().get_parent().tile.notch1 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					GameEventHandler.update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch2 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					GameEventHandler.update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 				elif overlaps[i].get_parent().get_parent().tile.notch3 == LetterTile.NotchTypes.EMPTY:
 					paired_tile = overlaps[i].get_parent().get_parent()
 					_snap_to_paired_tile(paired_tile, overlaps[i])
-					GameEventHandler.update_tooltip.emit(paired_tile)
+					GameEventHandler.update_tile_tooltip.emit(paired_tile)
 					has_paired.emit()
 					break
 	
@@ -156,7 +156,7 @@ func _resnap_to_paired_tile():
 				paired_tile.tile.bonus_letter1 = notch.letter
 				paired_tile.update_notch_graphics(2, true)
 				paired_tile.update_notch_graphics(1, true)
-				print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
+				#print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
 				
 				has_affected_notch1 = true
 				has_affected_notch2 = false
@@ -177,7 +177,7 @@ func _resnap_to_paired_tile():
 				paired_tile.tile.bonus_letter2 = notch.letter
 				paired_tile.update_notch_graphics(3, true)
 				paired_tile.update_notch_graphics(2, true)
-				print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
+				#print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
 				
 				has_affected_notch2 = true
 				has_affected_notch3 = false
@@ -198,13 +198,13 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		tween.tween_property(self, "rotation_degrees", 180.0, 0.15)
 		tween2.tween_property(self, "position", paired_tile_pose, 0.15)
 		paired_tile.tile.notch1 = LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]]
-		print(Notch.NotchTypes.keys()[notch.type])
-		print(LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]])
-		print(notch.type)
+		#print(Notch.NotchTypes.keys()[notch.type])
+		#print(LetterTile.NotchTypes[Notch.NotchTypes.keys()[notch.type]])
+		#print(notch.type)
 		paired_tile.tile.bonus_letter1 = notch.letter
 		paired_tile.update_notch_graphics(1, true)
 		paired_tile.toggle_monitorable()
-		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
+		#print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch1]).to_pascal_case())
 		
 		has_affected_notch1 = true
 		if folded:
@@ -223,7 +223,7 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		paired_tile.tile.bonus_letter2 = notch.letter
 		paired_tile.update_notch_graphics(2, true)
 		paired_tile.toggle_monitorable()
-		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
+		#print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch2]).to_pascal_case())
 		
 		has_affected_notch2 = true
 		if folded:
@@ -244,7 +244,7 @@ func _snap_to_paired_tile(paired_tile: GridTile, overlaps: Area2D):
 		paired_tile.tile.bonus_letter3 = notch.letter
 		paired_tile.update_notch_graphics(3, true)
 		paired_tile.toggle_monitorable()
-		print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch3]).to_pascal_case())
+		#print(str(paired_tile.tile.NotchTypes.keys()[paired_tile.tile.notch3]).to_pascal_case())
 		has_affected_notch3 = true
 		if folded:
 			$AnimationPlayer.play("unfold")
@@ -267,7 +267,7 @@ func _process(delta):
 
 func _on_texture_button_mouse_entered():
 	has_mouse = true
-	print(has_mouse)
+	#print(has_mouse)
 	original_z = self.z_index
 	self.scale = self.scale * 1.1
 	self.z_index = 128
@@ -275,7 +275,7 @@ func _on_texture_button_mouse_entered():
 	
 func _on_texture_button_mouse_exited():
 	has_mouse = false
-	print(has_mouse)
+	#print(has_mouse)
 	self.scale = self.scale / 1.1
 	self.z_index = original_z
 	GameEventHandler.notch_hovered.emit(self, false)

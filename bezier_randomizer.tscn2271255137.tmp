@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddysygcb1j8vw"]
+
+[ext_resource type="Script" uid="uid://c7g7kjsqoq2jt" path="res://bezier_randomizer.gd" id="1_3wls6"]
+
+[sub_resource type="Curve" id="Curve_3wls6"]
+_data = [Vector2(0, 0.24719107), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="BezierRandomizer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 480.0
+script = ExtResource("1_3wls6")
+
+[node name="BezierStart" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, 240)
+
+[node name="BezierEnd" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(608, 32)
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+autostart = true
+
+[node name="Line2D" type="Line2D" parent="."]
+unique_name_in_owner = true
+width = 4.0
+width_curve = SubResource("Curve_3wls6")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

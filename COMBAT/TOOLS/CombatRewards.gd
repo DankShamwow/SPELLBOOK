@@ -43,6 +43,7 @@ var relics = []
 func _ready() -> void:
 	GameEventHandler.tile_clicked.connect(self._on_tile_clicked)
 	GameEventHandler.notch_hovered.connect(self._is_notch_hovered)
+	GameEventHandler.tile_hovered.connect(self._is_tile_hovered)
 	
 	#StartingTiles.generate_starting_tiles()
 	#for i in starting_bag.size():
@@ -100,10 +101,14 @@ func _show_rewards(state: bool):
 func _is_notch_hovered(which: NotchObject, is_hovering: bool):
 	if is_hovering == true:
 		GameEventHandler.notch_tooltip_requested.emit(which)
-		GameEventHandler.tile_tooltip_hide_requested.emit()
+		GameEventHandler.tile_tooltip_hide_requested.emit(true)
 		
 	if is_hovering == false:
-		GameEventHandler.notch_tooltip_hide_requested.emit()
+		GameEventHandler.notch_tooltip_hide_requested.emit(false)
+
+func _is_tile_hovered(which: GridTile, is_hovering: bool):
+	if is_hovering == true:
+		GameEventHandler.notch_tooltip_hide_requested.emit(true)
 
 func query_combat_rewards(reward_gold: int, reward_notch_count: int, reward_relics: int, reward_notch_uncommons: int = 0, reward_notch_rares: int = 0, reward_notch_specified: Array = []):
 	if reward_gold > 0:
@@ -190,7 +195,7 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			var new_notch = NOTCH_OBJECT_SCENE.instantiate()
 			new_notch.notch = notches[i]
 			%NotchesParent.add_child(new_notch)
-			#new_notch.update_tooltip.connect(%TileTooltip._show_tooltip)
+			#new_notch.update_tile_tooltip.connect(%TileTooltip._show_tooltip)
 			var notch_tween = new_notch.create_tween()
 			notch_tween.tween_property(new_notch, "modulate:a", 0, 0.001)
 			notch_tween.tween_property(new_notch, "modulate:a", 1, 0.15)
@@ -210,20 +215,18 @@ func populate_notches_draws_and_tiles(notches: Array, draws: Array, tiles: Array
 			
 		for i in draws.size():
 			var draws_offset = 64 + 40 * (7 - draws.size())
-			print("Drawing new tile!")
 			var new_tile = GRID_TILE_SCENE.instantiate()
 			new_tile.tile = draws[i]
 			%PlayerTilesParent.add_child(new_tile)
 			new_tile.toggle_monitorable()
-			new_tile.position = Vector2(592, 32)
+			new_tile.position = Vector2(592, 16)
 			new_tile.tile.target = Vector2(draws_offset +(80*i), (232 + (((i+1) % 2) * 48)))
 			new_tile.spawned_from_bag()
 			new_tile.move_to_position(0.5)
-			new_tile.play_tile_sound()
+			GameEventHandler.play_tile_sound.emit(new_tile)
 			await get_tree().create_timer(0.1).timeout
 
 		for i in tiles.size():
-			print("Cooking new tile!")
 			var new_tile = GRID_TILE_SCENE.instantiate()
 			new_tile.tile = tiles[i]
 			%NewTilesParent.add_child(new_tile)
@@ -433,7 +436,7 @@ func _on_confirm_button_pressed() -> void:
 					await get_tree().create_timer(0.15).timeout
 			
 			for i in %PlayerTilesParent.get_child_count():
-				%PlayerTilesParent.get_child(-1).tile.target = Vector2(592, 32)
+				%PlayerTilesParent.get_child(-1).tile.target = Vector2(592, 16)
 				%PlayerTilesParent.get_child(-1).move_to_position(0.5)
 				%PlayerTilesParent.get_child(-1).is_being_added_to_deck()
 				%PlayerTilesParent.get_child(-1).reparent(%TilesToKill)
@@ -450,8 +453,9 @@ func _on_confirm_button_pressed() -> void:
 			
 			
 			for i in is_selected_tile.size():
+				is_selected_tile[i].tile.tile_index = current_deck.size()
 				current_deck.append(is_selected_tile[i].tile)
-				is_selected_tile[i].tile.target = Vector2(592, 32)
+				is_selected_tile[i].tile.target = Vector2(592, 16)
 				is_selected_tile[i].is_being_added_to_deck()
 				is_selected_tile[i].move_to_position(0.5)
 				is_selected_tile[i].reparent(%TilesToKill)

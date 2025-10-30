@@ -21,7 +21,7 @@ const Y_DIST := 45
 # Placement variance for map nodes
 const PLACEMENT_VARIANCE := 10
 
-const room_type_weights = [11.0, 3.0, 2.0, 1.0, 1.0, 1.0, 11.0]
+const room_type_weights = [12.0, 3.0, 2.0, 1.0, 0.0, 1.0, 11.0]
 
 var random_room_type_weights = {
 	Room.RoomType.MONSTER:		0.0,
@@ -71,6 +71,7 @@ func generate_map() -> Array[Array]:
 	_setup_room_types()
 
 	return map_data
+
 func _generate_initial_grid():
 	var result: Array[Array] = []
 	
@@ -130,6 +131,7 @@ func _generate_initial_grid():
 		result.append(adjacent_rooms)
 	
 	return result
+
 func _generate_starting_points() -> Array[int]:
 	var y_coordinates: Array[int]
 	var unique_points: int = 0
@@ -146,6 +148,7 @@ func _generate_starting_points() -> Array[int]:
 			y_coordinates.append(starting_point)
 
 	return y_coordinates
+
 func _create_strands(x: int, y: int) -> int:
 	var next_room: Room = null
 	var current_room = map_data[x][y] as Room
@@ -167,6 +170,7 @@ func _create_strands(x: int, y: int) -> int:
 		next_room.previous_rooms.append(current_room)
 	
 	return next_room.row
+
 func _would_cross_paths(x: int, y: int, room: Room) -> bool:
 	var upper_neighbor: Room
 	var lower_neighbor: Room
@@ -202,6 +206,7 @@ func _setup_center_rest_site() -> void:
 			rest_site.previous_rooms.append(current_room)
 			
 	rest_site.type = Room.RoomType.REST
+
 func _setup_boss_room() -> void:
 	var boss_room := map_data[15][3] as Room
 	
@@ -213,6 +218,7 @@ func _setup_boss_room() -> void:
 			boss_room.previous_rooms.append(current_room)
 			
 	boss_room.type = Room.RoomType.BOSS
+
 func _setup_room_types() -> void:
 	
 	# First section is always combat.
@@ -238,6 +244,7 @@ func _setup_room_types() -> void:
 			for next_room: Room in room.next_rooms:
 				if next_room.type == Room.RoomType.UNASSIGNED:
 					_set_room_randomly(next_room)
+
 func _set_room_randomly(room: Room) -> void:
 	
 	var type_candidate: Room.RoomType
@@ -245,7 +252,7 @@ func _set_room_randomly(room: Room) -> void:
 	while room.type == Room.RoomType.UNASSIGNED:
 		type_candidate = _get_type_by_weight()
 		
-		if room.column < 3 and (type_candidate == Room.RoomType.ELITE or type_candidate == Room.RoomType.REST):
+		if room.column < 4 and (type_candidate == Room.RoomType.ELITE or type_candidate == Room.RoomType.REST):
 			continue
 		
 		if room.column < 6 and (type_candidate == Room.RoomType.TREASURE or type_candidate == Room.RoomType.LIBRARY):

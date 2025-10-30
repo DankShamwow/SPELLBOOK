@@ -8,9 +8,9 @@ signal update_buffered_tiles()
 @export var word_list = GeneralManager.word_list
 
 
-func on_turn_end():
-	super()
+func on_turn_end(_count):
+	super(_count)
 
-func on_turn_start():
+func on_turn_start(_count):
 	GameEventHandler.update_buffered_tiles.emit()
-	super()
+	super(_count)

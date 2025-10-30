@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://cv817y6stxn3n"]
+[gd_scene load_steps=5 format=3 uid="uid://cv817y6stxn3n"]
 
 [ext_resource type="Script" uid="uid://nycdbt61hiqq" path="res://COMBAT/TOOLS/SpecialtyRewards.gd" id="1_xh81d"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="4_5iikj"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="6_ls4f1"]
-[ext_resource type="PackedScene" uid="uid://edlmf0f8whnf" path="res://GENERAL/OTHER/TileTooltip.tscn" id="7_vlj6n"]
 [ext_resource type="PackedScene" uid="uid://bjvffdnl0v751" path="res://GENERAL/OTHER/NotchTooltip.tscn" id="8_a0jw0"]
 
 [node name="SpecialtyRewards" type="Control"]
+visible = false
 z_index = 512
 layout_mode = 3
 anchors_preset = 5
@@ -60,19 +60,6 @@ offset_left = -320.0
 offset_right = 320.0
 offset_bottom = 480.0
 grow_horizontal = 2
-
-[node name="TileTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("7_vlj6n")]
-unique_name_in_owner = true
-z_index = 160
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = -128.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 156.0
-grow_horizontal = 1
 
 [node name="NotchTooltip" parent="NotchAndTileRewardParent" instance=ExtResource("8_a0jw0")]
 unique_name_in_owner = true

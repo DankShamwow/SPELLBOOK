@@ -12,6 +12,13 @@ offset_right = 32.0
 offset_bottom = 32.0
 pivot_offset = Vector2(16, 16)
 script = ExtResource("1_h6dk7")
+relic_id = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+color = Color(1, 0, 1, 1)
 
 [node name="Relic_Button" type="TextureButton" parent="."]
 layout_mode = 0
@@ -25,6 +32,7 @@ position = Vector2(16, 16)
 texture = ExtResource("2_ct0xs")
 hframes = 10
 vframes = 3
+frame = 1
 
 [node name="Relic_Mask" type="Sprite2D" parent="Relic_Button"]
 unique_name_in_owner = true
@@ -44,5 +52,6 @@ offset_right = 40.0
 offset_bottom = 38.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 
+[connection signal="gui_input" from="Relic_Button" to="." method="_on_relic_button_gui_input"]
 [connection signal="mouse_entered" from="Relic_Button" to="." method="_on_relic_button_mouse_entered"]
 [connection signal="mouse_exited" from="Relic_Button" to="." method="_on_relic_button_mouse_exited"]

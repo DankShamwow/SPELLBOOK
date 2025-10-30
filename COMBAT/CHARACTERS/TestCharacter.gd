@@ -8,5 +8,6 @@ func _ready():
 	health = 100
 	block = 0
 	max_energy = 3
+	borrow_limit = 1
 	has_initiative = true
 	super()

@@ -27,18 +27,18 @@ var TruncatedDescriptions = {
 "VAPORIZING":		"Permanently Removed on Play",
 "WEIGHTED":			"Skips Buffer on Play",
 "INERT":			"Debuff Immunity",
-"GILDED":			"+5 Gold at Combat End if Racked",
+"GILDED":			"+5 Gold at End of Combat if Racked",
 "PHANTOM":			"+2 Temporary Copies on Score",
 "FLAMING":			"Apply 3 Burn on Score",
 "REJUVENATING":		"+3 HP on First Play each Combat",
 "REINFORCED":		"+5 Block on Score",
-"EAGER":			"Priority Draw at Combat Start",
+"EAGER":			"Priority Draw at Start of Combat",
 "PATIENT":			"+2 Points per turn Racked",
 "QUICK":			"+5 Points on first turn Racked",
 "OVERLOADED":		"-1 Energy, Double Current Word Score",
 "BALANCED":			"+2 Points per outside Tile pair",
-"LOCAL":			"+1 Point for each tile after this one",
-"DISTANT":			"+1 Point for each tile before this one",
+"LOCAL":			"+1 Point for each Tile after this one",
+"DISTANT":			"+1 Point for each Tile before this one",
 "PRICKLY":			"Letter Value Bleed when Scored",
 "POTENT":			"+3 Points",
 "LEXICAL":			"Bonus Letter"
@@ -51,9 +51,9 @@ var current_score = 0
 
 func _ready() -> void:
 	modulate = Color.TRANSPARENT
-	GameEventHandler.tile_tooltip_requested.connect(_show_tooltip)
-	GameEventHandler.tile_mini_tooltip_requested.connect(_show_mini_tooltip)
-	GameEventHandler.tile_tooltip_hide_requested.connect(_hide_tooltip)
+	GameEventHandler.tile_tooltip_requested.connect(self._show_tooltip)
+	GameEventHandler.tile_mini_tooltip_requested.connect(self._show_mini_tooltip)
+	GameEventHandler.tile_tooltip_hide_requested.connect(self._hide_tooltip)
 	
 	var notch_1_text_line = []
 	var notch_2_text_line = []
@@ -93,7 +93,6 @@ func _process(_delta):
 		self.position.y = clamp(tooltip_pos.y + 8, 0, (screensize.y - current_size.y - 16))
 	
 func _show_tooltip(which: GridTile) -> void:
-	print(self.get_parent().name)
 	is_visible = true
 	is_active  = true
 	if tween:
@@ -101,6 +100,11 @@ func _show_tooltip(which: GridTile) -> void:
 
 	tile_type_icon.texture.region = Rect2(20*which.tile.type, 0, 20, 20)
 	tile_letters_icon.texture.region = Rect2(20*which.tile.visual_letter, 0, 20, 20)
+	
+	if which.tile.is_blank:
+		tile_letters_icon.visible = false
+	else:
+		tile_letters_icon.visible = true
 	
 	if not which.tile.notch1 == LetterTile.NotchTypes.EMPTY:
 		notch_1_icon.texture.region = Rect2(((which.tile.notch1 - 1) * 20), 0, 20, 20)
@@ -118,6 +122,9 @@ func _show_tooltip(which: GridTile) -> void:
 		notch_3_icon.texture.region = Rect2(400, 0, 20, 20)
 	
 	tile_tooltip_header.text = "Letter Tile"
+	
+	if which.tile.is_blank:
+		tile_tooltip_header.text = "Blank Tile"
 	
 	var current_letters_text = " "
 	
@@ -168,6 +175,7 @@ func _show_tooltip(which: GridTile) -> void:
 	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
 
 	self.size.y = get_minimum_size().y
+	self.size.x = get_minimum_size().x
 
 func _show_mini_tooltip(which: MiniGridTile) -> void:
 	is_visible = true
@@ -245,12 +253,16 @@ func _show_mini_tooltip(which: MiniGridTile) -> void:
 	tween.tween_callback(show)
 	tween.tween_property(self, "modulate", Color.WHITE, fade_seconds)
 
-func _hide_tooltip() -> void:
+func _hide_tooltip(force_hide: bool = false) -> void:
 	is_visible = false
 	if tween:
 		tween.kill()
 		
-	get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+	if not force_hide:
+		get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+		
+	else:
+		hide_animation()
 	
 func hide_animation() -> void:
 	if not is_visible:

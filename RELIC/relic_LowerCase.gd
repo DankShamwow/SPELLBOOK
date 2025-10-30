@@ -4,7 +4,8 @@ class_name TheLowerCase
 func _ready():
 	relic_id = 2
 	relic_name = "The Lower Case"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description ="Tiles from the bottom half of the rack grant an additional point."
 	relic_flavor_text = "The lower case from a printing press. It is vaguely magical, and makes you feel a bit heavier."
 	%Relic_Label.set_text("")

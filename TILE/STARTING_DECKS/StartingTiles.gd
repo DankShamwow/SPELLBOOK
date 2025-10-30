@@ -13,3 +13,4 @@ func generate_starting_tiles():
 			#print("Adding New Tile!")
 			var new_tile = LetterTile.new().new_tile(LetterTile.TileType.BASIC, i, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, LetterTile.NotchTypes.EMPTY, StartingTileArray.size())
 			StartingTileArray.append(new_tile)
+	return StartingTileArray

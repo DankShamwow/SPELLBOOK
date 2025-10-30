@@ -4,7 +4,8 @@ class_name Procrastination
 func _ready():
 	relic_id = 15
 	relic_name = "Procrastination"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Words containing "the" have their final score multiplied by 1.5, but only when attacking.'
 	relic_flavor_text = "# TODO: Write description for Procrastination."
 	%Relic_Label.set_text("")

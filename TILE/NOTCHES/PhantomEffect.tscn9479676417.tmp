@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://dto1iegbjnj04"]
+
+[ext_resource type="Script" uid="uid://dw56jx2aal6ka" path="res://TILE/NOTCHES/phantom_effect.gd" id="1_tiply"]
+[ext_resource type="Texture2D" uid="uid://cac035dl7belq" path="res://SPRITES/NOTCHES/PhantomEffect.png" id="1_v8fxe"]
+
+[sub_resource type="Curve" id="Curve_olqm1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.24719107), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_cfnkg"]
+offsets = PackedFloat32Array(0.43125, 0.7125, 1)
+colors = PackedColorArray(0.6039216, 0.9882353, 0.9843137, 1, 0.33333334, 0.83137256, 0.83137256, 1, 0.047058824, 0.38039216, 0.34509805, 0.5019608)
+
+[node name="PhantomEffect" type="Node2D"]
+script = ExtResource("1_tiply")
+
+[node name="GPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(8, 8)
+amount = 64
+lifetime = 0.5
+randomness = 1.0
+local_coords = true
+draw_order = 1
+emission_shape = 3
+emission_rect_extents = Vector2(2, 2)
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+angle_min = -22.5
+angle_max = 22.5
+scale_amount_max = 4.0
+scale_amount_curve = SubResource("Curve_olqm1")
+color = Color(0.33333334, 0.83137256, 0.83137256, 1)
+color_ramp = SubResource("Gradient_cfnkg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(8, 8)
+texture = ExtResource("1_v8fxe")

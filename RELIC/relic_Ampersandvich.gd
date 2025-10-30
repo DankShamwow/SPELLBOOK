@@ -15,7 +15,8 @@ var golden_dict = {
 func _ready():
 	relic_id = 7
 	relic_name = "Ampersandvich"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = str("Playing a word that contains " + '"and"' + " heals you for 10 and increases the played word's effective length by 2.")
 	relic_flavor_text = '"Ampersandvich makes me strooong!"'
 	%Relic_Label.set_text("")

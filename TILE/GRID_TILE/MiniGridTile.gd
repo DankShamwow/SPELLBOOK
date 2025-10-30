@@ -29,47 +29,50 @@ var paired_tile_1 = null
 var paired_tile_2 = null
 var paired_tile_3 = null
 
-
-
 var glow_tween: Tween
 var scale_tween: Tween
+var grumble_tween: Tween
+var purchase_price: int = 0
 
 func _ready():
 	
 	##This is the one we use outside of testing, at least when not testing the tile directly.
-	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
-	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
-	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
-	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
+	%Tile_Type.set_frame_coords(Vector2i(tile.type, 0))
+	%Tile_Letter.set_frame_coords(Vector2i(tile.visual_letter, 1))
+	%Tile_Overlay_Sprite.set_frame_coords(Vector2i(tile.type, 6))
+	%Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 3))
+	%Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 4))
+	%Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 5))
 
 	if self.tile.is_ghost:
 		var tween = get_tree().create_tween()
-		tween.tween_property($Tile_Button/Tile_Sprite, "modulate:a", 0.75, 0.01)
-	
-	## For testing purposes only
-	#var hasOverlay = randi_range(0, 5)
-	#$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(hasOverlay, 0))
-	#$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(randi_range(0, 25), 1))
-	#$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(hasOverlay, 3))
-	##$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(tile.notch1, 4))
-	##$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(tile.notch2, 5))
-	##$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(tile.notch3, 6))
+		tween.tween_property(%Tile_Sprite, "modulate:a", 0.75, 0.01)
+		
+	if self.tile.is_blank:
+		%Tile_Letter.visible = false
+	else:
+		%Tile_Letter.visible = true
 
 func _process(_delta: float) -> void:
+	if get_viewport().has_focus():
 	## If scoring isn't happening, and the tile isn't going through another scaling process
 	## and isn't being hovered and isn't at the proper scale, tween it to the proper scale.
-	if not GeneralManager.scoring_is_active and not scale_tween and not hovering and not self.scale == Vector2(is_at_scale(), is_at_scale()):
-		determine_tile_scale()
+		if not GeneralManager.scoring_is_active and not scale_tween and not hovering and not scale == is_at_scale() \
+		and not self.get_parent().name == "BagGrid":
+			determine_tile_scale()
+			
+		if not scale_tween == null:
+			if not GeneralManager.scoring_is_active and not scale_tween.is_valid() and not scale_tween.is_running() \
+			and not hovering and not scale == is_at_scale() and not self.get_parent().name == "BagGrid":
+				determine_tile_scale()
 
 func update_tile_graphics():
 	print("Updating graphics...")
 	
 	var tween = get_tree().create_tween()
 	
-	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
+	tween.tween_property(%Tile_Mask, "modulate:a", 1, 0.1)
+	tween.tween_property(%Tile_Mask, "modulate:a", 0, 0.01)
 	
 	var new_type = tile.type
 	var _played_letter = tile.played_letter
@@ -78,12 +81,17 @@ func update_tile_graphics():
 	var new_notch2 = tile.notch2
 	var new_notch3 = tile.notch3
 	
-	$Tile_Button/Tile_Sprite/Tile_Type.set_frame_coords(Vector2i(new_type, 0))
-	$Tile_Button/Tile_Sprite/Tile_Letter.set_frame_coords(Vector2i(visual_letter, 1))
-	$Tile_Button/Tile_Sprite/Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 6))
-	$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
-	$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
-	$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
+	%Tile_Type.set_frame_coords(Vector2i(new_type, 0))
+	%Tile_Letter.set_frame_coords(Vector2i(visual_letter, 1))
+	%Tile_Overlay_Sprite.set_frame_coords(Vector2i(new_type, 6))
+	%Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
+	%Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
+	%Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
+	
+	if self.tile.is_blank:
+		%Tile_Letter.visible = false
+	else:
+		%Tile_Letter.visible = true
 
 func update_notch_graphics(notch: int, is_ghost = false):
 	
@@ -92,35 +100,35 @@ func update_notch_graphics(notch: int, is_ghost = false):
 	var new_notch3 = tile.notch3
 	
 	var tween = get_tree().create_tween()
-	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 1, 0.1)
-	tween.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
+	tween.tween_property(%Tile_Mask, "modulate:a", 1, 0.1)
+	tween.tween_property(%Tile_Mask, "modulate:a", 0, 0.01)
 	
 	if notch == 1:
-		$Tile_Button/Tile_Sprite/Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
+		%Notch_1_Sprite.set_frame_coords(Vector2i(new_notch1, 3))
 		if is_ghost:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_1_Sprite, "modulate:a", 0.5, 0.1)
+			tween2.tween_property(%Notch_1_Sprite, "modulate:a", 0.5, 0.1)
 		else:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_1_Sprite, "modulate:a", 1.0, 0.1)
+			tween2.tween_property(%Notch_1_Sprite, "modulate:a", 1.0, 0.1)
 	
 	if notch == 2:
-		$Tile_Button/Tile_Sprite/Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
+		%Notch_2_Sprite.set_frame_coords(Vector2i(new_notch2, 4))
 		if is_ghost:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_2_Sprite, "modulate:a", 0.5, 0.1)
+			tween2.tween_property(%Notch_2_Sprite, "modulate:a", 0.5, 0.1)
 		else:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_2_Sprite, "modulate:a", 1.0, 0.1)
+			tween2.tween_property(%Notch_2_Sprite, "modulate:a", 1.0, 0.1)
 	
 	if notch == 3:
-		$Tile_Button/Tile_Sprite/Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
+		%Notch_3_Sprite.set_frame_coords(Vector2i(new_notch3, 5))
 		if is_ghost:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_3_Sprite, "modulate:a", 0.5, 0.1)
+			tween2.tween_property(%Notch_3_Sprite, "modulate:a", 0.5, 0.1)
 		else:
 			var tween2 = get_tree().create_tween()
-			tween2.tween_property($Tile_Button/Tile_Sprite/Notch_3_Sprite, "modulate:a", 1.0, 0.1)
+			tween2.tween_property(%Notch_3_Sprite, "modulate:a", 1.0, 0.1)
 
 	else:
 		return
@@ -134,65 +142,73 @@ func move_to_position(time:= 0.25):
 	await get_tree().create_timer(time/2).timeout
 	return true
 
-func play_tile_sound():
-	if not $SoundParent/TileSoundAttempt3.is_playing():
-		$SoundParent/TileSoundAttempt3.pitch_scale = various_rng.randf_range(0.965, 1.035)
-		$SoundParent/TileSoundAttempt3.play()
-
-func play_scoring_sound(count):
-	$SoundParent/ScoringSoundAttempt1.pitch_scale = 1 + (0.025 * count)
-	$SoundParent/ScoringSoundAttempt1.play()
-
-func play_tile_destruction_sound():
-	if not $SoundParent/DestructionSound.is_playing():
-		$SoundParent/DestructionSound.play()
-
 func is_at_scale():
 	var scaling_factor: float = 1.0
 	
-	if self.is_in_group("Tiles in Word") and not hovering:
-		if self.word_length > 6:
-			scaling_factor = float(7 / self.word_length + 1)
+	if (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and not hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0))
 		else:
-			scaling_factor = 1
+			scaling_factor = 1.0
 	
-	elif self.is_in_group("Tiles in Word") and hovering:
-		if self.word_length > 6:
-			scaling_factor = float(7 / self.word_length + 1) * 1.1
+	elif (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0)) * 1.1
 		else:
 			scaling_factor = 1.1
 	
-	elif not self.is_in_group("Tiles in Word") and hovering:
+	elif self.get_parent().name == "TileModifyScreen":
+		if hovering:
+			scaling_factor = 3.3
+		else:
+			scaling_factor = 3
+	
+	elif not (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and hovering:
 		scaling_factor = 1.1
 		
+	elif self.get_parent().name == "TilesToKill":
+		return
+	
 	else:
 		scaling_factor = 1.0
+		
+	var scalar = Vector2(scaling_factor, scaling_factor)
 	
-	return scaling_factor
+	return scalar
 
-func determine_tile_scale():
+func determine_tile_scale(speed: float = 0.1):
 	var scaling_factor: float = 1.0
 	
-	if self.is_in_group("Tiles in Word") and not hovering:
-		if self.word_length > 6:
-			scaling_factor = float(7 / self.word_length + 1)
+	if (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and not hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0))
 		else:
-			scaling_factor = 1
+			scaling_factor = 1.0
 	
-	elif self.is_in_group("Tiles in Word") and hovering:
-		if self.word_length > 6:
-			scaling_factor = float(7 / self.word_length + 1) * 1.1
+	elif (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and hovering:
+		if self.tile.word_length > 6:
+			scaling_factor = float(7.0 / (self.tile.word_length + 1.0)) * 1.1
 		else:
 			scaling_factor = 1.1
 	
-	elif not self.is_in_group("Tiles in Word") and hovering:
+	elif self.get_parent().name == "TileModifyScreen":
+		if hovering:
+			scaling_factor = 3.3
+		else:
+			scaling_factor = 3
+	
+	elif not (self.get_parent().name == "TilesInWord" or self.is_in_group("Tiles in Word")) and hovering:
 		scaling_factor = 1.1
+		
+	elif self.get_parent().name == "TilesToKill":
+		return
 		
 	else:
 		scaling_factor = 1.0
 		
 	scale_tween = get_tree().create_tween()
-	scale_tween.tween_property(self, "scale", Vector2(scaling_factor, scaling_factor), 0.1)
+	scale_tween.tween_property(self, "scale", Vector2(scaling_factor, scaling_factor), speed)
+	await get_tree().create_timer(speed).timeout
 
 func toggle_word_glow(state: bool = false):
 	if glow_tween:
@@ -233,14 +249,14 @@ func error_vision():
 func _on_tile_button_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			print("Left Clickety!")
-			play_tile_sound()
+			#print("Left Clickety!")
+			GameEventHandler.play_mini_tile_sound.emit(self)
 			GameEventHandler.tile_clicked.emit(
 				self, MiniGridTileAction.PLAY
 			)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			print("Right Clickety!")
-			play_tile_sound()
+			#print("Right Clickety!")
+			GameEventHandler.play_mini_tile_sound.emit(self)
 			GameEventHandler.tile_clicked.emit(
 				self, MiniGridTileAction.VIEW
 			)
@@ -270,12 +286,12 @@ func _on_tile_button_mouse_exited():
 		self.ghost_pair.determine_tile_scale()
 		self.ghost_pair.z_index = original_z
 		GameEventHandler.mini_tile_hovered.emit(self.ghost_pair, false)
-		GameEventHandler.tile_tooltip_hide_requested.emit()
+		GameEventHandler.tile_tooltip_hide_requested.emit(false)
 	else:
 		determine_tile_scale()
 		self.z_index = original_z
 		GameEventHandler.mini_tile_hovered.emit(self, false)
-		GameEventHandler.tile_tooltip_hide_requested.emit()
+		GameEventHandler.tile_tooltip_hide_requested.emit(false)
 
 func spawned_in():
 	var tween = get_tree().create_tween()
@@ -302,7 +318,7 @@ func is_destroyed():
 	scale_tween = get_tree().create_tween()
 	tween.tween_property(sprite, "modulate", Color(1, 0, 0, 0), 0.1)
 	scale_tween.tween_property(sprite, "scale", Vector2(0, 0), 0.1)
-	play_tile_destruction_sound()
+	GameEventHandler.play_misc_tile_sound.emit("DESTROY")
 	
 func is_being_bagged():
 	var tween = get_tree().create_tween()
@@ -419,7 +435,7 @@ func score_tile(count):
 		elif self.tile.word_index >= floor(self.tile.word_length / 2.0):
 			letter_score += 2 * (self.tile.word_length - self.tile.word_index - 1)
 	
-	play_scoring_sound(count)
+	GameEventHandler.play_tile_scoring_sound.emit(count)
 	await juice_score()
 
 	return letter_score
@@ -529,6 +545,70 @@ func juice_score():
 	tween2.tween_property($Tile_Button/Tile_Sprite/Tile_Mask, "modulate:a", 0, 0.01)
 	scale_tween.tween_property(self, "scale", current_size, 0.001)
 	return true
+
+func juice_notch(which: int):
+	var tween = get_tree().create_tween()
+	if which == 1:
+		tween.tween_property(%Notch_1_Sprite, "modulate", Color(25.236, 25.236, 25.236), 0.1)
+		tween.tween_property(%Notch_1_Sprite, "modulate", Color(1, 1, 1, 1), 0.1)
+
+	elif which == 2:
+		tween.tween_property(%Notch_2_Sprite, "modulate", Color(25.236, 25.236, 25.236), 0.1)
+		tween.tween_property(%Notch_2_Sprite, "modulate", Color(1, 1, 1, 1), 0.1)
+
+	elif which == 3:
+		tween.tween_property(%Notch_3_Sprite, "modulate", Color(25.236, 25.236, 25.236), 0.1)
+		tween.tween_property(%Notch_3_Sprite, "modulate", Color(1, 1, 1, 1), 0.1)
+
+func grumble_tile():
+	if not grumble_tween:
+		var current_position = self.position
+		grumble_tween = get_tree().create_tween()
+		scale_tween = get_tree().create_tween()
+		var tween = get_tree().create_tween()
+		
+		tween.tween_property(self, "modulate", Color(0.35, 0.0, 0.0, 1.0), 0.01)
+		tween.tween_interval(0.13)
+		scale_tween.tween_property(self, "scale", self.scale * 0.75, 0.03)
+		scale_tween.tween_callback(determine_tile_scale.bind(0.03)).set_delay(0.08)
+		var grumble_order = various_rng.randi_range(0, 1)
+		
+		if grumble_order == 0:
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x - various_rng.randf_range(1, 8), current_position.y - various_rng.randf_range(1, 8)), 0.05)
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x + various_rng.randf_range(1, 8), current_position.y + various_rng.randf_range(1, 8)), 0.05)
+		
+		if grumble_order == 1:
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x + various_rng.randf_range(1, 8), current_position.y + various_rng.randf_range(1, 8)), 0.05)
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x - various_rng.randf_range(1, 8), current_position.y - various_rng.randf_range(1, 8)), 0.05)
+		
+		grumble_tween.tween_property(self, "position", current_position, 0.05)
+		
+		
+		tween.tween_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.01)
+		
+	if not grumble_tween.is_valid():
+		var current_position = self.position
+		grumble_tween = get_tree().create_tween()
+		scale_tween = get_tree().create_tween()
+		var tween = get_tree().create_tween()
+		
+		tween.tween_property(self, "modulate", Color(0.75, 0.0, 0.0, 1.0), 0.01)
+		tween.tween_interval(0.13)
+		scale_tween.tween_property(self, "scale", self.scale * 0.75, 0.03)
+		scale_tween.tween_callback(determine_tile_scale.bind(0.03)).set_delay(0.08)
+		
+		var grumble_order = various_rng.randi_range(0, 1)
+		
+		if grumble_order == 0:
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x - various_rng.randf_range(1, 8), current_position.y - various_rng.randf_range(1, 8)), 0.05)
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x + various_rng.randf_range(1, 8), current_position.y + various_rng.randf_range(1, 8)), 0.05)
+		
+		if grumble_order == 1:
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x + various_rng.randf_range(1, 8), current_position.y + various_rng.randf_range(1, 8)), 0.05)
+			grumble_tween.tween_property(self, "position", Vector2(current_position.x - various_rng.randf_range(1, 8), current_position.y - various_rng.randf_range(1, 8)), 0.05)
+		
+		grumble_tween.tween_property(self, "position", current_position, 0.05)
+		tween.tween_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.01)
 
 func update_tile_score_text(tile_score: int, hide_text: bool = false):
 	if hide_text:

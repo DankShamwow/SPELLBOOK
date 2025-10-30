@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://uoy3xpsav60c"]
+[gd_scene load_steps=4 format=3 uid="uid://uoy3xpsav60c"]
 
-[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="1_vuqw6"]
 [ext_resource type="Script" uid="uid://ckqevqxqcddt4" path="res://GENERAL/GAME_SCENES/SHOP/Shop.gd" id="1_wmv1f"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_bb33a"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_v4ctu"]
 
 [node name="Shop" type="Control"]
 custom_minimum_size = Vector2(640, 360)
@@ -11,35 +12,199 @@ offset_right = 640.0
 offset_bottom = 480.0
 script = ExtResource("1_wmv1f")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 360.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="BackgroundPosition" type="Control" parent="."]
+visible = false
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -136.0
-offset_top = -60.0
-offset_bottom = 4.0
 grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2, 2)
-theme = ExtResource("1_vuqw6")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("1_vuqw6")
-theme_override_font_sizes/font_size = 26
-text = "Shop"
-horizontal_alignment = 1
+[node name="Background" type="Sprite2D" parent="BackgroundPosition"]
+unique_name_in_owner = true
+position = Vector2(0, 168)
+texture = ExtResource("2_bb33a")
 
-[node name="Button" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Go back to Map"
+[node name="ShopButtonBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 264.0
+offset_top = 232.0
+offset_right = 376.0
+offset_bottom = 280.0
+texture = ExtResource("3_v4ctu")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[node name="ShopButton" type="Button" parent="ShopButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "SHOP
+"
+
+[node name="LeaveButtonBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 488.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 248.0
+texture = ExtResource("3_v4ctu")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="LeaveButton" type="Button" parent="LeaveButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "LEAVE"
+
+[node name="ScreenCovering" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(0, 0, 0, 0)
+z_as_relative = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 480.0
+mouse_filter = 2
+
+[node name="ShopScreenParent" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="ShopKillParent" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ShopBackButtonBox" type="NinePatchRect" parent="ShopScreenParent"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 512.0
+offset_top = 312.0
+offset_right = 624.0
+offset_bottom = 360.0
+texture = ExtResource("3_v4ctu")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="ShopBackButton" type="Button" parent="ShopScreenParent/ShopBackButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "BACK
+"
+
+[node name="OverallShopArea" type="ColorRect" parent="ShopScreenParent"]
+visible = false
+layout_mode = 0
+offset_top = 96.0
+offset_right = 640.0
+offset_bottom = 480.0
+
+[node name="ShopTiles" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NormalTilesArea" type="ColorRect" parent="ShopScreenParent/ShopTiles"]
+visible = false
+layout_mode = 0
+offset_left = 32.0
+offset_top = 144.0
+offset_right = 608.0
+offset_bottom = 240.0
+color = Color(0, 1, 1, 1)
+
+[node name="ShopBlanks" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BlankTilesArea" type="ColorRect" parent="ShopScreenParent/ShopBlanks"]
+visible = false
+layout_mode = 0
+offset_left = 32.0
+offset_top = 240.0
+offset_right = 144.0
+offset_bottom = 432.0
+color = Color(0, 1, 0, 1)
+
+[node name="ShopRelics" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="RelicsArea" type="ColorRect" parent="ShopScreenParent/ShopRelics"]
+visible = false
+layout_mode = 0
+offset_left = 144.0
+offset_top = 240.0
+offset_right = 496.0
+offset_bottom = 336.0
+color = Color(1, 0, 1, 1)
+
+[node name="ShopPacks" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NotchPacksArea" type="ColorRect" parent="ShopScreenParent/ShopPacks"]
+visible = false
+layout_mode = 0
+offset_left = 144.0
+offset_top = 336.0
+offset_right = 496.0
+offset_bottom = 432.0
+color = Color(1, 1, 0, 1)
+
+[node name="FollowerTextParent" type="Control" parent="ShopScreenParent"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="pressed" from="ShopButtonBox/ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="LeaveButtonBox/LeaveButton" to="." method="_on_leave_button_pressed"]
+[connection signal="pressed" from="ShopScreenParent/ShopBackButtonBox/ShopBackButton" to="." method="_on_shop_back_button_pressed"]

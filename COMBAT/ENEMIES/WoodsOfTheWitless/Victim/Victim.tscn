@@ -1,10 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://c487o5n7md3uo"]
+[gd_scene load_steps=17 format=3 uid="uid://c487o5n7md3uo"]
 
 [ext_resource type="Script" uid="uid://cvvf4d5ty517i" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Victim/Victim.gd" id="1_1vq73"]
+[ext_resource type="AudioStream" uid="uid://cltd83lig5ife" path="res://AUDIO/GUI/BLOCK/block_gain_light.ogg" id="2_4rgm4"]
 [ext_resource type="Texture2D" uid="uid://gmwcjwgm7344" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Victim/Victim.png" id="2_bvymq"]
+[ext_resource type="AudioStream" uid="uid://ch28bwfqeuk84" path="res://AUDIO/GUI/BLOCK/block_gain_heavy.ogg" id="3_nh1e2"]
 [ext_resource type="Texture2D" uid="uid://crpy0ehpcx83j" path="res://SPRITES/COMBAT/HealthBar.png" id="3_xjybg"]
 [ext_resource type="FontFile" uid="uid://dbl8tpudhrqen" path="res://SPRITES/Spellbound Revamped.ttf" id="4_1rofp"]
+[ext_resource type="AudioStream" uid="uid://co1u16v1j54i6" path="res://AUDIO/GUI/BLOCK/block_hit_heavy.ogg" id="4_c6dve"]
 [ext_resource type="Script" uid="uid://cagywoxp6n1tt" path="res://COMBAT/ENEMIES/WoodsOfTheWitless/Victim/VictimAttacks.gd" id="5_bvymq"]
+[ext_resource type="AudioStream" uid="uid://o8anqfn4p5po" path="res://AUDIO/GUI/BLOCK/block_hit_light_1.ogg" id="5_bw8or"]
+[ext_resource type="AudioStream" uid="uid://bpwpo2aw652qb" path="res://AUDIO/GUI/BLOCK/block_hit_light_2.ogg" id="6_vodfh"]
+[ext_resource type="AudioStream" uid="uid://0dngclwve503" path="res://AUDIO/GUI/HIT/hit_sound_temp.ogg" id="7_enojn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fpio6"]
 atlas = ExtResource("2_bvymq")
@@ -38,6 +44,32 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(23, 28)
 script = ExtResource("1_1vq73")
+
+[node name="SoundParent" type="Node" parent="."]
+
+[node name="BlockGainLight" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("2_4rgm4")
+
+[node name="BlockGainHeavy" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("3_nh1e2")
+
+[node name="BlockHitHeavy" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("4_c6dve")
+
+[node name="BlockHitLight1" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("5_bw8or")
+
+[node name="BlockHitLight2" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("6_vodfh")
+
+[node name="HitSoundTemp" type="AudioStreamPlayer" parent="SoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("7_enojn")
 
 [node name="Entity_Button" type="TextureButton" parent="."]
 unique_name_in_owner = true

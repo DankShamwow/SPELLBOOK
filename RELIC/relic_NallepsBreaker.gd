@@ -4,7 +4,8 @@ class_name NallepsBreaker
 func _ready():
 	relic_id = 19
 	relic_name = "Nallep's Breaker"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Emordnilaps inflict Stoned for one turn equal to the length of the word.'
 	relic_flavor_text = "Nallep, twin of Pallen, was also a capable adventurer, but did not acquire as great of renown."
 	%Relic_Label.set_text("")

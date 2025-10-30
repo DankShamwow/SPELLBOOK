@@ -19,8 +19,8 @@ func plan_next_turn():
 		
 	schedule_attack(0)
 
-func on_turn_start():
-	super()
+func on_turn_start(_count):
+	super(_count)
 	_perform_next_attack()
 
 func _perform_next_attack():

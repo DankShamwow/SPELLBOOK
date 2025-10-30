@@ -1,0 +1,90 @@
+[gd_scene load_steps=15 format=3 uid="uid://cc8pj6h7m4ajc"]
+
+[ext_resource type="Script" uid="uid://uvy6ehhxlpsj" path="res://GENERAL/MANAGEMENT/SoundManager.gd" id="1_pon1k"]
+[ext_resource type="AudioStream" uid="uid://cltd83lig5ife" path="res://AUDIO/GUI/BLOCK/block_gain_light.ogg" id="2_ben57"]
+[ext_resource type="AudioStream" uid="uid://ch28bwfqeuk84" path="res://AUDIO/GUI/BLOCK/block_gain_heavy.ogg" id="3_3xymb"]
+[ext_resource type="AudioStream" uid="uid://co1u16v1j54i6" path="res://AUDIO/GUI/BLOCK/block_hit_heavy.ogg" id="4_8kc66"]
+[ext_resource type="AudioStream" uid="uid://o8anqfn4p5po" path="res://AUDIO/GUI/BLOCK/block_hit_light_1.ogg" id="5_v054m"]
+[ext_resource type="AudioStream" uid="uid://bpwpo2aw652qb" path="res://AUDIO/GUI/BLOCK/block_hit_light_2.ogg" id="6_u57q2"]
+[ext_resource type="AudioStream" uid="uid://0dngclwve503" path="res://AUDIO/GUI/HIT/hit_sound_temp.ogg" id="7_lwnog"]
+[ext_resource type="AudioStream" uid="uid://beb5w8rtcqp1o" path="res://AUDIO/NOTCH/ECHOING/echoing_attempt_1.ogg" id="8_m4s6t"]
+[ext_resource type="AudioStream" uid="uid://ci1x0nhl2pfsl" path="res://AUDIO/NOTCH/OVERLOADED/overloaded_attempt_1.ogg" id="9_j7gk2"]
+[ext_resource type="AudioStream" uid="uid://cgrvo67mmwtq3" path="res://AUDIO/NOTCH/PHANTOM/phantom_attempt_1.ogg" id="10_tb82h"]
+[ext_resource type="AudioStream" uid="uid://v5cshtwpert2" path="res://AUDIO/NOTCH/WEIGHTED/weighted_notch_attempt_4.ogg" id="11_mb2hv"]
+[ext_resource type="AudioStream" uid="uid://bnhp4hq5jtxrp" path="res://AUDIO/TILE/tile_sound_attempt3.ogg" id="12_rlvqj"]
+[ext_resource type="AudioStream" uid="uid://b4yfx6n23x4rl" path="res://AUDIO/TILE/destruction_vaporization_attempt_1.ogg" id="13_x8bem"]
+[ext_resource type="AudioStream" uid="uid://cgm5mblgsqast" path="res://AUDIO/MISC/SCORING/scoring_sound_attempt_1.ogg" id="14_jvcsk"]
+
+[node name="SoundManager" type="Node"]
+script = ExtResource("1_pon1k")
+
+[node name="EntitySoundParent" type="Node" parent="."]
+
+[node name="BlockGainLight" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("2_ben57")
+volume_db = -6.0
+
+[node name="BlockGainHeavy" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("3_3xymb")
+volume_db = -6.0
+
+[node name="BlockHitHeavy" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("4_8kc66")
+volume_db = -8.0
+
+[node name="BlockHitLight1" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("5_v054m")
+volume_db = -8.0
+
+[node name="BlockHitLight2" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("6_u57q2")
+volume_db = -8.0
+
+[node name="HitSoundTemp" type="AudioStreamPlayer" parent="EntitySoundParent"]
+unique_name_in_owner = true
+stream = ExtResource("7_lwnog")
+volume_db = -10.0
+
+[node name="TileSoundParent" type="Node" parent="."]
+
+[node name="Notches" type="Node" parent="TileSoundParent"]
+
+[node name="EchoingAttempt1" type="AudioStreamPlayer" parent="TileSoundParent/Notches"]
+unique_name_in_owner = true
+stream = ExtResource("8_m4s6t")
+
+[node name="OverloadedAttempt1" type="AudioStreamPlayer" parent="TileSoundParent/Notches"]
+unique_name_in_owner = true
+stream = ExtResource("9_j7gk2")
+volume_db = -8.0
+
+[node name="PhantomAttempt1" type="AudioStreamPlayer" parent="TileSoundParent/Notches"]
+unique_name_in_owner = true
+stream = ExtResource("10_tb82h")
+
+[node name="WeightedNotchAttempt4" type="AudioStreamPlayer" parent="TileSoundParent/Notches"]
+unique_name_in_owner = true
+stream = ExtResource("11_mb2hv")
+
+[node name="TileTypes" type="Node" parent="TileSoundParent"]
+
+[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="TileSoundParent/TileTypes"]
+unique_name_in_owner = true
+stream = ExtResource("12_rlvqj")
+volume_db = -8.0
+
+[node name="Misc" type="Node" parent="TileSoundParent"]
+
+[node name="DestructionVaporizationAttempt1" type="AudioStreamPlayer" parent="TileSoundParent/Misc"]
+unique_name_in_owner = true
+stream = ExtResource("13_x8bem")
+
+[node name="ScoringSoundAttempt1" type="AudioStreamPlayer" parent="TileSoundParent/Misc"]
+unique_name_in_owner = true
+stream = ExtResource("14_jvcsk")
+volume_db = -8.0

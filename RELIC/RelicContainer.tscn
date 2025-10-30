@@ -18,7 +18,7 @@ width = 128
 height = 32
 fill_to = Vector2(1, 0.0111732)
 
-[node name="RelicContainerGradient" type="TextureRect"]
+[node name="RelicsBar" type="TextureRect"]
 clip_children = 2
 z_as_relative = false
 texture_filter = 1

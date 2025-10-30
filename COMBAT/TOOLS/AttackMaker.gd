@@ -34,8 +34,6 @@ func _on_attack_word_submitted(new_text: String):
 	attack_targets.append(str(input_array[1]))
 	attack_intents.append(str(input_array[2]))
 	
-	print(new_attack)
-	
 	attacks.append(new_attack)
 	
 	%LineEdit.clear()
@@ -57,7 +55,6 @@ func _on_attack_debuff_submitted(new_text: String):
 	%StatusParent.add_child(new_status_icon)
 	new_status_icon.amount = new_attack_status[1]
 	new_status_icon.does_decay = bool(new_attack_status[2])
-	print(bool(new_attack_status[2]))
 	new_status_icon.duration = new_attack_status[3]
 	new_status_icon._update_graphics()
 	
@@ -86,7 +83,6 @@ func _on_attack_debuff_submitted(new_text: String):
 		status_packages[-1].append(new_attack_status)
 	
 	%DebuffText.clear()
-	print(status_packages)
 
 func _add_blank_debuff_package():
 	var new_status_package = []

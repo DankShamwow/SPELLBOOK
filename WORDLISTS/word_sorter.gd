@@ -76,7 +76,7 @@ func pick_random_word():
 	%WordToSort.set_text(random_key)
 
 func submit_word():
-	print(random_key)
+	#print(random_key)
 	if %GemButton.button_pressed:
 		print("Writing...")
 		gemstones.store_line(random_key)

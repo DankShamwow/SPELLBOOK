@@ -12,7 +12,7 @@ func update_button_data():
 	self.text = assoc_relic.relic_name
 
 func _on_pressed() -> void:
-	GameEventHandler.add_relic.emit(assoc_relic.relic_id)
+	GameEventHandler.add_relic.emit(assoc_relic.relic_id, false, 0)
 	rewards_relic_button_pressed.emit(self)
 	
 

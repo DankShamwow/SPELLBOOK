@@ -4,7 +4,8 @@ class_name OilLamp
 func _ready():
 	relic_id = 11
 	relic_name = "Oil Lamp"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'When you inflict Burn, increase the Amount and Duration by one.'
 	relic_flavor_text = "A seemingly-simple oil lamp, but as hard as you try, you can't seem to extinguish it."
 	%Relic_Label.set_text("")

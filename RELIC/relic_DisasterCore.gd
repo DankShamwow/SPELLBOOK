@@ -1,13 +1,11 @@
 extends Relic
 class_name DisasterCore
 
-var current_character = GeneralManager.current_character
-
 func _ready():
-	relic_id = 0
+	relic_id = -100
 	relic_name = "Disaster Core"
-	relic_rarity = RelicRarity.EVENT
-	
+	relic_rarity = Relic.RelicRarity.EVENT
+	relic_type = Relic.RelicType.RELIC
 	relic_description = "At the start of each turn, gain 3 Irradiation.\
 						 Scored letters gain points equal to thrice your Irradiation. \
 						 (Irradiation is Poison that does not decay each turn.)"
@@ -20,7 +18,7 @@ func _ready():
 
 
 
-func on_turn_start():
+func on_turn_start(_turn: int = 0):
 	GeneralManager.character_path.add_status("IRRADIATED_DEBUFF", 3, false, 1)
 
 ## Function that handles what should happen when a specific letter, kind of letter, etc.

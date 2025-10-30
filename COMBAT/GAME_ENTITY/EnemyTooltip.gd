@@ -15,13 +15,12 @@ func _ready() -> void:
 	
 	var health_text = []
 	var full_health_text = ""
-		
+	
 	var strength_text = []
 	var full_strength_text = ""
 	
 	var defense_text = []
 	var full_defense_text = ""
-	
 	
 	var intelligence_text = []
 	var full_intelligence_text = ""

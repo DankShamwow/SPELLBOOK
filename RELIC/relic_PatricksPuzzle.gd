@@ -7,8 +7,9 @@ var relic_dict: Dictionary[String, bool] = {
 
 func _ready():
 	relic_id = 17
-	relic_name = "Patrick's Pink Puzzle Box"
-	relic_rarity = RelicRarity.COMMON
+	relic_name = "Patrick's Pink\nPuzzle Box"
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = "If the played word contains another word, the played word's effective length is increased by 1."
 	relic_flavor_text = "When you look inside the puzzle box, you see a smaller version of yourself looking into a smaller version of the puzzle box."
 	%Relic_Label.set_text("")
@@ -53,15 +54,15 @@ func teardown_word(word: String):
 		for i in test_word.size():
 			var joined_word = ""
 			joined_word = joined_word.join(test_word)
-			print(joined_word)
+			#print(joined_word)
 			if (not joined_word == word and word.contains(joined_word) and GeneralManager.word_list.has(joined_word)):
 				print("Found Word: " + joined_word)
 				return true
 			else:
 				iterations += 1
 				test_word.remove_at(test_word.size() - 1)
-				print("Word: " + joined_word)
-				print("Iterations: " + str(iterations))
+				#print("Word: " + joined_word)
+				#print("Iterations: " + str(iterations))
 	
 	return false
 

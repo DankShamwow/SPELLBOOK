@@ -47,39 +47,47 @@ offset_right = 20.0
 offset_bottom = 20.0
 
 [node name="Tile_Sprite" type="Node2D" parent="Tile_Button"]
+unique_name_in_owner = true
 position = Vector2(10, 10)
 
 [node name="Tile_Type" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Tile_Letter" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Notch_1_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Notch_2_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Notch_3_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Tile_Overlay_Sprite" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 texture = ExtResource("2_ea6j7")
 hframes = 26
 vframes = 7
 
 [node name="Tile_Mask" type="Sprite2D" parent="Tile_Button/Tile_Sprite"]
+unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_633ix")
 
@@ -87,8 +95,6 @@ texture = ExtResource("3_633ix")
 libraries = {
 &"": SubResource("AnimationLibrary_bq3va")
 }
-
-[node name="TileSoundAttempt3" type="AudioStreamPlayer" parent="."]
 
 [connection signal="gui_input" from="Tile_Button" to="." method="_on_tile_button_gui_input"]
 [connection signal="mouse_entered" from="Tile_Button" to="." method="_on_tile_button_mouse_entered"]

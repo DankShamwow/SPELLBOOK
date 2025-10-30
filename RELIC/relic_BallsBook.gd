@@ -5,8 +5,9 @@ var relic_dict: Dictionary[String, bool] = {}
 
 func _ready():
 	relic_id = 4
-	relic_name = "Balls and How to Use Them"
-	relic_rarity = RelicRarity.COMMON_BOOK
+	relic_name = "Balls and How\nto Use Them"
+	relic_rarity = Relic.RelicRarity.COMMON_BOOK
+	relic_type = Relic.RelicType.BOOK
 	relic_description = 'Curated words relating to "kinds of balls" grant +3 points per tile.'
 	relic_flavor_text = "You've been searching for this one for a while. At last, you can finally learn how to use all the balls you've accumulated over the course of your life."
 	%Relic_Label.set_text("")
@@ -16,7 +17,7 @@ func _ready():
 func on_pickup_effect():
 	var wordlist = FileAccess.open("res://WORDLISTS/Categories/Balls.txt", FileAccess.READ)
 	while wordlist.get_position() < wordlist.get_length():
-		print("Working...")
+		#print("Working...")
 		relic_dict[str(wordlist.get_line())] = true
 	wordlist.close()
 	return null

@@ -22,7 +22,8 @@ var golden_dict = {
 func _ready():
 	relic_id = 16
 	relic_name = "Delicious Fruit"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'On pickup, gain +20 Max Health.'
 	relic_flavor_text = "For time immemorial, the heated argument has remained: is it closer to an apple or to a cherry? Either way, it doesn't matter, because it's very tasty, unless you're a kid."
 	%Relic_Label.set_text("")

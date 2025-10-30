@@ -11,13 +11,14 @@ var golden_dict = {
 func _ready():
 	relic_id = 8
 	relic_name = "Sentence Mixer"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Most strings that are palidromes count as words.'
 	relic_flavor_text = "That's not [i]smoms[/i], it's [i]steaets[/i]. [i]Steaets[/i] from the [i]steaets hah[/i] we're having."
 	%Relic_Label.set_text("")
 	super()
 
-func mixer_check(word: String, prefix_1: String = "", prefix_2: String = "", prefix_3: String = "", suffix_1: String = "", suffix_2: String = "", suffix_3: String = ""):
+func mixer_check(word: String):
 	if word == word.reverse():
 		for i in word.length():
 			## No using 3 of the same letter in a row.

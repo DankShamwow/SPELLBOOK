@@ -1,0 +1,107 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddysygcb1j8vw"]
+
+[ext_resource type="Script" uid="uid://c7g7kjsqoq2jt" path="res://bezier_randomizer.gd" id="1_3wls6"]
+[ext_resource type="PackedScene" uid="uid://dto1iegbjnj04" path="res://TILE/NOTCHES/PhantomEffect.tscn" id="2_i6yog"]
+
+[sub_resource type="Curve" id="Curve_3wls6"]
+_data = [Vector2(0, 0.123595595), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_3wls6"]
+
+[node name="BezierRandomizer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 480.0
+script = ExtResource("1_3wls6")
+
+[node name="FauxTileParent" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BezierStart" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, 240)
+
+[node name="BezierEnd" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(608, 32)
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+autostart = true
+
+[node name="Node" type="Node" parent="."]
+
+[node name="LineOne" type="Line2D" parent="Node"]
+unique_name_in_owner = true
+width = 8.0
+width_curve = SubResource("Curve_3wls6")
+default_color = Color(1, 0, 1, 0.5019608)
+
+[node name="LineTwo" type="Line2D" parent="Node"]
+unique_name_in_owner = true
+width = 8.0
+width_curve = SubResource("Curve_3wls6")
+default_color = Color(1, 1, 0, 0.5019608)
+
+[node name="StraightLineOne" type="Line2D" parent="Node"]
+unique_name_in_owner = true
+width = 2.0
+default_color = Color(1, 0, 1, 0.2509804)
+
+[node name="StraightLineTwo" type="Line2D" parent="Node"]
+unique_name_in_owner = true
+width = 2.0
+default_color = Color(1, 1, 0, 0.2509804)
+
+[node name="Node2" type="Node" parent="."]
+
+[node name="LineOnePointOne" type="ColorRect" parent="Node2"]
+unique_name_in_owner = true
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0, 1, 1)
+
+[node name="LineOnePointTwo" type="ColorRect" parent="Node2"]
+unique_name_in_owner = true
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0, 0, 1)
+
+[node name="LineTwoPointOne" type="ColorRect" parent="Node2"]
+unique_name_in_owner = true
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0, 1, 1, 1)
+
+[node name="LineTwoPointTwo" type="ColorRect" parent="Node2"]
+unique_name_in_owner = true
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0, 1, 0, 1)
+
+[node name="Node3" type="Node" parent="."]
+
+[node name="PathOne" type="Path2D" parent="Node3"]
+unique_name_in_owner = true
+curve = SubResource("Curve2D_3wls6")
+
+[node name="PathFollowOne" type="PathFollow2D" parent="Node3/PathOne"]
+unique_name_in_owner = true
+
+[node name="PhantomEffect" parent="Node3/PathOne/PathFollowOne" instance=ExtResource("2_i6yog")]
+
+[node name="PathTwo" type="Path2D" parent="Node3"]
+unique_name_in_owner = true
+curve = SubResource("Curve2D_3wls6")
+
+[node name="PathFollowTwo" type="PathFollow2D" parent="Node3/PathTwo"]
+unique_name_in_owner = true
+
+[node name="PhantomEffect" parent="Node3/PathTwo/PathFollowTwo" instance=ExtResource("2_i6yog")]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

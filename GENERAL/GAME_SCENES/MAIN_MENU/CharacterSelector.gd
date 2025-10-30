@@ -41,10 +41,8 @@ func _on_archivist_pressed() -> void:
 func _on_translator_pressed() -> void:
 	set_current_character(TRANSLATOR_DATA)
 
-
 func _on_inquisitor_pressed() -> void:
 	set_current_character(INQUISITOR_DATA)
-
 
 func _on_simian_typewriter_pressed() -> void:
 	set_current_character(GORILLA_DATA)

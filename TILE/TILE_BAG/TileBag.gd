@@ -25,21 +25,21 @@ var bag_list = []
 signal tile_bag_toggle(toggled_on)
 
 func _ready():
-	GameEventHandler.update_bag_tiles.connect(_on_update_bag_tiles)
-	GameEventHandler.update_buffered_tiles.connect(_on_update_buffered_tiles)
-	GameEventHandler.disable_tile_bag.connect(_on_disable_tile_bag)
+	GameEventHandler.update_bag_tiles.connect(self._on_update_bag_tiles)
+	GameEventHandler.update_buffered_tiles.connect(self._on_update_buffered_tiles)
+	GameEventHandler.disable_tile_bag.connect(self._on_disable_tile_bag)
 
 func _on_tile_bag_button_toggled(toggled_on: bool):
-	print(GeneralManager.is_map_open)
-	print(GeneralManager.is_combat_active)
-	print(current_combat_deck.size())
+	#print(GeneralManager.is_map_open)
+	#print(GeneralManager.is_combat_active)
+	#print(current_combat_deck.size())
 	if GeneralManager.is_combat_active == true:
 		GeneralManager.is_bag_open = true
 		tile_bag_toggle.emit(toggled_on)
 		if toggled_on == true:
 			no_click_area.set_layer(9)
 			for i in current_combat_deck.size():
-				print("Adding tile: " + str(i) + ".")
+				#print("Adding tile: " + str(i) + ".")
 				
 				## bag_tile is a GridTile with the data of a LetterTile from your deck.
 				var bag_tile = grid_tile_scene.instantiate()

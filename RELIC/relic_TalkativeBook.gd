@@ -10,7 +10,8 @@ var golden_dict: Dictionary[String, bool] = {
 func _ready():
 	relic_id = 18
 	relic_name = "Talkative Picture Book"
-	relic_rarity = RelicRarity.COMMON_BOOK
+	relic_rarity = Relic.RelicRarity.COMMON_BOOK
+	relic_type = Relic.RelicType.BOOK
 	relic_description = 'Onomatopoeia are granted +5 points per tile.'
 	relic_flavor_text = "It's a book with some kind of strange device attached to it. Sometimes, the device speaks in a language you don't understand."
 	%Relic_Label.set_text("")
@@ -20,7 +21,7 @@ func _ready():
 func on_pickup_effect():
 	var wordlist = FileAccess.open("res://WORDLISTS/Categories/Onomatopoeia.txt", FileAccess.READ)
 	while wordlist.get_position() < wordlist.get_length():
-		print("Working...")
+		#print("Working...")
 		relic_dict[str(wordlist.get_line())] = true
 	wordlist.close()
 	GeneralManager.add_bonus_words(golden_dict)

@@ -4,7 +4,8 @@ class_name Alphabook
 func _ready():
 	relic_id = 13
 	relic_name = "Alphabook"
-	relic_rarity = RelicRarity.COMMON_BOOK
+	relic_rarity = Relic.RelicRarity.COMMON_BOOK
+	relic_type = Relic.RelicType.BOOK
 	relic_description = 'Tiles with the letter A, B, or C have their tile score tripled, but only when attacking.'
 	relic_flavor_text = "The first book ever written."
 	super()

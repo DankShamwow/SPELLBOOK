@@ -1,0 +1,437 @@
+[gd_scene load_steps=7 format=3 uid="uid://tibr5k15ji1w"]
+
+[ext_resource type="Script" uid="uid://b51517hwv643v" path="res://GENERAL/GAME_SCENES/LIBRARY/library.gd" id="1_km8g1"]
+[ext_resource type="Texture2D" uid="uid://byxxi45b53k5b" path="res://SPRITES/GUI/GoldIcon.png" id="2_jmadg"]
+[ext_resource type="Texture2D" uid="uid://lqnli7aly3m8" path="res://SPRITES/BACKGROUND/WotW_draft_1.png" id="2_ptttu"]
+[ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="3_anl08"]
+[ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="5_ivlqu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8uoy"]
+atlas = ExtResource("2_jmadg")
+region = Rect2(0, 0, 32, 32)
+
+[node name="Library" type="Control"]
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 480.0
+script = ExtResource("1_km8g1")
+
+[node name="Line2D" type="Line2D" parent="."]
+visible = false
+position = Vector2(320, 0)
+points = PackedVector2Array(0, 0, 0, 480)
+
+[node name="Line2D2" type="Line2D" parent="."]
+visible = false
+position = Vector2(480, 0)
+points = PackedVector2Array(0, 0, 0, 480)
+
+[node name="Line2D3" type="Line2D" parent="."]
+visible = false
+position = Vector2(160, 0)
+points = PackedVector2Array(0, 0, 0, 480)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+visible = false
+position = Vector2(448, 192)
+
+[node name="BackgroundPosition" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Background" type="Sprite2D" parent="BackgroundPosition"]
+unique_name_in_owner = true
+position = Vector2(0, 168)
+texture = ExtResource("2_ptttu")
+
+[node name="LeaveButtonBox" type="NinePatchRect" parent="."]
+texture_filter = 1
+clip_contents = true
+layout_mode = 0
+offset_left = 488.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 248.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="LeaveButton" type="Button" parent="LeaveButtonBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "LEAVE"
+
+[node name="ButtonParent" type="Control" parent="."]
+anchors_preset = 0
+
+[node name="BorrowButton" type="Button" parent="ButtonParent"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 328.0
+offset_right = 256.0
+offset_bottom = 376.0
+tooltip_text = "You may borrow books up to your limit. You have borrowed [UNDEFINED]/[UNDEFINED] books."
+text = "BORROW"
+
+[node name="ExchangeButton" type="Button" parent="ButtonParent"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 392.0
+offset_right = 256.0
+offset_bottom = 440.0
+tooltip_text = "Exchange Books in your possession with 
+Books from this Library's collection.
+A Book can only be Exchanged once per visit."
+text = "EXCHANGE"
+
+[node name="BrowseButton" type="Button" parent="ButtonParent"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 384.0
+offset_top = 328.0
+offset_right = 512.0
+offset_bottom = 376.0
+tooltip_text = "Browse the Books currently
+available at this Library."
+text = "BROWSE"
+
+[node name="PurchaseButton" type="Button" parent="ButtonParent"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 384.0
+offset_top = 392.0
+offset_right = 512.0
+offset_bottom = 440.0
+tooltip_text = "Purchase a Borrowed Book 
+for its Shop price."
+text = "PURCHASE"
+
+[node name="ScreenCovering" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(0, 0, 0, 0)
+z_as_relative = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 480.0
+mouse_filter = 2
+
+[node name="BorrowParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="BorrowBookParent" type="Control" parent="BorrowParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BackButton" type="NinePatchRect" parent="BorrowParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 40.0
+offset_top = 392.0
+offset_right = 152.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="BorrowBackButton" type="Button" parent="BorrowParent/BackButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "BACK"
+
+[node name="ConfirmButton" type="NinePatchRect" parent="BorrowParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 488.0
+offset_top = 392.0
+offset_right = 600.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="BorrowConfirmButton" type="Button" parent="BorrowParent/ConfirmButton"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "CONFIRM"
+
+[node name="ExchangeParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+
+[node name="BackButton" type="NinePatchRect" parent="ExchangeParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 40.0
+offset_top = 392.0
+offset_right = 152.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="ExchangeBackButton" type="Button" parent="ExchangeParent/BackButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "BACK"
+
+[node name="ConfirmButton" type="NinePatchRect" parent="ExchangeParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 488.0
+offset_top = 392.0
+offset_right = 600.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="ExchangeConfirmButton" type="Button" parent="ExchangeParent/ConfirmButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+disabled = true
+text = "CONFIRM"
+
+[node name="ExchangeLibraryBookParent" type="Control" parent="ExchangeParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ExchangePlayerBookParent" type="Control" parent="ExchangeParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BrowseParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+
+[node name="BrowseBookParent" type="Control" parent="BrowseParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BackButton" type="NinePatchRect" parent="BrowseParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 40.0
+offset_top = 392.0
+offset_right = 152.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="BrowseBackButton" type="Button" parent="BrowseParent/BackButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "BACK"
+
+[node name="PurchaseParent" type="Node2D" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+
+[node name="PurchaseBookParent" type="Control" parent="PurchaseParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="BackButton" type="NinePatchRect" parent="PurchaseParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 40.0
+offset_top = 392.0
+offset_right = 152.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="PurchaseBackButton" type="Button" parent="PurchaseParent/BackButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+text = "LEAVE"
+
+[node name="ConfirmButton" type="NinePatchRect" parent="PurchaseParent"]
+texture_filter = 1
+clip_contents = true
+offset_left = 488.0
+offset_top = 392.0
+offset_right = 600.0
+offset_bottom = 440.0
+texture = ExtResource("3_anl08")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="PurchaseConfirmButton" type="Button" parent="PurchaseParent/ConfirmButton"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 40.0
+disabled = true
+text = "CONFIRM"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PurchaseParent"]
+offset_left = 488.0
+offset_top = 440.0
+offset_right = 600.0
+offset_bottom = 464.0
+alignment = 1
+
+[node name="GoldIcon" type="TextureRect" parent="PurchaseParent/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_o8uoy")
+
+[node name="GoldLabel" type="Label" parent="PurchaseParent/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("5_ivlqu")
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="FollowerTextParent" type="Control" parent="PurchaseParent"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ActionsRemaining" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 96.0
+offset_right = 512.0
+offset_bottom = 136.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 13
+text = "ACTIONS REMAINING: 3"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionCost" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 128.0
+offset_top = 136.0
+offset_right = 512.0
+offset_bottom = 150.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "ACTION COST: 0"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[connection signal="pressed" from="LeaveButtonBox/LeaveButton" to="." method="_on_leave_button_pressed"]
+[connection signal="mouse_entered" from="ButtonParent/BorrowButton" to="." method="_on_borrow_button_mouse_entered"]
+[connection signal="pressed" from="ButtonParent/BorrowButton" to="." method="_on_borrow_button_pressed"]
+[connection signal="pressed" from="ButtonParent/ExchangeButton" to="." method="_on_exchange_button_pressed"]
+[connection signal="pressed" from="ButtonParent/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="pressed" from="ButtonParent/PurchaseButton" to="." method="_on_purchase_button_pressed"]
+[connection signal="pressed" from="BorrowParent/BackButton/BorrowBackButton" to="." method="_on_borrow_back_button_pressed"]
+[connection signal="pressed" from="BorrowParent/ConfirmButton/BorrowConfirmButton" to="." method="_on_borrow_confirm_button_pressed"]
+[connection signal="pressed" from="ExchangeParent/BackButton/ExchangeBackButton" to="." method="_on_exchange_back_button_pressed"]
+[connection signal="pressed" from="ExchangeParent/ConfirmButton/ExchangeConfirmButton" to="." method="_on_exchange_confirm_button_pressed"]
+[connection signal="pressed" from="BrowseParent/BackButton/BrowseBackButton" to="." method="_on_browse_back_button_pressed"]
+[connection signal="pressed" from="PurchaseParent/BackButton/PurchaseBackButton" to="." method="_on_purchase_back_button_pressed"]
+[connection signal="pressed" from="PurchaseParent/ConfirmButton/PurchaseConfirmButton" to="." method="_on_purchase_confirm_button_pressed"]

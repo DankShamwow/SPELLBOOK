@@ -1,0 +1,137 @@
+extends StatusEffect
+
+## Information grabbed for Tile Related Debuffs:
+
+var tiles_in_play 	= GeneralManager.tiles_in_play
+var debuff_rng		= RandomnessManager.debuff_rng
+
+## List of LetterTiles that were successfully debuffed.
+var affected_tile_list: 					Array[LetterTile] = []
+## List of LetterTiles that were selected to be debuffed. This is trimmed to be equal to that of
+## affected_tile_list's tile indices once application concludes.
+var affected_tile_indices: 					Array[int] = []
+
+var previous_debuff_index: int
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	status_id = 6
+	status_name = "Warped"
+	status_description = "Warped Tiles have their Letter changed temporarily."
+	stack_type = StackType.TIMED_EXPIRY
+	tick_type = TickType.TURN_END
+	status_type = StatusType.DEBUFF
+	super()
+	
+func _update_graphics():
+	status_name = "Warped"
+	status_description = "Warped Tiles have their Letter changed temporarily."
+	super()
+	
+func on_application(_status_amount: int, _status_duration: int = 0):
+	var potential_tiles = []
+	amount = _status_amount
+	duration = _status_duration
+	#region Affects Character
+	if inflicted_entity is Character:
+		# Find all tiles that can be inflicted with the debuff.
+		for i in tiles_in_play.size():
+			var current_tile = tiles_in_play[i] as LetterTile
+			if current_tile.played_letter == current_tile.true_letter and not current_tile.is_debuff_immune:
+				potential_tiles.append(current_tile)
+		
+		if potential_tiles.size() == 0:
+			return 
+		
+		# Typically, the status amount will be smaller, but if it's greater than the number of tiles that can be inflicted,
+		# we just inflict all of the potential tiles with the debuff.
+		for i in min(potential_tiles.size(), _status_amount):
+			var allowed_letters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+			var affected_tile = potential_tiles[debuff_rng.randi() % potential_tiles.size()] as LetterTile
+			
+			if affected_tile.notch1 == LetterTile.NotchTypes.INERT \
+			or affected_tile.notch2 == LetterTile.NotchTypes.INERT \
+			or affected_tile.notch3 == LetterTile.NotchTypes.INERT:
+				affected_tile_indices.append(affected_tile.tile_index)
+				potential_tiles.erase(affected_tile)
+				continue
+				
+			else:
+				allowed_letters.remove_at(affected_tile.true_letter)
+				var warped_letter = allowed_letters[debuff_rng.randi() % allowed_letters.size()]
+				
+				affected_tile.visual_letter = warped_letter
+				affected_tile.played_letter = warped_letter
+				
+				affected_tile_indices.append(affected_tile.tile_index)
+				affected_tile_list.append(affected_tile)
+				potential_tiles.erase(affected_tile)
+		
+		GameEventHandler.update_tile_graphics.emit(inflicted_entity, affected_tile_indices)
+	#endregion
+	
+	#region Affects Enemy
+	if inflicted_entity is Enemy:
+		for i in inflicted_entity.enemy_deck.size():
+			var current_tile = inflicted_entity.enemy_deck[i] as LetterTile
+			if current_tile.played_letter == current_tile.true_letter and not current_tile.is_debuff_immune:
+				potential_tiles.append(current_tile)
+		
+		if potential_tiles.size() == 0:
+			return 
+		
+		# Typically, the status amount will be smaller, but if it's greater than the number of tiles that can be inflicted,
+		# we just inflict all of the potential tiles with the debuff.
+		for i in min(potential_tiles.size(), _status_amount):
+			var allowed_letters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+			var affected_tile = potential_tiles[debuff_rng.randi() % potential_tiles.size()] as LetterTile
+			
+			if affected_tile.notch1 == LetterTile.NotchTypes.INERT \
+			or affected_tile.notch2 == LetterTile.NotchTypes.INERT \
+			or affected_tile.notch3 == LetterTile.NotchTypes.INERT:
+				affected_tile_indices.append(affected_tile.tile_index)
+				potential_tiles.erase(affected_tile)
+				continue
+				
+			else:
+				allowed_letters.remove_at(affected_tile.true_letter)
+				var warped_letter = allowed_letters[debuff_rng.randi() % allowed_letters.size()]
+				
+				affected_tile.visual_letter = warped_letter
+				affected_tile.played_letter = warped_letter
+				
+				affected_tile_indices.append(affected_tile.tile_index)
+				affected_tile_list.append(affected_tile)
+				potential_tiles.erase(affected_tile)
+		
+		GameEventHandler.update_tile_tooltip_graphics.emit(inflicted_entity, affected_tile_indices)
+	#endregion
+	
+	affected_tile_indices.clear()
+	for tile: LetterTile in affected_tile_list:
+		affected_tile_indices.append(tile.tile_index)
+	
+	_update_graphics()
+
+func on_turn_end(which: GameEntity, _count: int):
+	if which == inflicted_entity:
+		if tick_type == TickType.TURN_END or tick_type == TickType.TURN_START_END:
+			duration -= 1
+			
+			_update_graphics()
+			
+			if duration <= 0:
+				on_duration_expiry()
+			
+func on_duration_expiry():
+	for i in affected_tile_list.size():
+		affected_tile_list[i].visual_letter = affected_tile_list[i].true_letter
+		affected_tile_list[i].played_letter = affected_tile_list[i].true_letter
+			
+	if inflicted_entity is Character:
+		GameEventHandler.update_tile_graphics.emit(inflicted_entity, affected_tile_indices)
+		
+	if inflicted_entity is Enemy:
+		GameEventHandler.update_tile_tooltip_graphics.emit(inflicted_entity, affected_tile_indices)
+		
+	self.queue_free()

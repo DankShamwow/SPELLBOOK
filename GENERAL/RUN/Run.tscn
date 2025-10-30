@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://gx3didg4ceg8"]
+[gd_scene load_steps=18 format=3 uid="uid://gx3didg4ceg8"]
 
 [ext_resource type="Script" uid="uid://cwyb7agurm1e4" path="res://GENERAL/RUN/Run.gd" id="1_0uibq"]
 [ext_resource type="Theme" uid="uid://6cu18c01b6a8" path="res://GENERAL/OTHER/SPELLBOOK_THEME.tres" id="2_bybjp"]
 [ext_resource type="PackedScene" uid="uid://cgtc1vnsv3tjl" path="res://RELIC/RelicTooltip.tscn" id="2_kanhh"]
 [ext_resource type="PackedScene" uid="uid://cpbsotfmvd85a" path="res://RELIC/RelicContainer.tscn" id="2_l3v56"]
 [ext_resource type="PackedScene" uid="uid://d1peqv2s6qtuo" path="res://TILE/TILE_BAG/TileBag.tscn" id="2_n48is"]
+[ext_resource type="Script" uid="uid://syjlh1hrxt0o" path="res://GENERAL/RUN/RunStats.gd" id="2_oh08a"]
 [ext_resource type="Texture2D" uid="uid://bhjemfgxqwnid" path="res://SPRITES/GUI/TileGrid.png" id="5_s26kh"]
 [ext_resource type="Texture2D" uid="uid://bmvy0sic8twxp" path="res://SPRITES/GUI/MapIcon.png" id="6_qmdm6"]
 [ext_resource type="PackedScene" uid="uid://cx5nftaudi8yv" path="res://GENERAL/GAME_SCENES/MAP/NewMapHandler.tscn" id="6_s26kh"]
@@ -41,9 +42,63 @@ grow_horizontal = 2
 script = ExtResource("1_0uibq")
 
 [node name="RunStats" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_oh08a")
 
 [node name="PermanentUI" type="CanvasLayer" parent="."]
 layer = 10
+
+[node name="DebugButtons" type="VBoxContainer" parent="PermanentUI"]
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 512.0
+offset_top = -120.0
+offset_right = 634.0
+offset_bottom = 84.0
+grow_vertical = 0
+theme = ExtResource("2_bybjp")
+
+[node name="MAP" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "MAP"
+
+[node name="COMBAT" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "COMBAT"
+
+[node name="RELIQUARY" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "RELIQUARY"
+
+[node name="LIBRARY" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "LIBRARY"
+
+[node name="SHOP" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "SHOP"
+
+[node name="REST" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "REST"
+
+[node name="RANDOM_EVENT" type="Button" parent="PermanentUI/DebugButtons"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "RANDOM EVENT"
 
 [node name="RelicTooltip" parent="PermanentUI" instance=ExtResource("2_kanhh")]
 unique_name_in_owner = true
@@ -53,53 +108,6 @@ offset_bottom = 84.0
 
 [node name="NewMapHandler" parent="PermanentUI" instance=ExtResource("6_s26kh")]
 unique_name_in_owner = true
-
-[node name="DebugButtons" type="VBoxContainer" parent="PermanentUI"]
-visible = false
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -176.0
-offset_right = 122.0
-offset_bottom = 2.0
-grow_vertical = 0
-theme = ExtResource("2_bybjp")
-
-[node name="MAP" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "MAP"
-
-[node name="COMBAT" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "COMBAT"
-
-[node name="RELIQUARY" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "RELIQUARY"
-
-[node name="SHOP" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "SHOP"
-
-[node name="REST" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "REST"
-
-[node name="RANDOM_EVENT" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "RANDOM EVENT"
-
-[node name="RELIC" type="Button" parent="PermanentUI/DebugButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "RELIC
-"
 
 [node name="TopBarGUI" type="NinePatchRect" parent="PermanentUI"]
 texture_filter = 1
@@ -226,6 +234,4 @@ unique_name_in_owner = true
 position = Vector2(0, 168)
 texture = ExtResource("8_qmdm6")
 
-[connection signal="add_relic" from="." to="PermanentUI/RelicContainerGradient" method="add_relic"]
-[connection signal="pressed" from="PermanentUI/DebugButtons/RELIC" to="." method="_on_relic_button_pressed"]
 [connection signal="toggled" from="PermanentUI/NewMapButton" to="PermanentUI/NewMapHandler" method="_on_new_map_button_toggled"]

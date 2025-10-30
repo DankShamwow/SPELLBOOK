@@ -49,13 +49,16 @@ func _show_tooltip(which: NotchObject) -> void:
 	
 	self.size.y = self.get_minimum_size().y
 
-func _hide_tooltip() -> void:
+func _hide_tooltip(force_hide: bool = false) -> void:
 	
 	is_visible = false
 	if tween:
 		tween.kill()
 		
-	get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+	if not force_hide:
+		get_tree().create_timer(fade_seconds, false).timeout.connect(hide_animation)
+	else:
+		hide_animation()
 		
 func hide_animation() -> void:
 	if not is_visible:

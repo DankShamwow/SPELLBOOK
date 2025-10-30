@@ -30,7 +30,6 @@ var enemy_rng = RandomnessManager.enemy_rng
 
 const INTENT_ICON_SCENE: PackedScene = preload("res://COMBAT/GAME_ENTITY/IntentIcon.tscn")
 
-
 func _ready():
 	
 	GameEventHandler.enemy_attack_finished.connect(check_for_ownership)
@@ -46,9 +45,6 @@ func _ready():
 	
 	for i in enemy_attack_count:
 		enemy_attack_list.append(%EnemyAttackData.EnemyAttackList[i])
-	
-	print(enemy_attack_count)
-	print(enemy_attack_list)
 	super()
 
 func _on_turn_start():
@@ -77,10 +73,10 @@ func schedule_attack(attack_number: int):
 	%IntentBox.add_child(attack_intent)
 	attack_intent.type = IntentIcon.IntentType[enemy_attack_intents[attack_number]]
 	attack_intent.update_intent_info()
-	attack_intent.is_intent = true
+	attack_intent.is_intent = true					## TODO: Rename this to "is_hoverable"
 	attack_intent.related_enemy = self
 	attack_intent.related_attack = attack_number
-	attack_intent.intent_hovered.connect(self.get_parent().get_parent().find_child("IntentTooltip")._on_intent_hovered)
+	attack_intent.intent_hovered.connect(self.get_parent().get_parent().find_child("IntentTooltip")._on_intent_hovered) ## TODO: Put this on the events bus
 
 func check_for_ownership(which: Enemy):
 	if which == self:
@@ -110,6 +106,6 @@ func perform_enemy_attack(attack_number):
 	await %IntentBox.get_child(0).juice_attack_perform()
 	%IntentBox.get_child(0).queue_free()
 
-func on_turn_end():
+func on_turn_end(_count):
 	plan_next_turn()
-	super()
+	super(_count)

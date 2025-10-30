@@ -4,7 +4,8 @@ class_name PenNib
 func _ready():
 	relic_id = 12
 	relic_name = "Pen Nib"
-	relic_rarity = RelicRarity.COMMON
+	relic_rarity = Relic.RelicRarity.COMMON
+	relic_type = Relic.RelicType.RELIC
 	relic_description = 'Every 10th tile scores for twice as much.'
 	relic_flavor_text = '"You can see the bloody history of all those who have held it. And also some sort of weird card game, for unknown reasons."'
 	super()

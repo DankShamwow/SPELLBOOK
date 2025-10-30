@@ -15,7 +15,7 @@ trout
 tench
 eel
 bass
-brream
+bream
 catfish
 dogfish
 shark
@@ -42,3 +42,4 @@ stingray
 grouper
 snapper
 guppy
+tilapia
